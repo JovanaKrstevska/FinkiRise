@@ -1,0 +1,40 @@
+.bg-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #ebf2f4;
+}
+.wave-svg {
+    position: relative;
+    left: 42.5vw;
+    top: 0;
+    width: 40vw;
+    height: 100vh;
+    z-index: 2;
+}
+.wave-svg1 {
+    position: relative;
+    left: 1vw;
+    top: 0;
+    width: 40vw;
+    height: 100vh;
+}
+.right-bg {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50vw;
+    height: 100vh;
+    background: #2f7b9b;
+}
+.diamond-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30vw;
+    height: 30vw;
+    transform: translate(-50%, -50%) rotate(45deg);
+    background: radial-gradient(circle at center, #71cbf9 10%, #2f7b9b 100%);
+    filter: blur(3px);
+}
