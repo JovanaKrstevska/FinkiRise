@@ -4,16 +4,23 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import LoginPage from './pages/LoginPage/LoginPage';
 import HelpPage from './pages/HelpPage/HelpPage';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import AboutUsPage from './pages/AboutUsPage/AboutUsPage';
+import HomePage from './pages/HomePage/HomePage';
+import SicPage from './pages/SicPage/SicPage';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <React.StrictMode>
       <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path='/login' element={<LoginPage />}/>
+        <Route path='/home' element={<HomePage />}/>
+        <Route path='/profile' element={<ProfilePage />}/>
         <Route path='/help' element={<HelpPage />}/>
+        <Route path='/sic' element={<SicPage />}/>
         <Route path='/about_us' element={<AboutUsPage />}/>
       </Routes>
     </React.StrictMode>
