@@ -242,5 +242,127 @@
             "title": "Вработување во iVote",
             "date": "4 Nov 2017"
         }
+    ],
+    "consultations": [
+         {
+            "id": 1,
+            "professor": "д-р Костадин Мишев",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 2,
+            "professor": "д-р Димитар Трајанов",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 3,
+            "professor": "Стефан Андонов",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 4,
+            "professor": "д-р Марјан Гушев",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 5,
+            "professor": "д-р Катерина Здравкова",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 6,
+            "professor": "д-р Сузана Лошковска",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 7,
+            "professor": "д-р Коста Митрески",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 8,
+            "professor": "д-р Верица Бакева",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 9,
+            "professor": "д-р Владимир Трајковиќ",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 10,
+            "professor": "д-р Ана Мадевска Богданова",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 11,
+            "professor": "д-р Дејан Ѓорѓевиќ",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 12,
+            "professor": "д-р Андреа Кулаков",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 13,
+            "professor": "д-р Љупчо Антовски",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 14,
+            "professor": "д-р Марија Михова",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 15,
+            "professor": "д-р Слободан Калајџиски",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 16,
+            "professor": "д-р Невена Ацковска",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 17,
+            "professor": "д-р Горан Велинов",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 18,
+            "professor": "д-р Анастас Мишев",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 19,
+            "professor": "д-р Иван Чорбев",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 20,
+            "professor": "д-р Гоце Арменски",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 21,
+            "professor": "д-р Боро Јакимовски",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 22,
+            "professor": "д-р Весна Димитрова",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 23,
+            "professor": "д-р Дејан Спасов",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        },
+        {
+            "id": 24,
+            "professor": "д-р Игор Мишковски",
+            "meetingLink": "https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e"
+        }
     ]
 }
