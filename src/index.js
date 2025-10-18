@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import LoginPage from './pages/LoginPage/LoginPage';
 import HelpPage from './pages/HelpPage/HelpPage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AboutUsPage from './pages/AboutUsPage/AboutUsPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,6 +14,7 @@ root.render(
       <Routes>
         <Route path='/login' element={<LoginPage />}/>
         <Route path='/help' element={<HelpPage />}/>
+        <Route path='/about_us' element={<AboutUsPage />}/>
       </Routes>
     </React.StrictMode>
   </BrowserRouter>
