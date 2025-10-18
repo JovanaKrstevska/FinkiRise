@@ -1,0 +1,15 @@
+.star {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-right: 12px;
+  cursor: pointer;
+  transition: filter 0.15s;
+  outline: none;
+}
+.star:focus,
+.star:hover {
+  filter: drop-shadow(0 0 5px #94d5f7);
+}

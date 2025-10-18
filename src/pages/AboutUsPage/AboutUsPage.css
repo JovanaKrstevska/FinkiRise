@@ -1,29 +1,31 @@
-.mainBox {
+.mainBoxAboutUs {
     position: absolute;
-    top: 12.5%;
-    left: 5%;
+    top: 15%;
+    left: 9%;
     background-color: white;
     border: 3px solid #5896B1;
     border-radius: 18px;
-    width: 90vw;
-    height: 40vw;
+    width: 80vw;
+    height: 35vw;
 }
 .aboutUs{
     position: absolute;
     top: 5%;
+    left: 3%;
+    width: 75vw;
 }
 .advice{
     position: absolute;
-    top: 45%;
-    left: 5%;
+    top: 50%;
+    right: 0.3%;
     color: #015E86;
     text-align: center;
-    font-size: 45px;
+    font-size: 40px;
     width: 80vw;
 }
 .starAboutUs{
     position: absolute;
-    left: 86%;
-    top: 68%;
-    width: 13vw;
+    left: 88%;
+    top: 72%;
+    width: 10vw;
 }
