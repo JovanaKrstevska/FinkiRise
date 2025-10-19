@@ -5,7 +5,8 @@
     overflow: hidden;
     background: #ebf2f4;
 }
-.finki_rise_logo{
+
+.finki_rise_logo {
     position: absolute;
     left: 4.8%;
     top: 14%;
@@ -13,6 +14,7 @@
     filter: blur(0px);
     mix-blend-mode: multiply;
 }
+
 .wave-svg {
     position: relative;
     left: 42.5vw;
@@ -21,6 +23,7 @@
     height: 100vh;
     z-index: 2;
 }
+
 .wave-svg1 {
     position: relative;
     left: 1vw;
@@ -29,6 +32,7 @@
     height: 100vh;
     z-index: 1;
 }
+
 .right-bg {
     position: absolute;
     right: 0;
@@ -38,6 +42,7 @@
     background-color: #2f7b9b;
     z-index: 3;
 }
+
 .diamond-glow {
     position: absolute;
     top: 50%;
@@ -46,9 +51,10 @@
     height: 40vw;
     background: radial-gradient(circle, #6ED4FF 0%, #3899C2 50%, #084a6d90 100%);
     transform: translate(-50%, -50%) rotate(45deg);
-    mix-blend-mode:lighten;
+    mix-blend-mode: lighten;
     z-index: 4;
 }
+
 .board {
     position: absolute;
     left: 56.5vw;
@@ -59,12 +65,14 @@
     border-radius: 24px;
     z-index: 5;
 }
-.formLogin{
+
+.formLogin {
     position: absolute;
     width: 99%;
     height: 90%;
 }
-.h1Edit{
+
+.h1Edit {
     position: absolute;
     left: 12.5%;
     color: white;
@@ -74,13 +82,30 @@
     font-family: serif;
     padding: 8px 40px;
 }
-.inputPassword{
+
+.inputPassword {
     position: relative;
     top: 45%;
 }
-.btnLogin{
+
+.btnLogin {
     position: absolute;
     left: 32%;
     top: 78%;
     height: 3.5vw;
+}
+
+.error-message {
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    right: 10%;
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    text-align: center;
+    font-size: 14px;
+    z-index: 10;
 }

@@ -4,12 +4,12 @@ input {
     right: 6%;
     border-radius: 8px;
     padding: 15px;
-    color: #000;
+    color: #024866;
     border: 0;
     background-color: hsla(0, 100%, 99%, 0.687);
     text-align: left;
     font-family: serif;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 400;
     cursor: pointer;
     margin-top: 10px;

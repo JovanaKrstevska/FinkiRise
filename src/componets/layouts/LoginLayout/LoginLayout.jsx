@@ -1,7 +1,33 @@
+import { useNavigate } from 'react-router-dom';
+import { loginWithEmailAndPassword } from '../../../config/firebase';
+import { useState } from 'react';
 import '../LoginLayout/LoginLayout.css';
 import Button from '../../ui/Button/Button';
 import Input from '../../ui/Input/Input';
+
 function LoginLayout() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    
+    const handleLogin = async (event) => {
+        event.preventDefault();
+        setLoading(true);
+        setError(null);
+        
+        const result = await loginWithEmailAndPassword(email, password);
+        
+        if (result.success) {
+            navigate('/home');
+            console.log('User logged in successfully!');
+        } else {
+            setError(result.error);
+        }
+        
+        setLoading(false);
+    };
     return (
         <div className="bg-container">
             <img className="finki_rise_logo" src='/assets/icons/finki_rise_logo.svg' alt='FinkiRise'></img>
@@ -20,11 +46,32 @@ function LoginLayout() {
             <div className="right-bg"></div>
             <div className="diamond-glow"></div>
             <div className='board'>
-                <form className='formLogin'>
+                <form className='formLogin' onSubmit={handleLogin}>
                     <h1 className='h1Edit'>Добредојде</h1>
-                    <Input typename={"text"} labelname={"Електронска пошта/Индекс"} placeholder={"Внеси ја твојата електронска пошта/индекс"} />
-                    <Input typename={"password"} className="inputPassword" labelname={"Лозинка"} placeholder={"Внеси ја твојата лозинка"} />
-                    <Button className="btnLogin" content={"Најава"} />
+                    {error && <div className="error-message">{error}</div>}
+                    <Input 
+                        typename={"email"} 
+                        labelname={"Електронска пошта/Индекс"} 
+                        placeholder={"Внеси ја твојата електронска пошта/индекс"} 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                    <Input 
+                        typename={"password"} 
+                        className="inputPassword" 
+                        labelname={"Лозинка"} 
+                        placeholder={"Внеси ја твојата лозинка"} 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                    <Button 
+                        className="btnLogin" 
+                        content={"Најава"} 
+                        type="submit"
+                        disabled={loading}
+                    />
                 </form>
             </div>
         </div>
