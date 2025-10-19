@@ -120,9 +120,150 @@ h2 {
     text-align: center;
     color: #015e86;
 }
+
 .btnClosePop{
   background-color: rgba(9, 109, 167, 0.737);
   width: 8vw;
   height: 2vw;
   font-size: 20px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .mainBox {
+        position: relative;
+        top: 20px;
+        left: 5%;
+        width: 90vw;
+        height: auto;
+        min-height: 80vh;
+        padding-bottom: 20px;
+    }
+    
+    h2 {
+        position: relative;
+        left: 0;
+        width: 100%;
+        font-size: 20px;
+        padding: 20px;
+        margin: 0;
+    }
+    
+    .contact-row {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 20px;
+        margin-top: 20px;
+    }
+    
+    .contact-col {
+        position: relative;
+        top: 0;
+        width: 100%;
+        height: auto;
+        text-align: center;
+    }
+    
+    .contact-title {
+        font-size: 18px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .email {
+        position: relative;
+        left: 0;
+        top: 0;
+        font-size: 16px;
+        margin-bottom: 10px;
+        display: block;
+    }
+    
+    .select {
+        position: relative;
+        left: 0;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        margin: 0 auto;
+    }
+    
+    .text {
+        position: relative;
+        bottom: auto;
+        left: 0;
+        width: calc(100% - 40px);
+        height: 120px;
+        margin: 20px;
+    }
+    
+    .textInput {
+        position: relative;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 120px;
+        padding: 10px;
+        font-size: 16px;
+    }
+    
+    .btnPrati {
+        position: relative;
+        left: 0;
+        top: 0;
+        height: 50px;
+        width: 120px;
+        margin: 20px auto;
+        display: block;
+    }
+    
+    .modal {
+        width: 80vw;
+        max-width: 400px;
+        margin: 20px;
+    }
+    
+    .btnClosePop {
+        width: 100px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mainBox {
+        left: 2%;
+        width: 96vw;
+        min-height: 70vh;
+    }
+    
+    h2 {
+        font-size: 18px;
+        padding: 15px;
+    }
+    
+    .contact-title {
+        font-size: 16px;
+    }
+    
+    .email {
+        font-size: 14px;
+        word-break: break-word;
+    }
+    
+    .text {
+        height: 100px;
+        margin: 15px;
+        width: calc(100% - 30px);
+    }
+    
+    .textInput {
+        height: 100px;
+        font-size: 14px;
+    }
 }

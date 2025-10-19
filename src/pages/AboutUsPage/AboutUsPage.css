@@ -8,12 +8,14 @@
     width: 80vw;
     height: 35vw;
 }
+
 .aboutUs{
     position: absolute;
     top: 5%;
     left: 3%;
     width: 75vw;
 }
+
 .advice{
     position: absolute;
     top: 50%;
@@ -23,9 +25,73 @@
     font-size: 40px;
     width: 80vw;
 }
+
 .starAboutUs{
     position: absolute;
     left: 88%;
     top: 72%;
     width: 10vw;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .mainBoxAboutUs {
+        position: relative;
+        top: 20px;
+        left: 5%;
+        width: 90vw;
+        height: auto;
+        min-height: 60vh;
+        padding-bottom: 20px;
+    }
+    
+    .aboutUs {
+        position: relative;
+        top: 20px;
+        left: 5%;
+        width: 85%;
+        font-size: 18px;
+    }
+    
+    .advice {
+        position: relative;
+        top: 30px;
+        right: auto;
+        left: 5%;
+        font-size: 24px;
+        width: 85%;
+        margin-bottom: 60px;
+    }
+    
+    .starAboutUs {
+        position: absolute;
+        left: 80%;
+        top: auto;
+        bottom: 10px;
+        width: 15vw;
+        max-width: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mainBoxAboutUs {
+        left: 2%;
+        width: 96vw;
+        min-height: 70vh;
+    }
+    
+    .aboutUs {
+        font-size: 16px;
+        width: 90%;
+    }
+    
+    .advice {
+        font-size: 20px;
+        width: 90%;
+    }
+    
+    .starAboutUs {
+        width: 50px;
+        left: 75%;
+    }
 }

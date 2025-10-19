@@ -15,13 +15,13 @@ root.render(
   <BrowserRouter>
     <React.StrictMode>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path='/login' element={<LoginPage />}/>
-        <Route path='/home' element={<HomePage />}/>
-        <Route path='/profile' element={<ProfilePage />}/>
-        <Route path='/help' element={<HelpPage />}/>
-        <Route path='/sic' element={<SicPage />}/>
-        <Route path='/about_us' element={<AboutUsPage />}/>
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/home' element={<HomePage />} />
+        <Route path='/profile' element={<ProfilePage />} />
+        <Route path='/help' element={<HelpPage />} />
+        <Route path='/sic' element={<SicPage />} />
+        <Route path='/about_us' element={<AboutUsPage />} />
       </Routes>
     </React.StrictMode>
   </BrowserRouter>

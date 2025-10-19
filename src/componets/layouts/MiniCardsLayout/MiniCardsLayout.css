@@ -102,7 +102,7 @@
 }
 
 .page.active {
-    background: #b1d8ea;
+    background: #96cee7;
     color: #22657e;
     font-weight: bold;
 }
@@ -110,5 +110,113 @@
 .arrow {
     font-size: 1.15em;
     vertical-align: middle;
-    background: #b1d8ea;
+    background: #96cee7;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .miniCardLayout {
+        position: relative;
+        left: 5%;
+        width: 90vw;
+        flex-direction: column;
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .tableContainer {
+        position: relative;
+        top: 0;
+        padding: 0 5%;
+    }
+
+    .table-container {
+        position: relative;
+        right: 0;
+        width: 90vw;
+        padding: 10px;
+    }
+
+    .table-row {
+        width: calc(90vw - 40px);
+        margin: 8px 0;
+        padding: 8px 12px;
+        flex-wrap: wrap;
+        height: auto;
+        min-height: 54px;
+    }
+
+    .title {
+        font-size: 16px;
+        flex-basis: 70%;
+        margin-bottom: 5px;
+    }
+
+    .date {
+        font-size: 14px;
+        flex-basis: 25%;
+        text-align: right;
+    }
+
+    .pagination {
+        right: 0;
+        margin: 15px 0;
+    }
+
+    .page,
+    .arrow {
+        width: auto;
+        min-width: 35px;
+        padding: 6px 10px;
+        font-size: 14px;
+        margin: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .miniCardLayout {
+        left: 2%;
+        width: 96vw;
+    }
+
+    .table-container {
+        width: 96vw;
+        padding: 8px;
+    }
+
+    .table-row {
+        width: calc(96vw - 32px);
+        padding: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .star {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        margin-right: 0;
+    }
+
+    .title {
+        font-size: 15px;
+        flex-basis: 100%;
+        margin-bottom: 5px;
+        padding-right: 40px;
+    }
+
+    .date {
+        font-size: 13px;
+        flex-basis: 100%;
+        text-align: left;
+        align-self: flex-end;
+    }
+
+    .page,
+    .arrow {
+        min-width: 30px;
+        padding: 5px 8px;
+        font-size: 12px;
+    }
 }

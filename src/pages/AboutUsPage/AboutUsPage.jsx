@@ -1,5 +1,6 @@
 import '../AboutUsPage/AboutUsPage.css';
 import NavBar from '../../componets/ui/NavBar/NavBar';
+
 function AboutUsPage(){
     return(
         <>
