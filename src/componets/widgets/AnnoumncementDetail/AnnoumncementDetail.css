@@ -1,19 +1,27 @@
-.modalOverlay {
+.annoumncementOverlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0,0,0,0.4);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-.modalContent {
+.annoumncementContent {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
-  max-width: 600px;
-  max-height: 80vh;
+  height: 80vh;
   overflow-y: auto;
-  width: 90%;
+  width: 80%;
+}
+.btnClose{
+  background-color: rgba(9, 109, 167, 0.737);
+  width: 8vw;
+  height: 2vw;
+  font-size: 23px;
 }
