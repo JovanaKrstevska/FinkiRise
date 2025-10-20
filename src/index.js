@@ -9,20 +9,46 @@ import AboutUsPage from './pages/AboutUsPage/AboutUsPage';
 import HomePage from './pages/HomePage/HomePage';
 import SicPage from './pages/SicPage/SicPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import './utils/setupTestData'; // For development testing
+import './utils/resetDatabase'; // For database reset
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <React.StrictMode>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/home' element={<HomePage />} />
-        <Route path='/profile' element={<ProfilePage />} />
-        <Route path='/help' element={<HelpPage />} />
-        <Route path='/sic' element={<SicPage />} />
-        <Route path='/about_us' element={<AboutUsPage />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/home' element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          } />
+          <Route path='/profile' element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
+          <Route path='/help' element={
+            <ProtectedRoute>
+              <HelpPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/sic' element={
+            <ProtectedRoute>
+              <SicPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/about_us' element={
+            <ProtectedRoute>
+              <AboutUsPage />
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </AuthProvider>
     </React.StrictMode>
   </BrowserRouter>
 );

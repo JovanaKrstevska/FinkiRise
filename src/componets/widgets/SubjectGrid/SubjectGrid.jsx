@@ -1,17 +1,67 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './SubjectGrid.css';
 import Button from '../../ui/Button/Button';
+import { useAuth } from '../../../contexts/AuthContext';
+import { getAllSubjects, getSubjectsByAcademicPeriod } from '../../../services/databaseService';
 
 function SubjectGrid() {
     const [currentPage, setCurrentPage] = useState(1);
+    const [subjects, setSubjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedAcademicYear, setSelectedAcademicYear] = useState('all');
+    const [selectedSemesterType, setSelectedSemesterType] = useState('all');
+    const { currentUser } = useAuth();
     const itemsPerPage = 6;
 
-    // Mock data for subjects
-    const subjects = Array.from({ length: 50 }, (_, i) => ({
-        id: i + 1,
-        name: "Име на предмет",
-        code: "IO"
-    }));
+    useEffect(() => {
+        loadSubjects();
+    }, [currentUser, selectedAcademicYear, selectedSemesterType]);
+
+    const loadSubjects = async () => {
+        if (currentUser) {
+            console.log('🎓 Student: Loading subjects from Firebase...');
+            console.log('📊 Filters - Academic Year:', selectedAcademicYear, 'Semester Type:', selectedSemesterType);
+            setLoading(true);
+            try {
+                let result;
+                if (selectedAcademicYear === 'all' && selectedSemesterType === 'all') {
+                    console.log('🔍 Getting ALL subjects (no filters)');
+                    result = await getAllSubjects();
+                } else {
+                    const academicYear = selectedAcademicYear === 'all' ? null : selectedAcademicYear;
+                    const semesterType = selectedSemesterType === 'all' ? null : selectedSemesterType;
+                    console.log('🔍 Getting filtered subjects - Year:', academicYear, 'Type:', semesterType);
+                    result = await getSubjectsByAcademicPeriod(academicYear, semesterType);
+                }
+
+                if (result.success) {
+                    setSubjects(result.data);
+                    console.log('✅ Student: Loaded subjects from Firebase:', result.data.length);
+                } else {
+                    console.error('❌ Student: Error loading subjects:', result.error);
+                    // Show fallback subjects if Firebase fails
+                    const fallbackSubjects = [
+                        { id: '1', name: 'Веб програмирање', code: 'WP', semesterType: 'summer', academicYear: '2025/2026' },
+                        { id: '2', name: 'Бази на податоци', code: 'DB', semesterType: 'winter', academicYear: '2025/2026' },
+                        { id: '3', name: 'Софтверско инженерство', code: 'SE', semesterType: 'summer', academicYear: '2025/2026' }
+                    ];
+                    setSubjects(fallbackSubjects);
+                    console.log('🔄 Student: Using fallback subjects');
+                }
+            } catch (error) {
+                console.error('💥 Student: Database connection failed:', error);
+                // Show fallback subjects if database fails
+                const fallbackSubjects = [
+                    { id: '1', name: 'Веб програмирање', code: 'WP', semesterType: 'summer', academicYear: '2025/2026' },
+                    { id: '2', name: 'Бази на податоци', code: 'DB', semesterType: 'winter', academicYear: '2025/2026' },
+                    { id: '3', name: 'Софтверско инженерство', code: 'SE', semesterType: 'summer', academicYear: '2025/2026' }
+                ];
+                setSubjects(fallbackSubjects);
+                console.log('🔄 Student: Using fallback subjects due to error');
+            }
+            setLoading(false);
+        }
+    };
 
     const totalPages = Math.ceil(subjects.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -53,19 +103,69 @@ function SubjectGrid() {
         return pages;
     };
 
+    if (loading) {
+        return (
+            <div className="subject-grid-container">
+                <div className="loading-message">Се вчитуваат предметите...</div>
+            </div>
+        );
+    }
+
+    console.log('🎓 SubjectGrid: Rendering with subjects:', subjects.length);
+    console.log('🎓 SubjectGrid: Current subjects:', subjects);
+
     return (
         <div className="subject-grid-container">
+
+
+            {/* Academic Period Filters */}
+            <div className="academic-filters">
+                <div className="filter-group">
+                    <label htmlFor="year-select">Академска година:</label>
+                    <select
+                        id="year-select"
+                        value={selectedAcademicYear}
+                        onChange={(e) => setSelectedAcademicYear(e.target.value)}
+                        className="filter-dropdown"
+                    >
+                        <option value="all">Сите години</option>
+                        <option value="2024/2025">2024/2025</option>
+                        <option value="2025/2026">2025/2026</option>
+                        <option value="2026/2027">2026/2027</option>
+                    </select>
+                </div>
+
+                <div className="filter-group">
+                    <label htmlFor="semester-type-select">Тип семестар:</label>
+                    <select
+                        id="semester-type-select"
+                        value={selectedSemesterType}
+                        onChange={(e) => setSelectedSemesterType(e.target.value)}
+                        className="filter-dropdown"
+                    >
+                        <option value="all">Сите семестри</option>
+                        <option value="winter">Зимски семестар</option>
+                        <option value="summer">Летен семестар</option>
+                    </select>
+                </div>
+            </div>
+
             <div className="subject-grid">
                 {currentSubjects.map((subject) => (
                     <div key={subject.id} className="subject-card">
                         <div className="subject-logo">
-                            <img 
-                                src="/assets/icons/finki_subject_logo.svg" 
-                                alt="Subject Logo" 
+                            <img
+                                src="/assets/icons/finki_subject_logo.svg"
+                                alt="Subject Logo"
                                 className="logo-image"
                             />
                         </div>
                         <div className="subject-name">{subject.name}</div>
+                        {subject.semesterType && subject.academicYear && (
+                            <div className="subject-semester">
+                                {subject.semesterType === 'winter' ? 'Зимски' : 'Летен'} семестар {subject.academicYear}
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
@@ -86,8 +186,6 @@ function SubjectGrid() {
                 >
                     &#9654;
                 </span>
-
-                <Button className="filter-btn" content="Филтрирај" />
             </div>
         </div>
     );
