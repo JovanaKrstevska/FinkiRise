@@ -46,8 +46,8 @@ export const resetSubjectsDatabase = async (professorId) => {
             const docRef = await addDoc(collection(db, 'subjects'), {
                 ...subject,
                 createdAt: serverTimestamp(),
-                enrolledStudents: [],
-                assignmentCount: 0
+                enrolledStudents: Math.floor(Math.random() * 50) + 15, // Random 15-65 students
+                assignmentCount: Math.floor(Math.random() * 5) + 1 // Random 1-5 assignments
             });
             console.log('✅ RESET: Created:', subject.name, 'with semesterType:', subject.semesterType);
         }

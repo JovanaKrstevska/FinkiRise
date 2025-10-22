@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import './SubjectGrid.css';
-import Button from '../../ui/Button/Button';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getAllSubjects, getSubjectsByAcademicPeriod } from '../../../services/databaseService';
 
@@ -129,9 +128,10 @@ function SubjectGrid() {
                         className="filter-dropdown"
                     >
                         <option value="all">Сите години</option>
+                        <option value="2022/2023">2022/2023</option>
+                        <option value="2023/2024">2023/2024</option>
                         <option value="2024/2025">2024/2025</option>
                         <option value="2025/2026">2025/2026</option>
-                        <option value="2026/2027">2026/2027</option>
                     </select>
                 </div>
 

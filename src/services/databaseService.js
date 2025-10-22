@@ -48,7 +48,10 @@ export const createSubject = async (subjectData) => {
         const docRef = await addDoc(collection(db, 'subjects'), {
             ...subjectData,
             createdAt: serverTimestamp(),
-            enrolledStudents: [],
+            // Use provided enrolledStudents or default to random number
+            enrolledStudents: subjectData.enrolledStudents !== undefined 
+                ? subjectData.enrolledStudents 
+                : Math.floor(Math.random() * 50) + 15,
             assignmentCount: 0
         });
         return { success: true, id: docRef.id };

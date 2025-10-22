@@ -1,4 +1,4 @@
-.professor-subject-grid-container {
+.subject-grid-container {
     position: relative;
     right: 25px;
     background-color: rgba(255, 255, 255, 0.95);
@@ -10,15 +10,76 @@
     width: 90%;
 }
 
-.loading-message {
+.academic-filters {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: rgba(184, 218, 234, 0.2);
+    border-radius: 10px;
+    border: 1px solid #b8daea;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.filter-group label {
+    font-weight: 600;
+    color: #22657e;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.filter-dropdown {
+    padding: 8px 12px;
+    border: 2px solid #5896B1;
+    border-radius: 8px;
+    background-color: white;
+    color: #22657e;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    min-width: 150px;
+}
+
+.filter-dropdown:hover {
+    border-color: #2f7b9b;
+}
+
+.filter-dropdown:focus {
+    outline: none;
+    border-color: #2f7b9b;
+    box-shadow: 0 0 0 2px rgba(47, 123, 155, 0.2);
+}
+
+.loading-message, .empty-state {
     text-align: center;
     color: #22657e;
-    font-size: 18px;
     padding: 40px;
+}
+
+.loading-message {
+    font-size: 18px;
     font-weight: 500;
 }
 
-.professor-subject-grid {
+.empty-state h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #22657e;
+}
+
+.empty-state p {
+    font-size: 16px;
+    color: #5896B1;
+}
+
+.subject-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 25px;
@@ -28,7 +89,7 @@
     margin-right: auto;
 }
 
-.professor-subject-card {
+.subject-card {
     background: rgba(240, 248, 255, 0.9);
     border-radius: 20px;
     padding: 15px 10px;
@@ -43,7 +104,7 @@
     align-items: center;
 }
 
-.professor-subject-card:hover {
+.subject-card:hover {
     transform: translateY(-7px);
     box-shadow: 0 8px 20px rgba(33, 150, 243, 0.25);
 }
@@ -67,7 +128,7 @@
     transition: transform 0.3s ease;
 }
 
-.professor-subject-card:hover .logo-image {
+.subject-card:hover .logo-image {
     transform: scale(1.05);
 }
 
@@ -76,39 +137,18 @@
     font-size: 16px;
     font-weight: 600;
     margin-top: 5px;
-    margin-bottom: 10px;
 }
 
-.professor-subject-stats {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    align-items: center;
-    margin-top: 8px;
-}
-
-.stat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: rgba(184, 218, 234, 0.3);
-    padding: 8px 12px;
+.subject-semester {
+    background-color: rgba(184, 218, 234, 0.4);
+    color: #2f7b9b;
+    padding: 4px 8px;
     border-radius: 12px;
-    border: 1px solid #b8daea;
-}
-
-.stat-number {
-    font-size: 18px;
-    font-weight: bold;
-    color: #22657e;
-    line-height: 1;
-}
-
-.stat-label {
-    font-size: 11px;
-    color: #5896B1;
-    margin-top: 2px;
+    font-size: 12px;
     font-weight: 500;
+    margin-top: 8px;
+    text-align: center;
+    border: 1px solid #b8daea;
 }
 
 .paginationSubjectGrid {
@@ -148,8 +188,8 @@
 
 .filter-btn {
     position: relative;
-    top: 30px;
-    right: 130px;
+    top: 20px;
+    right: 20px;
     background-color: #3899C2;
     color: white;
     border: none;
@@ -171,12 +211,12 @@
 }
 
 @media (max-width: 768px) {
-    .professor-subject-grid {
+    .subject-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
 
-    .professor-subject-card {
+    .subject-card {
         padding: 20px 15px;
     }
 
@@ -194,23 +234,7 @@
         font-size: 14px;
     }
 
-    .professor-subject-stats {
-        gap: 10px;
-    }
-
-    .stat-item {
-        padding: 6px 8px;
-    }
-
-    .stat-number {
-        font-size: 16px;
-    }
-
-    .stat-label {
-        font-size: 10px;
-    }
-
-    .page1,
+    .page,
     .arrow1 {
         width: auto;
         min-width: 22px;
@@ -227,12 +251,12 @@
 }
 
 @media (max-width: 480px) {
-    .professor-subject-grid {
+    .subject-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
 
-    .professor-subject-card {
+    .subject-card {
         padding: 15px;
     }
 
@@ -245,23 +269,7 @@
         font-size: 13px;
     }
 
-    .professor-subject-stats {
-        gap: 8px;
-    }
-
-    .stat-item {
-        padding: 5px 6px;
-    }
-
-    .stat-number {
-        font-size: 14px;
-    }
-
-    .stat-label {
-        font-size: 9px;
-    }
-
-    .page1,
+    .page,
     .arrow1 {
         min-width: 18px;
         padding: 2px 4px;

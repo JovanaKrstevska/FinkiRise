@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './ProfessorSubjectGrid.css';
-import Button from '../../ui/Button/Button';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getSubjectsByProfessor, clearAndInitializeSampleData } from '../../../services/databaseService';
+import CreateCourseModal from '../../modals/CreateCourseModal/CreateCourseModal';
 
 function ProfessorSubjectGrid() {
     const [currentPage, setCurrentPage] = useState(1);
     const [professorSubjects, setProfessorSubjects] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showCreateModal, setShowCreateModal] = useState(false);
     const { currentUser } = useAuth();
     const itemsPerPage = 6;
 
@@ -29,10 +30,10 @@ function ProfessorSubjectGrid() {
                             try {
                                 const initResult = await clearAndInitializeSampleData(currentUser.uid);
                                 console.log('🔧 Initialize sample data result:', initResult);
-                                
+
                                 const newResult = await getSubjectsByProfessor(currentUser.uid);
                                 console.log('📊 After initialization, subjects:', newResult);
-                                
+
                                 if (newResult.success) {
                                     setProfessorSubjects(newResult.data);
                                     console.log('✅ Set subjects from database:', newResult.data);
@@ -84,6 +85,25 @@ function ProfessorSubjectGrid() {
         loadSubjects();
     }, [currentUser]);
 
+    const handleCourseCreated = () => {
+        // Reload subjects after creating a new course
+        const loadSubjects = async () => {
+            if (currentUser) {
+                setLoading(true);
+                try {
+                    const result = await getSubjectsByProfessor(currentUser.uid);
+                    if (result.success) {
+                        setProfessorSubjects(result.data);
+                    }
+                } catch (error) {
+                    console.error('Error reloading subjects:', error);
+                }
+                setLoading(false);
+            }
+        };
+        loadSubjects();
+    };
+
     const totalPages = Math.ceil(professorSubjects.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const currentSubjects = professorSubjects.slice(startIndex, startIndex + itemsPerPage);
@@ -134,6 +154,18 @@ function ProfessorSubjectGrid() {
 
     return (
         <div className="professor-subject-grid-container">
+            {/* Create Course Section */}
+            <div className="academic-filters">
+                <div className="filter-group">
+                    <button 
+                        className="create-course-btn"
+                        onClick={() => setShowCreateModal(true)}
+                    >
+                        + Креирај курс
+                    </button>
+                </div>
+            </div>
+
             <div className="professor-subject-grid">
                 {currentSubjects.map((subject) => (
                     <div key={subject.id} className="professor-subject-card">
@@ -147,7 +179,7 @@ function ProfessorSubjectGrid() {
                         <div className="subject-name">{subject.name}</div>
                         <div className="professor-subject-stats">
                             <div className="stat-item">
-                                <span className="stat-number">{subject.enrolledStudents?.length || 0}</span>
+                                <span className="stat-number">{subject.enrolledStudents || 0}</span>
                                 <span className="stat-label">студенти</span>
                             </div>
                             <div className="stat-item">
@@ -176,6 +208,12 @@ function ProfessorSubjectGrid() {
                     &#9654;
                 </span>
             </div>
+
+            <CreateCourseModal
+                isOpen={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                onCourseCreated={handleCourseCreated}
+            />
         </div>
     );
 }

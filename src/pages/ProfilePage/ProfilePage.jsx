@@ -1,4 +1,4 @@
-import NavBar from '../../componets/ui/NavBar/NavBar';
+import NavBar from '../../components/ui/NavBar/NavBar';
 import '../ProfilePage/ProfilePage.css';
 
 function ProfilePage(){

@@ -1,6 +1,6 @@
-import NavBar from '../../componets/ui/NavBar/NavBar';
+import NavBar from '../../components/ui/NavBar/NavBar';
 import '../HelpPage/HelpPage.css';
-import HelpLayout from '../../componets/layouts/HelpLayout/HelpLayout';
+import HelpLayout from '../../components/layouts/HelpLayout/HelpLayout';
 
 function HelpPage() {
     return (
