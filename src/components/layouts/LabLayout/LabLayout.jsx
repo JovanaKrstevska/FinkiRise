@@ -27,8 +27,58 @@ function LabLayout() {
             }
 
             if (result.success) {
-                // Take only first 4 subjects for display
-                setSubjects(result.data.slice(0, 4));
+                // Filter to get unique subjects by name, preferring newer academic years
+                const uniqueSubjects = [];
+                const seenNames = new Set();
+
+                // Sort by academic year (newest first) to prefer newer versions
+                const sortedSubjects = result.data.sort((a, b) => {
+                    return b.academicYear.localeCompare(a.academicYear);
+                });
+
+                // Add unique subjects by name (first 4)
+                for (const subject of sortedSubjects) {
+                    if (!seenNames.has(subject.name) && uniqueSubjects.length < 4) {
+                        uniqueSubjects.push(subject);
+                        seenNames.add(subject.name);
+                    }
+                }
+
+                // Add 5th subject - another unique one if available
+                for (const subject of sortedSubjects) {
+                    if (!seenNames.has(subject.name) && uniqueSubjects.length < 5) {
+                        uniqueSubjects.push(subject);
+                        seenNames.add(subject.name);
+                        break;
+                    }
+                }
+
+                // Add 6th subject - same subject but different semester/year
+                for (const subject of sortedSubjects) {
+                    if (uniqueSubjects.length >= 6) break;
+
+                    // Find a subject that has the same name as one we already have but different year/semester
+                    const existingSubject = uniqueSubjects.find(s => s.name === subject.name);
+                    if (existingSubject &&
+                        (existingSubject.academicYear !== subject.academicYear ||
+                            existingSubject.semesterType !== subject.semesterType) &&
+                        !uniqueSubjects.find(s => s.id === subject.id)) {
+                        uniqueSubjects.push(subject);
+                        break;
+                    }
+                }
+
+                // If we still don't have 6, fill with any remaining subjects
+                if (uniqueSubjects.length < 6) {
+                    for (const subject of sortedSubjects) {
+                        if (uniqueSubjects.length >= 6) break;
+                        if (!uniqueSubjects.find(s => s.id === subject.id)) {
+                            uniqueSubjects.push(subject);
+                        }
+                    }
+                }
+
+                setSubjects(uniqueSubjects);
             } else {
                 setError(result.error || 'Failed to fetch subjects');
             }

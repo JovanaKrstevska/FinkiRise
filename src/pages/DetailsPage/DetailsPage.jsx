@@ -56,7 +56,6 @@ function DetailsPage() {
     };
 
     const handleStartLab = () => {
-        console.log('🚀 Starting exam...', labData);
         setExamStarted(true);
     };
 
@@ -204,8 +203,6 @@ function DetailsPage() {
                         <div className="lab-stats">
                             <span className="total-questions">Вкупно број на прашања: {labData.questions.length}</span>
                             <span className="total-points">Вкупно поени: {labData.questions.reduce((sum, q) => sum + q.points, 0)}</span>
-                            <span className="time-limit">Време: {labData.timeLimit} минути</span>
-                            <span className="lab-types">Типови: Избор, Кодирање, Прикачување</span>
                         </div>
 
                         <button className="start-lab-btn" onClick={handleStartLab}>

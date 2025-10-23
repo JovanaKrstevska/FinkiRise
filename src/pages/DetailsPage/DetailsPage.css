@@ -34,8 +34,8 @@
 }
 
 .lab-title {
-    color: #4a90a4;
-    font-size: 28px;
+    color: #015E86;
+    font-size: 30px;
     font-weight: 600;
     margin-bottom: 40px;
     letter-spacing: 0.5px;
@@ -44,18 +44,19 @@
 .lab-description {
     margin-bottom: 40px;
     text-align: left;
+    color: #015E86;
 }
 
 .description-title {
-    color: #4a90a4;
-    font-size: 18px;
+    color: #015E86;
+    font-size: 20px;
     font-weight: 600;
     margin-bottom: 15px;
 }
 
 .description-text {
-    color: #4a90a4;
-    font-size: 16px;
+    color: #015E86;
+    font-size: 19px;
     line-height: 1.6;
     margin: 0;
     text-align: justify;
@@ -66,8 +67,15 @@
     text-align: right;
 }
 
+.time-limit{
+    color: #015E86;
+}
+.total-points{
+    color: #015E86;
+}
+
 .total-questions {
-    color: #4a90a4;
+    color: #015E86;
     font-size: 18px;
     font-weight: 600;
 }
@@ -139,7 +147,9 @@
         padding: 12px 30px;
         font-size: 16px;
     }
-}/* 
+}
+
+/* 
 Exam Results Styles */
 .exam-results {
     background: white;

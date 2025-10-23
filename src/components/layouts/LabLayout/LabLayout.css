@@ -46,12 +46,12 @@
     margin: 0;
     font-size: 18px;
     font-weight: 600;
-    color: #2c5282;
+    color: #015E86;
     letter-spacing: 0.3px;
 }
 
 .lab-card-content {
-    padding: 16px 20px;
+    padding: 10px 20px;
 }
 
 .lab-info {
@@ -67,7 +67,7 @@
 }
 
 .lab-name {
-    color: #4a90a4;
+    color: #015E86;
     font-size: 16px;
     font-weight: 500;
     letter-spacing: 0.2px;
