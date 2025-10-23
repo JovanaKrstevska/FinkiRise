@@ -1,9 +1,11 @@
 import './NavigationPanel.css';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function NavigationPanel() {
     const { userRole } = useAuth();
-    
+    const navigate = useNavigate();
+
     const navigationItems = [
         {
             title: "Туторијали",
@@ -11,9 +13,9 @@ function NavigationPanel() {
             professorAction: () => console.log('Professor: Manage tutorials')
         },
         {
-            title: "Лабораториски", 
-            studentAction: () => console.log('Student: View lab assignments'),
-            professorAction: () => console.log('Professor: Create lab assignments')
+            title: "Лабораториски",
+            studentAction: () => navigate('/lab'),
+            professorAction: () => navigate('/lab')
         },
         {
             title: "Испити",
@@ -29,12 +31,12 @@ function NavigationPanel() {
             item.studentAction();
         }
     };
-    
+
     return (
         <div className="navigation-panel">
             {navigationItems.map((item, index) => (
-                <div 
-                    key={index} 
+                <div
+                    key={index}
                     className="nav-item"
                     onClick={() => handleItemClick(item)}
                 >

@@ -9,6 +9,8 @@ import AboutUsPage from './pages/AboutUsPage/AboutUsPage';
 import HomePage from './pages/HomePage/HomePage';
 import SicPage from './pages/SicPage/SicPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
+import LabPage from './pages/LabPage/LabPage';
+import DetailsPage from './pages/DetailsPage/DetailsPage';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import './utils/setupTestData'; // For development testing
@@ -45,6 +47,16 @@ root.render(
           <Route path='/about_us' element={
             <ProtectedRoute>
               <AboutUsPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/lab' element={
+            <ProtectedRoute>
+              <LabPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/lab/:subjectId' element={
+            <ProtectedRoute>
+              <DetailsPage />
             </ProtectedRoute>
           } />
         </Routes>

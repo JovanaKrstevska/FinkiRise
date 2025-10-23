@@ -1,0 +1,147 @@
+.lab-layout {
+    position: relative;
+    right: 5px;
+    top: 0.5vw;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(90, 160, 185, 0.15);
+    margin: 0 auto 30px auto;
+    border: 3px solid #b1d8ea;
+    width: 90%;
+}
+
+.lab-container {
+    width: 90vw;
+    height: 38vw;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.lab-card {
+    background: white;
+    border: 2px solid #4a90a4;
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lab-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+.lab-card-header {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%);
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.subject-name {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c5282;
+    letter-spacing: 0.3px;
+}
+
+.lab-card-content {
+    padding: 16px 20px;
+}
+
+.lab-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.star-icon {
+    color: #4a90a4;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.lab-name {
+    color: #4a90a4;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .lab-layout {
+        padding: 16px;
+    }
+    
+    .lab-card-header {
+        padding: 12px 16px;
+    }
+    
+    .lab-card-content {
+        padding: 12px 16px;
+    }
+    
+    .subject-name {
+        font-size: 16px;
+    }
+    
+    .lab-name {
+        font-size: 14px;
+    }
+}
+
+/* Animation for loading state */
+.lab-card {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus states for accessibility */
+.lab-card:focus {
+    outline: 2px solid #4a90a4;
+    outline-offset: 2px;
+}
+
+.lab-card:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Loading and error states */
+.loading-message,
+.error-message,
+.no-subjects-message {
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 18px;
+    color: #4a90a4;
+    background: white;
+    border: 2px solid #4a90a4;
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.error-message {
+    color: #d32f2f;
+    border-color: #d32f2f;
+}
+
+.loading-message {
+    color: #666;
+    border-color: #ddd;
+}
