@@ -53,6 +53,8 @@ function LabExam({ labData, onSubmit, onExit }) {
     const currentQ = questions[currentQuestion];
     const progress = ((currentQuestion + 1) / questions.length) * 100;
 
+
+
     // Safety check - if no questions or current question is undefined, show loading
     if (!questions || questions.length === 0 || !currentQ) {
         return (
@@ -79,21 +81,27 @@ function LabExam({ labData, onSubmit, onExit }) {
                         <div className="answers-section">
                             {currentQ.type === 'multiple-choice' && (
                                 <div className="options-list">
-                                    {currentQ.options.map((option, index) => (
-                                        <label key={index} className="option-item">
-                                            <div className="custom-checkbox">
-                                                <input
-                                                    type="radio"
-                                                    name={`question-${currentQ.id}`}
-                                                    value={index}
-                                                    checked={answers[currentQ.id] === index}
-                                                    onChange={() => handleAnswerChange(currentQ.id, index)}
-                                                />
-                                                <span className="checkbox-square"></span>
-                                            </div>
-                                            <span className="option-answer">{option}</span>
-                                        </label>
-                                    ))}
+                                    {currentQ.options && Array.isArray(currentQ.options) ? (
+                                        currentQ.options.map((option, index) => (
+                                            <label key={index} className="option-item">
+                                                <div className="custom-checkbox">
+                                                    <input
+                                                        type="radio"
+                                                        name={`question-${currentQ.id}`}
+                                                        value={index}
+                                                        checked={answers[currentQ.id] === index}
+                                                        onChange={() => handleAnswerChange(currentQ.id, index)}
+                                                    />
+                                                    <span className="checkbox-square"></span>
+                                                </div>
+                                                <span className="option-answer">{option}</span>
+                                            </label>
+                                        ))
+                                    ) : (
+                                        <div className="options-error">
+                                            <p>Опциите не се достапни за ова прашање.</p>
+                                        </div>
+                                    )}
                                 </div>
                             )}
 

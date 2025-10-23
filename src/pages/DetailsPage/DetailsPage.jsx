@@ -150,6 +150,8 @@ function DetailsPage() {
         const currentQ = labData.questions[currentReviewQuestion];
         const userAnswer = examResults.submission.answers[currentQ.id];
 
+
+
         return (
             <div>
                 <NavBar />
@@ -171,28 +173,47 @@ function DetailsPage() {
                                         {currentQ.question}
                                     </div>
 
+
+
                                     <div className="review-answers">
                                         {currentQ.type === 'multiple-choice' && (
                                             <div className="review-options">
-                                                {currentQ.options.map((option, index) => (
-                                                    <div
-                                                        key={index}
-                                                        className={`review-option ${index === currentQ.correctAnswer ? 'correct' : ''
-                                                            } ${index === userAnswer ? 'user-selected' : ''
-                                                            }`}
-                                                    >
-                                                        <div className="review-checkbox">
-                                                            <span className={`checkbox-indicator ${index === userAnswer ? 'selected' : ''
-                                                                }`}>
-                                                                {index === userAnswer ? '✓' : ''}
-                                                            </span>
-                                                        </div>
-                                                        <span className="review-option-text">{option}</span>
-                                                        {index === currentQ.correctAnswer && (
-                                                            <span className="correct-indicator">✓ Точен одговор</span>
-                                                        )}
+                                                {currentQ.options && Array.isArray(currentQ.options) && currentQ.options.length > 0 ? (
+                                                    currentQ.options.map((option, index) => {
+                                                        const isCorrect = index === currentQ.correctAnswer;
+                                                        const isUserSelected = index === userAnswer;
+                                                        const isIncorrect = isUserSelected && !isCorrect;
+
+                                                        return (
+                                                            <div
+                                                                key={index}
+                                                                className={`review-option ${isCorrect ? 'correct' : ''
+                                                                    } ${isUserSelected ? 'user-selected' : ''
+                                                                    } ${isIncorrect ? 'incorrect' : ''
+                                                                    }`}
+                                                            >
+                                                                <div className="review-checkbox">
+                                                                    <span className={`checkbox-indicator ${isUserSelected ? 'selected' : ''
+                                                                        }`}>
+                                                                        {isUserSelected ? '✓' : ''}
+                                                                    </span>
+                                                                </div>
+                                                                <span className="review-option-text">{option}</span>
+                                                                {isCorrect && (
+                                                                    <span className="correct-indicator">✓ Точен одговор</span>
+                                                                )}
+                                                                {isIncorrect && (
+                                                                    <span className="incorrect-indicator">✗ Неточен одговор</span>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })
+                                                ) : (
+                                                    <div className="missing-data-warning">
+                                                        <h4>⚠️ Непотполни податоци за прашањето</h4>
+                                                        <p>Ова прашање нема дефинирани опции за одговор.</p>
                                                     </div>
-                                                ))}
+                                                )}
                                             </div>
                                         )}
 
