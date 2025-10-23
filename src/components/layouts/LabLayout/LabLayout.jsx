@@ -89,7 +89,7 @@ function LabLayout() {
                             <div className="lab-card-content">
                                 <div className="lab-info">
                                     <span className="star-icon">★</span>
-                                    <span className="lab-name">Име на лабораториска вежба</span>
+                                    <span className="lab-name">Лабораториска вежба</span>
                                 </div>
                             </div>
                         </div>

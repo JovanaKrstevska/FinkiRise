@@ -376,3 +376,142 @@ export const initializeSampleData = async (professorId) => {
         return { success: false, error: error.message };
     }
 };
+
+// Lab Management
+export const createLab = async (labData) => {
+    try {
+        const docRef = await addDoc(collection(db, 'labs'), {
+            ...labData,
+            createdAt: serverTimestamp()
+        });
+        return { success: true, id: docRef.id };
+    } catch (error) {
+        console.error('Error creating lab:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const getLabBySubject = async (subjectId) => {
+    try {
+        console.log('🔍 Database: Getting lab for subject:', subjectId);
+        const q = query(
+            collection(db, 'labs'),
+            where('subjectId', '==', subjectId)
+        );
+        const querySnapshot = await getDocs(q);
+        
+        if (querySnapshot.empty) {
+            console.log('📄 Database: No lab found for subject, creating default lab...');
+            // Create a default lab if none exists
+            const defaultLab = await createDefaultLab(subjectId);
+            return defaultLab;
+        }
+
+        let lab = null;
+        querySnapshot.forEach((doc) => {
+            lab = { id: doc.id, ...doc.data() };
+        });
+
+        console.log('✅ Database: Found lab:', lab);
+        return { success: true, data: lab };
+    } catch (error) {
+        console.error('❌ Database: Error getting lab:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const createDefaultLab = async (subjectId) => {
+    try {
+        const defaultLabData = {
+            subjectId,
+            title: "Лабораториска вежба 1",
+            timeLimit: 60, // minutes
+            maxAttempts: 1,
+            questions: [
+                {
+                    id: 1,
+                    type: 'multiple-choice',
+                    question: 'Што е HTML?',
+                    options: [
+                        'Hypertext Markup Language',
+                        'High Tech Modern Language',
+                        'Home Tool Markup Language',
+                        'Hyperlink and Text Markup Language'
+                    ],
+                    correctAnswer: 0,
+                    points: 5
+                },
+                {
+                    id: 2,
+                    type: 'multiple-choice',
+                    question: 'Кој од следниве е валиден CSS селектор?',
+                    options: [
+                        '.class-name',
+                        '#id-name',
+                        'element-name',
+                        'Сите од горните'
+                    ],
+                    correctAnswer: 3,
+                    points: 5
+                },
+                {
+                    id: 3,
+                    type: 'coding',
+                    question: 'Напишете JavaScript функција која ги собира два броја:',
+                    placeholder: 'function addNumbers(a, b) {\n    // Вашиот код овде\n    return a + b;\n}',
+                    points: 10
+                },
+                {
+                    id: 4,
+                    type: 'file-upload',
+                    question: 'Прикачете ја вашата HTML страница за проектот:',
+                    acceptedTypes: '.html,.htm,.zip',
+                    points: 10
+                }
+            ]
+        };
+
+        const result = await createLab(defaultLabData);
+        if (result.success) {
+            return { success: true, data: { id: result.id, ...defaultLabData } };
+        }
+        return result;
+    } catch (error) {
+        console.error('❌ Database: Error creating default lab:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+// Lab Submissions
+export const submitLabExam = async (submissionData) => {
+    try {
+        const docRef = await addDoc(collection(db, 'labSubmissions'), {
+            ...submissionData,
+            submittedAt: serverTimestamp()
+        });
+        return { success: true, id: docRef.id };
+    } catch (error) {
+        console.error('Error submitting lab exam:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const getLabSubmissions = async (studentId, labId) => {
+    try {
+        const q = query(
+            collection(db, 'labSubmissions'),
+            where('studentId', '==', studentId),
+            where('labId', '==', labId),
+            orderBy('submittedAt', 'desc')
+        );
+        const querySnapshot = await getDocs(q);
+        const submissions = [];
+        querySnapshot.forEach((doc) => {
+            submissions.push({ id: doc.id, ...doc.data() });
+        });
+        return { success: true, data: submissions };
+    } catch (error) {
+        console.error('Error getting lab submissions:', error);
+        return { success: false, error: error.message };
+    }
+};
