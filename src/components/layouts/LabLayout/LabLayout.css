@@ -13,7 +13,7 @@
 
 .lab-container {
     width: 90vw;
-    height: 38vw;
+    min-height: 38vw;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -25,9 +25,10 @@
     border: 2px solid #4a90a4;
     border-radius: 12px;
     padding: 0;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: 80px;
 }
 
 .lab-card:hover {
@@ -51,26 +52,39 @@
 }
 
 .lab-card-content {
-    padding: 10px 20px;
+    padding: 5px 20px;
+    display: block !important;
+    width: 100%;
+    min-height: 40px;
+    background: transparent;
 }
 
 .lab-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 30px !important;
 }
 
 .star-icon {
-    color: #4a90a4;
-    font-size: 20px;
-    font-weight: bold;
+    color: #4a90a4 !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    display: inline-block !important;
+    visibility: visible !important;
 }
 
 .lab-name {
-    color: #015E86;
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: 0.2px;
+    color: #015E86 !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2px !important;
+    display: inline-block !important;
+    visibility: visible !important;
 }
 
 /* Responsive design */
@@ -144,4 +158,748 @@
 .loading-message {
     color: #666;
     border-color: #ddd;
+}/*
+ Professor View Styles */
+.lab-container.professor-view {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: auto;
+}
+
+.professor-subject-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Subject Header Card */
+.subject-header-card {
+    background: white;
+    border: 3px solid #4a90a4;
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.1);
+}
+
+.subject-info {
+    flex: 1;
+}
+
+.subject-title {
+    color: #4a90a4;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.subject-subtitle {
+    color: #4a90a4;
+    font-size: 16px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-edit-subject {
+    background-color: #4a90a4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-edit-subject:hover {
+    background-color: #3a7a8a;
+    transform: translateY(-1px);
+}
+
+/* Lab Text Section */
+.lab-text-section {
+    background: white;
+    border: 3px solid #4a90a4;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.1);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.section-title {
+    color: #4a90a4;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.btn-save-text {
+    background-color: #4a90a4;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-save-text:hover {
+    background-color: #3a7a8a;
+    transform: translateY(-1px);
+}
+
+.lab-text-tag {
+    background-color: #4a90a4;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+/* Profess
+or Lab Section */
+.professor-lab-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #e0e0e0;
+}
+
+/* Create New Section */
+.create-new-section {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.create-new-btn {
+    background: white;
+    border: 3px dashed #4a90a4;
+    border-radius: 15px;
+    padding: 40px 60px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #4a90a4;
+    font-size: 18px;
+    font-weight: 600;
+    min-width: 300px;
+}
+
+.create-new-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #3a7a8a;
+    color: #3a7a8a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.2);
+}
+
+.plus-icon {
+    font-size: 32px;
+    font-weight: 300;
+}
+
+/* Create Options Section */
+.create-options-section {
+    background: white;
+    border: 2px solid #4a90a4;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.1);
+}
+
+.create-options-title {
+    color: #4a90a4;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.create-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.create-lab-option {
+    background: linear-gradient(135deg, #4a90a4 0%, #5ba0b4 100%);
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.create-lab-option:hover {
+    background: linear-gradient(135deg, #3a7a8a 0%, #4a8a9a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.3);
+}
+
+.cancel-create-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+.cancel-create-btn:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+}
+
+/* Responsive Design for Professor Section */
+@media (max-width: 768px) {
+    .create-new-btn {
+        min-width: 250px;
+        padding: 30px 40px;
+        font-size: 16px;
+    }
+
+    .create-options-section {
+        padding: 20px;
+    }
+
+    .create-options-title {
+        font-size: 18px;
+    }
+
+    .create-lab-option {
+        font-size: 14px;
+        padding: 12px 20px;
+    }
+}/*
+ New Professor Cards Layout */
+.professor-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Professor Subject Card */
+.professor-subject-card {
+    background: white;
+    border: 3px solid #4a90a4;
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.1);
+}
+
+.professor-card-content {
+    flex: 1;
+}
+
+.professor-subject-title {
+    color: #4a90a4;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+}
+
+.professor-lab-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.professor-lab-name {
+    color: #4a90a4;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.professor-edit-btn {
+    background-color: #4a90a4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.professor-edit-btn:hover {
+    background-color: #3a7a8a;
+    transform: translateY(-1px);
+}
+
+/* Professor Text Card */
+.professor-text-card {
+    background: white;
+    border: 3px solid #4a90a4;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.1);
+}
+
+.professor-text-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.professor-text-title {
+    color: #4a90a4;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.professor-save-btn {
+    background-color: #4a90a4;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.professor-save-btn:hover {
+    background-color: #3a7a8a;
+    transform: translateY(-1px);
+}
+
+.professor-text-content {
+    margin-top: 15px;
+}
+
+.professor-text-tag {
+    background-color: #4a90a4;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.professor-text-tag:hover {
+    background-color: #3a7a8a;
+    transform: translateY(-1px);
+}
+
+/* Professor Create Card */
+.professor-create-card {
+    background: white;
+    border: 3px dashed #4a90a4;
+    border-radius: 15px;
+    padding: 0;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.1);
+}
+
+.professor-create-btn {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 40px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #4a90a4;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.professor-create-btn:hover {
+    background-color: rgba(74, 144, 164, 0.05);
+    color: #3a7a8a;
+}
+
+.professor-plus-icon {
+    font-size: 32px;
+    font-weight: 300;
+}
+
+.professor-create-text {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Responsive Design for New Professor View */
+@media (max-width: 768px) {
+    .professor-subject-card {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .professor-text-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .professor-subject-title {
+        font-size: 20px;
+    }
+
+    .professor-text-title {
+        font-size: 18px;
+    }
+
+    .professor-create-btn {
+        padding: 30px 20px;
+    }
+
+    .professor-plus-icon {
+        font-size: 28px;
+    }
+
+    .professor-create-text {
+        font-size: 16px;
+    }
+}
+.lab-link {
+    cursor: pointer;
+    text-decoration: underline;
+    transition: all 0.3s ease;
+}
+
+.lab-link:hover {
+    color: #3a7a8a;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.lab-link:active {
+    transform: translateY(0);
+}
+
+/* Remove hover effect from lab card when lab name is clickable */
+.lab-card:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: default;
+}
+
+/* Add subtle hover effect to the card itself */
+.lab-card {
+    transition: box-shadow 0.2s ease;
+}
+
+.lab-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}/* Pro
+fessor elements integrated with student cards */
+.lab-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.professor-edit-btn-small {
+    background-color: #4a90a4;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.professor-edit-btn-small:hover {
+    background-color: #3a7a8a;
+    transform: translateY(-1px);
+}
+
+.create-lab-link {
+    color: #4a90a4;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 8px;
+    text-decoration: underline;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.create-lab-link:hover {
+    color: #3a7a8a;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+/* Professor create section */
+.professor-create-section {
+    margin-top: 5px;
+}
+
+.professor-create-card-simple {
+    background: white;
+    border: 2px dashed #4a90a4;
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.professor-create-card-simple:hover {
+    border-color: #3a7a8a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.professor-create-btn-simple {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 30px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #4a90a4;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.professor-create-btn-simple:hover {
+    background-color: rgba(74, 144, 164, 0.05);
+    color: #3a7a8a;
+}
+
+.professor-plus-icon-simple {
+    font-size: 24px;
+    font-weight: 300;
+}
+
+.professor-create-text-simple {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Responsive design for integrated professor elements */
+@media (max-width: 768px) {
+    .lab-card-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .professor-edit-btn-small {
+        align-self: flex-end;
+    }
+
+    .create-lab-link {
+        display: block;
+        margin-left: 0;
+        margin-top: 5px;
+        font-size: 13px;
+    }
+
+    .professor-create-btn-simple {
+        padding: 25px 15px;
+    }
+
+    .professor-plus-icon-simple {
+        font-size: 20px;
+    }
+
+    .professor-create-text-simple {
+        font-size: 14px;
+    }
+}/* La
+b Link Styles - Fix for visibility */
+.lab-link {
+    cursor: pointer;
+    text-decoration: underline;
+    transition: all 0.3s ease;
+    display: inline-block;
+    flex-shrink: 0;
+    color: #015E86;
+}
+
+.lab-link:hover {
+    color: #3a7a8a;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.lab-link:active {
+    transform: translateY(0);
+}
+
+/* Ensure lab-info content is properly displayed */
+.lab-info {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+.lab-name {
+    color: #015E86 !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2px !important;
+}
+
+/* Fix for professor view lab info */
+.lab-card .lab-info .lab-name.lab-link {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+/* CRITIC
+AL FIX - Force visibility of lab content */
+.lab-card .lab-card-content {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+.lab-card .lab-card-content .lab-info {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+}
+
+.lab-card .lab-card-content .lab-info .star-icon,
+.lab-card .lab-card-content .lab-info .lab-name {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}/* P
+rofessor Lab Content */
+.professor-lab-content {
+    width: 100%;
+}
+
+.existing-labs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lab-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #f0f8ff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.lab-item:hover {
+    background: #e8f4f8;
+    border-color: #4a90a4;
+}
+
+.lab-item .lab-name {
+    color: #015E86;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.lab-item .lab-name:hover {
+    color: #3a7a8a;
+    text-decoration: underline;
+}
+
+.lab-meta {
+    color: #666;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.no-labs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    padding: 15px;
+}
+
+.no-labs-text {
+    color: #666;
+    font-style: italic;
+    font-size: 14px;
+}
+
+.create-lab-link {
+    color: #4a90a4;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: underline;
+    transition: all 0.3s ease;
+    margin-top: 8px;
+    display: inline-block;
+}
+
+.create-lab-link:hover {
+    color: #3a7a8a;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+/* Responsive design for professor lab content */
+@media (max-width: 768px) {
+    .lab-item {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+    }
+    
+    .lab-meta {
+        font-size: 11px;
+    }
+    
+    .create-lab-link {
+        font-size: 13px;
+    }
 }

@@ -482,6 +482,28 @@ export const createDefaultLab = async (subjectId) => {
     }
 };
 
+export const getLabsByProfessor = async (professorId) => {
+    try {
+        console.log('🔍 Database: Getting labs for professor:', professorId);
+        const q = query(
+            collection(db, 'labs'),
+            where('professorId', '==', professorId)
+        );
+        const querySnapshot = await getDocs(q);
+        const labs = [];
+        querySnapshot.forEach((doc) => {
+            labs.push({ id: doc.id, ...doc.data() });
+        });
+        console.log('✅ Database: Found labs:', labs.length);
+        return { success: true, data: labs };
+    } catch (error) {
+        console.error('❌ Database: Error getting labs by professor:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+
+
 // Lab Submissions
 export const submitLabExam = async (submissionData) => {
     try {

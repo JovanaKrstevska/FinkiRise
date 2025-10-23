@@ -13,7 +13,7 @@ function LabLayout() {
 
     useEffect(() => {
         fetchSubjects();
-    }, [currentUser, userRole]);
+    }, []);
 
     const fetchSubjects = async () => {
         try {
@@ -118,32 +118,47 @@ function LabLayout() {
         );
     }
 
-
     return (
         <div className="lab-layout">
             <div className="lab-container">
                 {subjects.length === 0 ? (
                     <div className="no-subjects-message">
-                        No subjects available for lab exercises.
+                        {userRole === 'professor'
+                            ? 'No subjects available. Please create subjects first.'
+                            : 'No subjects available for lab exercises.'
+                        }
                     </div>
                 ) : (
-                    subjects.map((subject) => (
-                        <div
-                            key={subject.id}
-                            className="lab-card"
-                            onClick={() => handleLabClick(subject)}
-                        >
-                            <div className="lab-card-header">
-                                <h3 className="subject-name">{formatSubjectName(subject)}</h3>
-                            </div>
-                            <div className="lab-card-content">
-                                <div className="lab-info">
-                                    <span className="star-icon">★</span>
-                                    <span className="lab-name">Лабораториска вежба</span>
+                    <>
+                        {subjects.map((subject) => (
+                            <div
+                                key={subject.id}
+                                className="lab-card"
+                                onClick={() => handleLabClick(subject)}
+                            >
+                                <div className="lab-card-header">
+                                    <h3 className="subject-name">{formatSubjectName(subject)}</h3>
+                                </div>
+                                <div className="lab-card-content">
+                                    <div className="lab-info">
+                                        <span className="star-icon">★</span>
+                                        <span className="lab-name">Лабораториска вежба</span>
+                                        {userRole === 'professor' && (
+                                            <span
+                                                className="create-lab-link"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    navigate(`/professor/labs/create/${subject.id}`);
+                                                }}
+                                            >
+                                                + Креирај нова
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))
+                        ))}
+                    </>
                 )}
             </div>
         </div>

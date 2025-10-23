@@ -11,6 +11,7 @@ import SicPage from './pages/SicPage/SicPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import LabPage from './pages/LabPage/LabPage';
 import DetailsPage from './pages/DetailsPage/DetailsPage';
+import CreateLabPage from './pages/CreateLabPage/CreateLabPage';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import './utils/setupTestData'; // For development testing
@@ -57,6 +58,11 @@ root.render(
           <Route path='/lab/:subjectId' element={
             <ProtectedRoute>
               <DetailsPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/professor/labs/create/:subjectId' element={
+            <ProtectedRoute>
+              <CreateLabPage />
             </ProtectedRoute>
           } />
         </Routes>
