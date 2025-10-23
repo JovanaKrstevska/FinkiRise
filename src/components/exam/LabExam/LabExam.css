@@ -248,9 +248,9 @@
 }
 
 .question-nav-btn.answered {
-    background-color: #28a745;
+    background-color: #296374;
     color: white;
-    border-color: #28a745;
+    border-color: #296374;
 }
 
 .question-nav-btn.answered.active {
@@ -266,7 +266,7 @@
 
 .submit-exam-btn {
     width: 100%;
-    background-color: #dc3545;
+    background-color: #4a90a4;
     color: white;
     border: none;
     padding: 15px;
@@ -278,7 +278,7 @@
 }
 
 .submit-exam-btn:hover {
-    background-color: #c82333;
+    background-color: #296374;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
 }

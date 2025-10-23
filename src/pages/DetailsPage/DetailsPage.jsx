@@ -17,6 +17,8 @@ function DetailsPage() {
     const [examStarted, setExamStarted] = useState(false);
     const [examCompleted, setExamCompleted] = useState(false);
     const [examResults, setExamResults] = useState(null);
+    const [reviewMode, setReviewMode] = useState(false);
+    const [currentReviewQuestion, setCurrentReviewQuestion] = useState(0);
 
     useEffect(() => {
         fetchLabData();
@@ -143,6 +145,97 @@ function DetailsPage() {
         );
     }
 
+    // Show review mode
+    if (reviewMode && examResults && labData) {
+        const currentQ = labData.questions[currentReviewQuestion];
+        const userAnswer = examResults.submission.answers[currentQ.id];
+
+        return (
+            <div>
+                <NavBar />
+                <div className="lab-details-page">
+                    <div className="review-layout">
+                        <div className="review-header">
+                            <button className="back-to-results-btn" onClick={() => setReviewMode(false)}>
+                                ← Назад
+                            </button>
+                            <h2>Преглед на одговори</h2>
+                        </div>
+
+                        <div className="review-content">
+                            <div className="review-question-section">
+                                <div className="review-question-card">
+                                    <h3 className="review-question-title">Прашање {currentReviewQuestion + 1}:</h3>
+
+                                    <div className="review-question-text">
+                                        {currentQ.question}
+                                    </div>
+
+                                    <div className="review-answers">
+                                        {currentQ.type === 'multiple-choice' && (
+                                            <div className="review-options">
+                                                {currentQ.options.map((option, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className={`review-option ${index === currentQ.correctAnswer ? 'correct' : ''
+                                                            } ${index === userAnswer ? 'user-selected' : ''
+                                                            }`}
+                                                    >
+                                                        <div className="review-checkbox">
+                                                            <span className={`checkbox-indicator ${index === userAnswer ? 'selected' : ''
+                                                                }`}>
+                                                                {index === userAnswer ? '✓' : ''}
+                                                            </span>
+                                                        </div>
+                                                        <span className="review-option-text">{option}</span>
+                                                        {index === currentQ.correctAnswer && (
+                                                            <span className="correct-indicator">✓ Точен одговор</span>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {currentQ.type === 'coding' && (
+                                            <div className="review-code">
+                                                <h4>Вашиот код:</h4>
+                                                <pre className="code-display">{userAnswer || 'Нема одговор'}</pre>
+                                            </div>
+                                        )}
+
+                                        {currentQ.type === 'file-upload' && (
+                                            <div className="review-file">
+                                                <h4>Прикачен фајл:</h4>
+                                                <div className="file-display">
+                                                    {userAnswer ? userAnswer.name : 'Нема прикачен фајл'}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="review-navigation-section">
+                                <div className="review-navigation-card">
+                                    {labData.questions.map((question, index) => (
+                                        <button
+                                            key={index}
+                                            className={`review-nav-btn ${question.type} ${index === currentReviewQuestion ? 'active' : ''
+                                                }`}
+                                            onClick={() => setCurrentReviewQuestion(index)}
+                                        >
+                                            Прашање {index + 1}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     // Show exam results
     if (examCompleted && examResults) {
         return (
@@ -151,22 +244,23 @@ function DetailsPage() {
                 <div className="lab-details-page">
                     <div className="lab-details-container">
                         <div className="exam-results">
-                            <h1 className="results-title">Резултати од испитот</h1>
-                            <div className="score-display">
-                                <div className="score-circle">
-                                    <span className="score-number">{examResults.score}</span>
-                                    <span className="score-total">/ 100</span>
+                            <div className="results-card">
+                                <h1 className="results-title">Стигнавте до крајот на лабораториската!</h1>
+
+                                <div className="results-message">
+                                    <p>Резултатите од лабораториската по предметот <strong>"{subject?.name || 'Предмет'}"</strong> ќе бидат објавени од страна на професорите. Дотолку сакате да си ги видите решенијата притеснете на копчето <strong>Преглед</strong>.</p>
                                 </div>
                             </div>
-                            <div className="results-details">
-                                <p>Вашиот резултат: <strong>{examResults.score} од {examResults.totalPoints} поени</strong></p>
-                                <p>Процент: <strong>{Math.round((examResults.score / examResults.totalPoints) * 100)}%</strong></p>
-                                <p>Статус: <strong>{examResults.score >= (examResults.totalPoints * 0.6) ? 'Положено' : 'Не положено'}</strong></p>
-                            </div>
+
                             <div className="results-actions">
                                 <Button
-                                    className="btn-back-to-labs"
-                                    content={"Назад кон лабораториски"}
+                                    className="btn-preview"
+                                    content={"Преглед"}
+                                    onClick={() => setReviewMode(true)}
+                                />
+                                <Button
+                                    className="btn-exit"
+                                    content={"Излез"}
                                     onClick={handleBackToLab}
                                 />
                             </div>
