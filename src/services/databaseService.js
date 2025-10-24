@@ -420,6 +420,27 @@ export const getLabBySubject = async (subjectId) => {
     }
 };
 
+// Get lab by its specific ID (no creation)
+export const getLabById = async (labId) => {
+    try {
+        console.log('🔍 Database: Getting lab by ID:', labId);
+        const docRef = doc(db, 'labs', labId);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            const lab = { id: docSnap.id, ...docSnap.data() };
+            console.log('✅ Database: Found lab by ID:', lab);
+            return { success: true, data: lab };
+        } else {
+            console.log('❌ Database: No lab found with ID:', labId);
+            return { success: false, error: 'Lab not found' };
+        }
+    } catch (error) {
+        console.error('❌ Database: Error getting lab by ID:', error);
+        return { success: false, error: error.message };
+    }
+};
+
 export const createDefaultLab = async (subjectId) => {
     try {
         const defaultLabData = {

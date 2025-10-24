@@ -4,11 +4,11 @@ import NavBar from '../../components/ui/NavBar/NavBar';
 import './DetailsPage.css';
 import Button from '../../components/ui/Button/Button';
 import LabExam from '../../components/exam/LabExam/LabExam';
-import { getLabBySubject, submitLabExam } from '../../services/databaseService';
+import { getLabById, submitLabExam } from '../../services/databaseService';
 import { useAuth } from '../../contexts/AuthContext';
 
 function DetailsPage() {
-    const { subjectId } = useParams();
+    const { labId } = useParams();
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     const [subject, setSubject] = useState(null);
@@ -22,14 +22,14 @@ function DetailsPage() {
 
     useEffect(() => {
         fetchLabData();
-    }, [subjectId]);
+    }, [labId]);
 
     const fetchLabData = async () => {
         try {
             setLoading(true);
 
             // Fetch lab data from Firebase
-            const labResult = await getLabBySubject(subjectId);
+            const labResult = await getLabById(labId);
 
             if (labResult.success) {
                 setLabData(labResult.data);
@@ -87,7 +87,7 @@ function DetailsPage() {
             const submissionData = {
                 studentId: currentUser.uid,
                 labId: labData.id,
-                subjectId: subjectId,
+                subjectId: labData.subjectId,
                 answers: submission.answers,
                 score: score,
                 totalPoints: labData.questions.reduce((sum, q) => sum + q.points, 0),
