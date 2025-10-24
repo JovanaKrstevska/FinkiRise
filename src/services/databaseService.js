@@ -558,3 +558,187 @@ export const getLabSubmissions = async (studentId, labId) => {
         return { success: false, error: error.message };
     }
 };
+
+// Tutorial Management
+export const createTutorial = async (tutorialData) => {
+    try {
+        const docRef = await addDoc(collection(db, 'tutorials'), {
+            ...tutorialData,
+            createdAt: serverTimestamp()
+        });
+        return { success: true, id: docRef.id };
+    } catch (error) {
+        console.error('Error creating tutorial:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const getAllTutorials = async () => {
+    try {
+        console.log('🔍 Database: Getting all tutorials...');
+        const querySnapshot = await getDocs(collection(db, 'tutorials'));
+        const tutorials = [];
+        querySnapshot.forEach((doc) => {
+            tutorials.push({ id: doc.id, ...doc.data() });
+        });
+        console.log('✅ Database: Found tutorials:', tutorials.length);
+        return { success: true, data: tutorials };
+    } catch (error) {
+        console.error('❌ Database: Error getting tutorials:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const getTutorialsByUser = async (userId) => {
+    try {
+        console.log('🔍 Database: Getting tutorials for user:', userId);
+        const q = query(
+            collection(db, 'tutorials'),
+            where('createdBy', '==', userId)
+        );
+        const querySnapshot = await getDocs(q);
+        const tutorials = [];
+        querySnapshot.forEach((doc) => {
+            tutorials.push({ id: doc.id, ...doc.data() });
+        });
+        console.log('✅ Database: Found user tutorials:', tutorials.length);
+        return { success: true, data: tutorials };
+    } catch (error) {
+        console.error('❌ Database: Error getting user tutorials:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+// Initialize sample YouTube tutorials
+export const initializeSampleTutorials = async () => {
+    try {
+        console.log('🎥 Database: Initializing sample YouTube tutorials...');
+        
+        const sampleTutorials = [
+            {
+                title: "JavaScript за почетници",
+                description: "Научете ги основите на JavaScript програмирањето",
+                youtubeUrl: "https://www.youtube.com/watch?v=PkZNo7MFNFg",
+                thumbnail: "https://img.youtube.com/vi/PkZNo7MFNFg/maxresdefault.jpg",
+                category: "Programming",
+                duration: "3:45:30",
+                isPublic: true
+            },
+            {
+                title: "React Tutorial за почетници",
+                description: "Комплетен React курс за почетници",
+                youtubeUrl: "https://www.youtube.com/watch?v=Ke90Tje7VS0",
+                thumbnail: "https://img.youtube.com/vi/Ke90Tje7VS0/maxresdefault.jpg",
+                category: "Web Development",
+                duration: "11:55:23",
+                isPublic: true
+            },
+            {
+                title: "Python за почетници",
+                description: "Научете Python програмирање од нула",
+                youtubeUrl: "https://www.youtube.com/watch?v=rfscVS0vtbw",
+                thumbnail: "https://img.youtube.com/vi/rfscVS0vtbw/maxresdefault.jpg",
+                category: "Programming",
+                duration: "4:26:52",
+                isPublic: true
+            },
+            {
+                title: "HTML & CSS Tutorial",
+                description: "Создавајте убави веб страници со HTML и CSS",
+                youtubeUrl: "https://www.youtube.com/watch?v=mU6anWqZJcc",
+                thumbnail: "https://img.youtube.com/vi/mU6anWqZJcc/maxresdefault.jpg",
+                category: "Web Development",
+                duration: "2:04:41",
+                isPublic: true
+            },
+            {
+                title: "Node.js Tutorial",
+                description: "Backend развој со Node.js",
+                youtubeUrl: "https://www.youtube.com/watch?v=TlB_eWDSMt4",
+                thumbnail: "https://img.youtube.com/vi/TlB_eWDSMt4/maxresdefault.jpg",
+                category: "Backend",
+                duration: "3:26:15",
+                isPublic: true
+            },
+            {
+                title: "Database Design Tutorial",
+                description: "Научете како да дизајнирате бази на податоци",
+                youtubeUrl: "https://www.youtube.com/watch?v=ztHopE5Wnpc",
+                thumbnail: "https://img.youtube.com/vi/ztHopE5Wnpc/maxresdefault.jpg",
+                category: "Database",
+                duration: "1:16:44",
+                isPublic: true
+            },
+            {
+                title: "Git & GitHub Tutorial",
+                description: "Version control со Git и GitHub",
+                youtubeUrl: "https://www.youtube.com/watch?v=RGOj5yH7evk",
+                thumbnail: "https://img.youtube.com/vi/RGOj5yH7evk/maxresdefault.jpg",
+                category: "Tools",
+                duration: "1:08:13",
+                isPublic: true
+            },
+            {
+                title: "Machine Learning Basics",
+                description: "Вовед во машинското учење",
+                youtubeUrl: "https://www.youtube.com/watch?v=ukzFI9rgwfU",
+                thumbnail: "https://img.youtube.com/vi/ukzFI9rgwfU/maxresdefault.jpg",
+                category: "AI/ML",
+                duration: "2:25:17",
+                isPublic: true
+            },
+            {
+                title: "Mobile App Development",
+                description: "Создавајте мобилни апликации",
+                youtubeUrl: "https://www.youtube.com/watch?v=0-S5a0eXPoc",
+                thumbnail: "https://img.youtube.com/vi/0-S5a0eXPoc/maxresdefault.jpg",
+                category: "Mobile",
+                duration: "4:41:54",
+                isPublic: true
+            },
+            {
+                title: "Cybersecurity Fundamentals",
+                description: "Основи на кибер безбедноста",
+                youtubeUrl: "https://www.youtube.com/watch?v=U_P23SqJaDc",
+                thumbnail: "https://img.youtube.com/vi/U_P23SqJaDc/maxresdefault.jpg",
+                category: "Security",
+                duration: "2:12:33",
+                isPublic: true
+            },
+            {
+                title: "UI/UX Design Principles",
+                description: "Дизајн принципи за корисничко искуство",
+                youtubeUrl: "https://www.youtube.com/watch?v=c9Wg6Cb_YlU",
+                thumbnail: "https://img.youtube.com/vi/c9Wg6Cb_YlU/maxresdefault.jpg",
+                category: "Design",
+                duration: "1:45:22",
+                isPublic: true
+            },
+            {
+                title: "Docker Tutorial",
+                description: "Контејнеризација со Docker",
+                youtubeUrl: "https://www.youtube.com/watch?v=3c-iBn73dDE",
+                thumbnail: "https://img.youtube.com/vi/3c-iBn73dDE/maxresdefault.jpg",
+                category: "DevOps",
+                duration: "2:10:45",
+                isPublic: true
+            }
+        ];
+
+        console.log('📝 Database: Creating tutorials:', sampleTutorials.length);
+        for (const tutorial of sampleTutorials) {
+            const result = await createTutorial(tutorial);
+            if (result.success) {
+                console.log('✅ Database: Tutorial created:', tutorial.title);
+            } else {
+                console.error('❌ Database: Failed to create tutorial:', tutorial.title);
+            }
+        }
+
+        console.log('🎉 Database: Sample tutorials initialization complete');
+        return { success: true };
+    } catch (error) {
+        console.error('❌ Database: Error initializing sample tutorials:', error);
+        return { success: false, error: error.message };
+    }
+};

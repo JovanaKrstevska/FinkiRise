@@ -1,0 +1,282 @@
+.tutorial-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.tutorial-modal {
+    background-color: #E8F4F8;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.tutorial-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 30px;
+    border-bottom: 1px solid rgba(1, 94, 134, 0.1);
+}
+
+.tutorial-modal-title {
+    color: #015E86;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    position: relative;
+    left: 70px;
+}
+
+.tutorial-modal-save {
+    background-color: #015E86;
+    color: #ffffff;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tutorial-modal-save:hover {
+    background-color: #8CC8D8;
+    transform: translateY(-1px);
+}
+
+.tutorial-modal-content {
+    padding: 30px;
+}
+
+
+.tutorial-form-input {
+    width: 90%;
+    height: 2vw;
+    padding: 12px 16px;
+    border: 2px solid #A8D5E2;
+    border-radius: 10px;
+    font-size: 14px;
+    background-color: white;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+    position: absolute;
+    top: -25px;
+    left: -10px;
+}
+
+.tutorial-form-input:focus {
+    outline: none;
+    border-color: #015E86;
+}
+
+.tutorial-form-input::placeholder {
+    color:#666;
+    font-size: 15px;
+}
+
+.tutorial-form-section{
+    position: relative;
+    top: -20px;
+    left: -2vw;
+    padding: 10px;
+}
+
+.tutorial-content-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.tutorial-upload-section {
+    display: flex;
+    flex-direction: column;
+    /* border: 1px solid black; */
+    position: relative;
+    bottom: 2.5vw;
+    left: -0.5vw;
+}
+.tutorial-form-label-upload{
+    position: relative;
+    top: 5px;
+    left: 0.5vw;
+}
+
+.tutorial-upload-area {
+    border: 2px dashed #A8D5E2;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: white;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tutorial-upload-area:hover,
+.tutorial-upload-area.drag-active {
+    border-color: #015E86;
+    background-color: #f8fbfc;
+}
+
+.tutorial-upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.tutorial-upload-icon {
+    font-size: 48px;
+    color: #A8D5E2;
+}
+
+.tutorial-upload-text {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.tutorial-thumbnail-preview {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.tutorial-preview-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.tutorial-video-preview,
+.tutorial-video-placeholder {
+    background-color: #ddd;
+    border-radius: 15px;
+    aspect-ratio: 16/9;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    left: -0.5vw;
+    top: 0.7vw;
+}
+
+.tutorial-video-iframe {
+    width: 100%;
+    flex: 1;
+    border: none;
+    border-radius: 15px 15px 0 0;
+}
+
+.tutorial-video-placeholder {
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+}
+
+.tutorial-play-icon {
+    font-size: 48px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.tutorial-video-controls {
+    background-color: white;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tutorial-video-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: #666;
+}
+
+.tutorial-progress-bar {
+    flex: 1;
+    height: 4px;
+    background-color: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.tutorial-progress-fill {
+    width: 30%;
+    height: 100%;
+    background-color: #015E86;
+    border-radius: 2px;
+}
+
+.tutorial-video-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.tutorial-control-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.tutorial-control-btn:hover {
+    background-color: #f0f0f0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .tutorial-modal {
+        width: 95%;
+        margin: 20px;
+    }
+
+    .tutorial-modal-header {
+        padding: 15px 20px;
+    }
+
+    .tutorial-modal-title {
+        font-size: 20px;
+    }
+
+    .tutorial-modal-content {
+        padding: 20px;
+    }
+
+    .tutorial-content-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .tutorial-upload-area {
+        min-height: 150px;
+        padding: 20px;
+    }
+
+    .tutorial-upload-icon {
+        font-size: 36px;
+    }
+}

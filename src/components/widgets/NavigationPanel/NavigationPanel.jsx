@@ -9,8 +9,8 @@ function NavigationPanel() {
     const navigationItems = [
         {
             title: "Туторијали",
-            studentAction: () => console.log('Student: View tutorials'),
-            professorAction: () => console.log('Professor: Manage tutorials')
+            studentAction: () => navigate('/tutorial'),
+            professorAction: () => navigate('/tutorial')
         },
         {
             title: "Лабораториски",

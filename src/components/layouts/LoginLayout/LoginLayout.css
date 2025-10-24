@@ -95,12 +95,12 @@
     height: 3.5vw;
 }
 
-.error-message {
+.error-message1 {
     position: absolute;
-    top: 20%;
+    top: 25%;
     left: 10%;
     right: 10%;
-    background-color: rgba(220, 53, 69, 0.1);
+    background-color: rgba(227, 117, 128, 0.1);
     color: #dc3545;
     padding: 10px;
     border-radius: 8px;

@@ -16,6 +16,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import './utils/setupTestData'; // For development testing
 import './utils/resetDatabase'; // For database reset
+import TutorialPage from './pages/TutorialPage/TutorialPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -48,6 +49,11 @@ root.render(
           <Route path='/about_us' element={
             <ProtectedRoute>
               <AboutUsPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/tutorial' element={
+            <ProtectedRoute>
+              <TutorialPage />
             </ProtectedRoute>
           } />
           <Route path='/lab' element={

@@ -32,6 +32,7 @@
     color: #22657e;
     font-size: 16px;
     white-space: nowrap;
+    padding-right: 8px;
 }
 
 .filter-dropdown {

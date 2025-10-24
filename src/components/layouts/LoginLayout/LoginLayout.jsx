@@ -48,7 +48,7 @@ function LoginLayout() {
             <div className='board'>
                 <form className='formLogin' onSubmit={handleLogin}>
                     <h1 className='h1Edit'>Добредојде</h1>
-                    {error && <div className="error-message">{error}</div>}
+                    {error && <div className="error-message1">{error}</div>}
                     <Input 
                         typename={"email"} 
                         labelname={"Електронска пошта/Индекс"} 
