@@ -1,0 +1,639 @@
+/* Profile Layout Component Styles */
+.profile-layout {
+    width: 100%;
+    padding: 20px;
+}
+
+/* Professor Layout */
+.professor-layout-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.professor-left-column,
+.professor-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Professor Calendar Widget */
+.professor-calendar-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.professor-widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.professor-widget-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.professor-add-btn {
+    background: #4A90E2;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.professor-calendar-grid {
+    width: 100%;
+}
+
+.professor-calendar-header {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+    margin-bottom: 5px;
+}
+
+.professor-calendar-header span {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    padding: 5px 2px;
+}
+
+.professor-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+}
+
+.professor-calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    background: #f8f9fa;
+    transition: background-color 0.2s ease;
+}
+
+.professor-calendar-day:hover {
+    background: #e9ecef;
+}
+
+.professor-calendar-day.office-hours {
+    background: #E8F4FD;
+    color: #4A90E2;
+    font-weight: 600;
+}
+
+.professor-calendar-day.grades-due {
+    background: #D4F6D4;
+    color: #28A745;
+    font-weight: 600;
+}
+
+.professor-event-label {
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+/* Professor Schedule Widget */
+.professor-schedule-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.professor-schedule-widget h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.professor-schedule-table {
+    width: 100%;
+}
+
+.professor-schedule-header {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 10px;
+}
+
+.professor-schedule-header span {
+    font-weight: 600;
+    color: #666;
+    font-size: 12px;
+}
+
+.professor-schedule-row {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.professor-schedule-row span {
+    font-size: 12px;
+    color: #333;
+}
+
+.professor-schedule-row:last-child {
+    border-bottom: none;
+}
+
+/* Professor Profile Widget */
+.professor-profile-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.professor-avatar-container {
+    margin-bottom: 15px;
+}
+
+.professor-avatar-circle {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.professor-avatar-circle:hover {
+    transform: scale(1.05);
+}
+
+.professor-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    border: 3px solid #4A90E2;
+}
+
+.professor-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #4A90E2;
+}
+
+.professor-name {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #4A90E2;
+}
+
+.professor-details {
+    text-align: left;
+}
+
+.professor-details p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.professor-details strong {
+    color: #333;
+}
+
+/* Professor Task Widget */
+.professor-task-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.professor-task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.professor-task-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+}
+
+.professor-task-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #4A90E2;
+}
+
+.professor-task-item span {
+    font-size: 14px;
+    color: #333;
+}
+
+.professor-task-item.completed span {
+    text-decoration: line-through;
+    color: #999;
+}
+
+/* Student Layout (same as before but with student- prefix) */
+.student-layout-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.student-top-section {
+    display: grid;
+    grid-template-columns: 350px 1fr 400px;
+    gap: 30px;
+    align-items: start;
+}
+
+.student-info-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.student-avatar-container {
+    margin-bottom: 20px;
+}
+
+.student-avatar-circle {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.student-avatar-circle:hover {
+    transform: scale(1.05);
+}
+
+.student-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: #999;
+    border: 4px solid #4A90E2;
+    box-shadow: 0 4px 16px rgba(74, 144, 226, 0.2);
+}
+
+.student-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #4A90E2;
+    box-shadow: 0 4px 16px rgba(74, 144, 226, 0.2);
+}
+
+.student-user-name {
+    color: #4A90E2;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.student-user-details {
+    text-align: left;
+    margin-bottom: 25px;
+}
+
+.student-user-details p {
+    margin: 8px 0;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.student-label {
+    color: #4A90E2;
+    font-weight: 600;
+}
+
+.student-value {
+    color: #666;
+    font-weight: 500;
+}
+
+.student-cv-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.student-cv-preview {
+    flex-shrink: 0;
+}
+
+.student-cv-icon {
+    width: 60px;
+    height: 75px;
+    background: #e0e0e0;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+}
+
+.student-cv-info {
+    flex: 1;
+    text-align: left;
+}
+
+.student-cv-info h3 {
+    color: #4A90E2;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+}
+
+.student-cv-filename {
+    color: #4A90E2;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.student-progress-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.student-progress-title {
+    color: #4A90E2;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.student-progress-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+}
+
+.student-progress-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.student-progress-circle::before {
+    content: '';
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    background: white;
+    border-radius: 50%;
+}
+
+.student-progress-text {
+    position: relative;
+    z-index: 2;
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+}
+
+.student-tutorials-card {
+    background: transparent;
+    padding: 0;
+}
+
+.student-tutorials-title {
+    color: #4A90A4;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.student-tutorials-list {
+    background: white;
+    border: 4px solid #4A90A4;
+    border-radius: 8px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.student-tutorial-item {
+    background: white;
+    padding: 15px 20px;
+    border-bottom: 2px solid #4A90A4;
+    transition: background-color 0.3s ease;
+}
+
+.student-tutorial-item:last-child {
+    border-bottom: none;
+}
+
+.student-tutorial-item:hover {
+    background: #f8f9fa;
+}
+
+.student-tutorial-name {
+    color: #333;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+    display: block;
+}
+
+.student-subjects-section {
+    background: #A8D5E2;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.student-subjects-navigation {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.student-nav-arrow {
+    background: white;
+    color: #4A90E2;
+    border: none;
+    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.student-nav-arrow:hover {
+    background: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.student-subjects-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.student-subject-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.student-subject-card:hover {
+    transform: translateY(-2px);
+}
+
+.student-subject-icon {
+    width: 80px;
+    height: 60px;
+    background: #e0e0e0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    margin: 0 auto 10px auto;
+}
+
+.student-subject-name {
+    color: #4A90E2;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .professor-layout-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .student-top-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .student-subjects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .professor-calendar-header {
+        grid-template-columns: repeat(7, 1fr);
+    }
+    
+    .professor-calendar-days {
+        grid-template-columns: repeat(7, 1fr);
+    }
+    
+    .professor-schedule-header,
+    .professor-schedule-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+    
+    .student-subjects-navigation {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .student-subjects-grid {
+        grid-template-columns: 1fr;
+        order: 2;
+    }
+    
+    .student-nav-arrow {
+        order: 1;
+        width: 100%;
+        max-width: 200px;
+    }
+}

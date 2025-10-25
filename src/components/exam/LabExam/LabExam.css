@@ -149,10 +149,10 @@
 }
 
 /* Coding Input */
-.code-input {
+.code-input1 {
     position: relative;
-    left: -1vw;
-    width: 100%;
+    left: -0.1vw;
+    width: 97.5%;
     flex: 1;
     min-height: 200px;
     padding: 15px;
@@ -165,7 +165,7 @@
     resize: none;
 }
 
-.code-input:focus {
+.code-input1:focus {
     outline: none;
     border-color: #4a90a4;
     background-color: white;

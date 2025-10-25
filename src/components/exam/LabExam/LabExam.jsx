@@ -107,7 +107,7 @@ function LabExam({ labData, onSubmit, onExit }) {
 
                             {currentQ.type === 'coding' && (
                                 <textarea
-                                    className="code-input"
+                                    className="code-input1"
                                     placeholder={currentQ.placeholder}
                                     value={answers[currentQ.id] || ''}
                                     onChange={(e) => handleAnswerChange(currentQ.id, e.target.value)}
