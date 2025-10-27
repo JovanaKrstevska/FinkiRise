@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { getSubjectsByProfessor } from '../../../services/databaseService';
 import './ProfileLayout.css';
+import Input from "../../ui/Input/Input";
 
 function ProfileLayout({ userRole, profileData, userTutorials, onImageUpload, onProfileUpdate, currentUser }) {
     const [tasks, setTasks] = useState([
-        { id: 1, text: 'Grade assignments', completed: true },
-        { id: 2, text: 'Paper review', completed: true },
-        { id: 3, text: 'Prepare lecture', completed: false },
-        { id: 4, text: 'Administrative tasks', completed: false }
+        { id: 1, text: 'Прегледување на домашните', completed: true },
+        { id: 2, text: 'Консултации', completed: true },
+        { id: 3, text: 'Спремање за ново предавање', completed: false },
+        { id: 4, text: 'Административни таскови', completed: false }
     ]);
 
     const [currentTutorialSlide, setCurrentTutorialSlide] = useState(0);
@@ -160,19 +161,19 @@ function ProfileLayout({ userRole, profileData, userTutorials, onImageUpload, on
                                     <span>Location</span>
                                 </div>
                                 <div className="professor-schedule-row">
-                                    <span>Intro to Psychology</span>
+                                    <span>Веб програмирање предавања</span>
                                     <span>Mon, Wed 9:00 AM</span>
-                                    <span>Room 101</span>
+                                    <span>Просторија 117</span>
                                 </div>
                                 <div className="professor-schedule-row">
-                                    <span>Research Methods</span>
+                                    <span>Објектно-ориентирано програмирање</span>
                                     <span>Tue, Thu 11:00 AM</span>
-                                    <span>Room 202</span>
+                                    <span>Барака 2.2</span>
                                 </div>
                                 <div className="professor-schedule-row">
-                                    <span>Advanced Statistics</span>
+                                    <span>ЕМТ Аудиториски</span>
                                     <span>Mon, Wed 3:00 PM</span>
-                                    <span>Room 303</span>
+                                    <span>Просторија 225</span>
                                 </div>
                             </div>
                         </div>
@@ -204,7 +205,8 @@ function ProfileLayout({ userRole, profileData, userTutorials, onImageUpload, on
                             {/* Display professor information */}
                             <h3 className="professor-name">{profileData?.firstName && profileData?.lastName ? `${profileData.firstName} ${profileData.lastName}` : 'Име Презиме'}</h3>
                             <div className="professor-details">
-                                <p><strong>Email:</strong> {profileData?.email || 'profesor@finki.ukim.mk'}</p>
+                                <h3>Линк до Консултации</h3>
+                                <a href="https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e" style={{ color: "#015E86", textDecoration: "none" }}>Консултации</a>
                             </div>
 
                             <div className="professor-save-controls">
@@ -223,6 +225,7 @@ function ProfileLayout({ userRole, profileData, userTutorials, onImageUpload, on
                                     <div key={task.id} className={`professor-task-item ${task.completed ? 'completed' : ''}`}>
                                         <input
                                             type="checkbox"
+                                            className='professor-task-list-check'
                                             checked={task.completed}
                                             onChange={() => handleTaskToggle(task.id)}
                                         />

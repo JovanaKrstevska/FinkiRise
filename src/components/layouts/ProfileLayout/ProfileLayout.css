@@ -187,8 +187,8 @@
 }
 
 .professor-avatar-circle {
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
     margin: 0 auto;
     cursor: pointer;
     transition: transform 0.3s ease;
@@ -215,21 +215,23 @@
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #4A90E2;
+    border: 4px solid #4A90E2;
+    box-shadow: 0 4px 16px rgba(74, 144, 226, 0.2);
 }
 
 .professor-name {
     margin: 0 0 15px 0;
-    font-size: 18px;
+    font-size: 25px;
     font-weight: 600;
-    color: #4A90E2;
+    color: #015E86;
 }
 
 .professor-details {
-    text-align: left;
+    text-align: center;
     padding-bottom: 20px;
     border-bottom: 2px solid #e9ecef;
     margin-bottom: 20px;
+    color: #015E86;
 }
 
 .professor-details p {
@@ -268,6 +270,13 @@
     width: 16px;
     height: 16px;
     accent-color: #4A90E2;
+}
+
+.professor-task-list-check{
+    position: relative;
+    left: -0.2vw;
+    bottom: 0.5vh;
+    border: 1px solid black;
 }
 
 .professor-task-item span {
@@ -596,7 +605,7 @@
 .student-subjects-section {
     position: relative;
     left: 25vw;
-    bottom: 11.5vw;
+    bottom: 12.5vw;
     width: 70%;
     background: #78AEC5;
     border-radius: 15px;
