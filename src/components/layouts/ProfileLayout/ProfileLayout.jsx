@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getSubjectsByProfessor } from '../../../services/databaseService';
 import './ProfileLayout.css';
 
-function ProfileLayout({ userRole, studentData, professorData, userTutorials, profileImage, onImageUpload }) {
+function ProfileLayout({ userRole, profileData, userTutorials, onImageUpload, onProfileUpdate, currentUser }) {
     const [tasks, setTasks] = useState([
         { id: 1, text: 'Grade assignments', completed: true },
         { id: 2, text: 'Paper review', completed: true },
@@ -9,8 +10,15 @@ function ProfileLayout({ userRole, studentData, professorData, userTutorials, pr
         { id: 4, text: 'Administrative tasks', completed: false }
     ]);
 
+    const [currentTutorialSlide, setCurrentTutorialSlide] = useState(0);
+    const tutorialsPerSlide = 3;
+
+    const [recentSubjects, setRecentSubjects] = useState([]);
+    const [currentSubjectSlide, setCurrentSubjectSlide] = useState(0);
+    const subjectsPerSlide = 4;
+
     const handleTaskToggle = (taskId) => {
-        setTasks(tasks.map(task => 
+        setTasks(tasks.map(task =>
             task.id === taskId ? { ...task, completed: !task.completed } : task
         ));
     };
@@ -18,6 +26,100 @@ function ProfileLayout({ userRole, studentData, professorData, userTutorials, pr
     const triggerImageUpload = () => {
         document.getElementById('profile-layout-image-input').click();
     };
+
+    const handleSave = () => {
+        // Just trigger save with current profile data
+        onProfileUpdate(profileData);
+    };
+
+    const nextTutorialSlide = () => {
+        const totalTutorials = userTutorials.length > 0 ? userTutorials.length : 6;
+        const maxSlide = Math.ceil(totalTutorials / tutorialsPerSlide) - 1;
+        setCurrentTutorialSlide(prev => prev < maxSlide ? prev + 1 : 0);
+    };
+
+    const prevTutorialSlide = () => {
+        const totalTutorials = userTutorials.length > 0 ? userTutorials.length : 6;
+        const maxSlide = Math.ceil(totalTutorials / tutorialsPerSlide) - 1;
+        setCurrentTutorialSlide(prev => prev > 0 ? prev - 1 : maxSlide);
+    };
+
+    // Subject navigation functions
+    const nextSubjectSlide = () => {
+        const maxSlide = Math.ceil(recentSubjects.length / subjectsPerSlide) - 1;
+        setCurrentSubjectSlide(prev => prev < maxSlide ? prev + 1 : 0);
+    };
+
+    const prevSubjectSlide = () => {
+        const maxSlide = Math.ceil(recentSubjects.length / subjectsPerSlide) - 1;
+        setCurrentSubjectSlide(prev => prev > 0 ? prev - 1 : maxSlide);
+    };
+
+    // Function to get most recent subjects (latest academic year for each subject)
+    const getMostRecentSubjects = (subjects) => {
+        if (!subjects || subjects.length === 0) {
+            return [];
+        }
+
+        const subjectMap = new Map();
+
+        subjects.forEach(subject => {
+            const key = subject.name;
+
+            if (!subjectMap.has(key)) {
+                subjectMap.set(key, subject);
+            } else {
+                const existing = subjectMap.get(key);
+
+                if (subject.academicYear && existing.academicYear &&
+                    subject.academicYear > existing.academicYear) {
+                    subjectMap.set(key, subject);
+                }
+            }
+        });
+
+        return Array.from(subjectMap.values()).sort((a, b) =>
+            (b.academicYear || '').localeCompare(a.academicYear || '')
+        );
+    };
+
+    // Fetch subjects for professor
+    useEffect(() => {
+        if (currentUser?.uid) {
+            const fetchSubjects = async () => {
+                try {
+                    console.log('🔍 Fetching subjects for user:', currentUser.uid, 'Role:', userRole);
+                    
+                    // Try to get subjects by professor first
+                    const result = await getSubjectsByProfessor(currentUser.uid);
+                    console.log('📊 Firebase result:', result);
+                    
+                    if (result.success && result.data && result.data.length > 0) {
+                        console.log('📚 Found subjects:', result.data);
+                        const mostRecent = getMostRecentSubjects(result.data);
+                        console.log('🎯 Most recent subjects:', mostRecent);
+                        setRecentSubjects(mostRecent);
+                    } else {
+                        console.log('⚠️ No subjects found for this user');
+                        // If no subjects found, try to get all subjects (for students)
+                        const { getAllSubjects } = await import('../../../services/databaseService');
+                        const allResult = await getAllSubjects();
+                        console.log('📊 All subjects result:', allResult);
+                        
+                        if (allResult.success && allResult.data && allResult.data.length > 0) {
+                            const mostRecent = getMostRecentSubjects(allResult.data);
+                            console.log('🎯 All subjects - most recent:', mostRecent);
+                            setRecentSubjects(mostRecent);
+                        }
+                    }
+                } catch (error) {
+                    console.error('❌ Error fetching subjects:', error);
+                }
+            };
+
+            fetchSubjects();
+        }
+    }, [currentUser, userRole]);
 
     if (userRole === 'professor') {
         return (
@@ -82,8 +184,8 @@ function ProfileLayout({ userRole, studentData, professorData, userTutorials, pr
                         <div className="professor-profile-widget">
                             <div className="professor-avatar-container">
                                 <div className="professor-avatar-circle" onClick={triggerImageUpload}>
-                                    {profileImage ? (
-                                        <img src={profileImage} alt="Profile" className="professor-avatar-img" />
+                                    {profileData?.profileImage ? (
+                                        <img src={profileData.profileImage} alt="Profile" className="professor-avatar-img" />
                                     ) : (
                                         <div className="professor-avatar-placeholder">
                                             <span>👤</span>
@@ -98,10 +200,15 @@ function ProfileLayout({ userRole, studentData, professorData, userTutorials, pr
                                     style={{ display: 'none' }}
                                 />
                             </div>
-                            <h3 className="professor-name">Име на Професор</h3>
+
+                            {/* Display professor information */}
+                            <h3 className="professor-name">{profileData?.firstName && profileData?.lastName ? `${profileData.firstName} ${profileData.lastName}` : 'Име Презиме'}</h3>
                             <div className="professor-details">
-                                <p><strong>Линк до консултации:</strong></p>
-                                <p>Консултации</p>
+                                <p><strong>Email:</strong> {profileData?.email || 'profesor@finki.ukim.mk'}</p>
+                            </div>
+
+                            <div className="professor-save-controls">
+                                <button onClick={handleSave} className="save-btn">💾 Save</button>
                             </div>
                         </div>
 
@@ -114,8 +221,8 @@ function ProfileLayout({ userRole, studentData, professorData, userTutorials, pr
                             <div className="professor-task-list">
                                 {tasks.map((task) => (
                                     <div key={task.id} className={`professor-task-item ${task.completed ? 'completed' : ''}`}>
-                                        <input 
-                                            type="checkbox" 
+                                        <input
+                                            type="checkbox"
                                             checked={task.completed}
                                             onChange={() => handleTaskToggle(task.id)}
                                         />
@@ -130,18 +237,18 @@ function ProfileLayout({ userRole, studentData, professorData, userTutorials, pr
         );
     }
 
-    // Student Layout (same as before but with unique classes)
+    // Student Layout
     return (
         <div className="profile-layout">
             <div className="student-layout-container">
-                {/* Top Section - 3 Column Layout */}
+                {/* Top Section - 2 Column Layout */}
                 <div className="student-top-section">
                     {/* Left - Profile Card */}
                     <div className="student-info-card">
                         <div className="student-avatar-container">
                             <div className="student-avatar-circle" onClick={triggerImageUpload}>
-                                {profileImage ? (
-                                    <img src={profileImage} alt="Profile" className="student-avatar-img" />
+                                {profileData?.profileImage ? (
+                                    <img src={profileData.profileImage} alt="Profile" className="student-avatar-img" />
                                 ) : (
                                     <div className="student-avatar-placeholder">
                                         <span>👤</span>
@@ -157,72 +264,120 @@ function ProfileLayout({ userRole, studentData, professorData, userTutorials, pr
                             />
                         </div>
 
-                        <h2 className="student-user-name">{studentData.name}</h2>
-
+                        {/* Display current user information */}
+                        <h2 className="student-user-name">{profileData?.firstName && profileData?.lastName ? `${profileData.firstName} ${profileData.lastName}` : 'Име Презиме'}</h2>
                         <div className="student-user-details">
-                            <p><span className="student-label">Индекс:</span> <span className="student-value">{studentData.index}</span></p>
-                            <p><span className="student-label">Просек:</span> <span className="student-value">{studentData.prosek}</span></p>
-                            <p><span className="student-label">Кредити:</span> <span className="student-value">{studentData.credits} ЕКТС</span></p>
-                            <p><span className="student-label">Смер:</span> <span className="student-value">{studentData.smer}</span></p>
+                            <p><span className="student-label">Индекс:</span> <span className="student-value">{profileData?.index || '173246'}</span></p>
+                            <p><span className="student-label">Просек:</span> <span className="student-value">{profileData?.average || '7.21'}</span></p>
+                            <p><span className="student-label">Кредити:</span> <span className="student-value">{profileData?.credits || '240'} ЕКТС</span></p>
+                            <p><span className="student-label">Смер:</span> <span className="student-value">{profileData?.studyDirection || 'Примена на е-технологии'}</span></p>
+                        </div>
+
+                        <div className="student-save-controls">
+                            <button onClick={handleSave} className="save-btn">💾 Save</button>
                         </div>
 
                         <div className="student-cv-section">
                             <div className="student-cv-preview">
-                                <div className="student-cv-icon">Бед</div>
+                                <div className="student-cv-icon">📄</div>
                             </div>
                             <div className="student-cv-info">
                                 <h3>Вашето CV:</h3>
-                                <p className="student-cv-filename">{studentData.index}_CV.pdf</p>
+                                {profileData?.cvUrl ? (
+                                    <>
+                                        <p className="student-cv-filename">
+                                            {profileData.cvFileName || `${profileData?.index || '173246'}_CV.pdf`}
+                                        </p>
+                                        <a
+                                            href={profileData.cvUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="student-cv-download"
+                                        >
+                                            📥 Преземи CV
+                                        </a>
+                                    </>
+                                ) : (
+                                    <p className="student-cv-no-file">Нема прикачено CV</p>
+                                )}
                             </div>
                         </div>
                     </div>
 
-                    {/* Center - Progress Circle */}
-                    <div className="student-progress-card">
+                    {/* Right - Tutorials and Progress */}
+                    <div className="student-right-section">
+                        {/* Progress Circle */}
                         <h3 className="student-progress-title">Финален прогрес:</h3>
                         <div className="student-progress-container">
                             <div className="student-progress-circle" style={{
-                                background: `conic-gradient(#A8D5E2 0deg ${studentData.progress * 3.6}deg, #e9ecef ${studentData.progress * 3.6}deg 360deg)`
+                                background: `conic-gradient(#3484bd 0deg ${(profileData?.progress || 50) * 3.6}deg, #6ed0f6  ${(profileData?.progress || 50) * 3.6}deg 360deg)`
                             }}>
-                                <span className="student-progress-text">{studentData.progress}%</span>
+                                <span className="student-progress-text">{profileData?.progress || 50}%</span>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Right - Tutorials */}
-                    <div className="student-tutorials-card">
-                        <h3 className="student-tutorials-title">Твои Туторијали:</h3>
-                        <div className="student-tutorials-list">
-                            {userTutorials.length > 0 ? (
-                                userTutorials.map((tutorial) => (
-                                    <div key={tutorial.id} className="student-tutorial-item">
-                                        <span className="student-tutorial-name">{tutorial.title}</span>
-                                    </div>
-                                ))
-                            ) : (
-                                Array.from({ length: 6 }, (_, index) => (
-                                    <div key={index} className="student-tutorial-item">
-                                        <span className="student-tutorial-name">Име на Туторијалот</span>
-                                    </div>
-                                ))
-                            )}
+                        {/* Tutorials */}
+                        <div className="student-tutorials-card">
+                            <div className="tutorials-header">
+                                <h3 className="student-tutorials-title">Твои Туторијали:</h3>
+                                <div className="tutorials-navigation">
+                                    <button onClick={prevTutorialSlide} className="tutorial-nav-btn tutorial-prev">
+                                        ◀
+                                    </button>
+                                    <button onClick={nextTutorialSlide} className="tutorial-nav-btn tutorial-next">
+                                        ▶
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="tutorials-slider">
+                                <ul className="student-tutorials-list" style={{
+                                    transform: `translateY(-${currentTutorialSlide * (tutorialsPerSlide * 60)}px)`
+                                }}>
+                                    {userTutorials.length > 0 ? (
+                                        userTutorials.map((tutorial) => (
+                                            <li key={tutorial.id} className="student-tutorial-item">
+                                                {tutorial.title}
+                                            </li>
+                                        ))
+                                    ) : (
+                                        Array.from({ length: 6 }, (_, index) => (
+                                            <li key={index} className="student-tutorial-item">
+                                                Име на Туторијалот
+                                            </li>
+                                        ))
+                                    )}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Bottom Section - Subjects */}
+                {/* Bottom Section - Recent Subjects */}
                 <div className="student-subjects-section">
                     <div className="student-subjects-navigation">
-                        <button className="student-nav-arrow student-nav-left">◀</button>
+                        <button onClick={prevSubjectSlide} className="student-nav-arrow student-nav-left">◀</button>
                         <div className="student-subjects-grid">
-                            {Array.from({ length: 4 }, (_, index) => (
-                                <div key={index} className="student-subject-card">
-                                    <div className="student-subject-icon">Бед</div>
-                                    <p className="student-subject-name">Име на предмет</p>
-                                </div>
-                            ))}
+                            {recentSubjects.length > 0 ? (
+                                recentSubjects
+                                    .slice(currentSubjectSlide * subjectsPerSlide, (currentSubjectSlide + 1) * subjectsPerSlide)
+                                    .map((subject) => (
+                                        <div key={subject.id} className="student-subject-card">
+                                            <div className="student-subject-icon">📚</div>
+                                            <p className="student-subject-name">{subject.name}</p>
+                                            <p className="student-subject-year">{subject.academicYear}</p>
+                                        </div>
+                                    ))
+                            ) : (
+                                Array.from({ length: 4 }, (_, index) => (
+                                    <div key={index} className="student-subject-card">
+                                        <div className="student-subject-icon">📚</div>
+                                        <p className="student-subject-name">Нема предмети</p>
+                                        <p className="student-subject-year">2023/2024</p>
+                                    </div>
+                                ))
+                            )}
                         </div>
-                        <button className="student-nav-arrow student-nav-right">▶</button>
+                        <button onClick={nextSubjectSlide} className="student-nav-arrow student-nav-right">▶</button>
                     </div>
                 </div>
             </div>

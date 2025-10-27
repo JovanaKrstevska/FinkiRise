@@ -12,7 +12,12 @@ import {
     orderBy,
     serverTimestamp
 } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { 
+    ref, 
+    uploadBytes, 
+    getDownloadURL
+} from 'firebase/storage';
+import { db, storage } from '../config/firebase';
 
 // User Management
 export const createUserProfile = async (userId, userData) => {
@@ -38,6 +43,106 @@ export const getUserProfile = async (userId) => {
         }
     } catch (error) {
         console.error('Error getting user profile:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+// Profile Image Management
+export const uploadProfileImage = async (userId, imageFile) => {
+    try {
+        // Create a reference to the profile image
+        const imageRef = ref(storage, `profile-images/${userId}/${Date.now()}_${imageFile.name}`);
+        
+        // Upload the file
+        const snapshot = await uploadBytes(imageRef, imageFile);
+        
+        // Get the download URL
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        
+        return { success: true, url: downloadURL };
+    } catch (error) {
+        console.error('Error uploading profile image:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+// CV File Management
+export const uploadCvFile = async (userId, cvFile) => {
+    try {
+        // Create a reference to the CV file
+        const cvRef = ref(storage, `cv-files/${userId}/${Date.now()}_${cvFile.name}`);
+        
+        // Upload the file
+        const snapshot = await uploadBytes(cvRef, cvFile);
+        
+        // Get the download URL
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        
+        return { 
+            success: true, 
+            url: downloadURL,
+            fileName: cvFile.name
+        };
+    } catch (error) {
+        console.error('Error uploading CV file:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+// Update User Profile Data
+export const updateUserProfile = async (userId, profileData) => {
+    try {
+        const userRef = doc(db, 'users', userId);
+        await updateDoc(userRef, {
+            ...profileData,
+            updatedAt: serverTimestamp()
+        });
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating user profile:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+// Create or Update Complete Profile (with image)
+export const saveCompleteProfile = async (userId, profileData, imageFile = null) => {
+    try {
+        let imageUrl = profileData.profileImage || null;
+        
+        // Upload image if provided
+        if (imageFile) {
+            const imageResult = await uploadProfileImage(userId, imageFile);
+            if (imageResult.success) {
+                imageUrl = imageResult.url;
+            } else {
+                return { success: false, error: 'Failed to upload image' };
+            }
+        }
+        
+        // Prepare profile data
+        const completeProfileData = {
+            ...profileData,
+            profileImage: imageUrl,
+            updatedAt: serverTimestamp()
+        };
+        
+        // Check if profile exists
+        const existingProfile = await getUserProfile(userId);
+        
+        if (existingProfile.success) {
+            // Update existing profile
+            await updateDoc(doc(db, 'users', userId), completeProfileData);
+        } else {
+            // Create new profile
+            await setDoc(doc(db, 'users', userId), {
+                ...completeProfileData,
+                createdAt: serverTimestamp()
+            });
+        }
+        
+        return { success: true, data: completeProfileData };
+    } catch (error) {
+        console.error('Error saving complete profile:', error);
         return { success: false, error: error.message };
     }
 };
