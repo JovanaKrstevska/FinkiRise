@@ -198,6 +198,7 @@ function CreateExamPage() {
         };
 
         try {
+            console.log('Creating exam with subjectId:', subjectId);
             console.log('Saving exam data:', examData);
             const result = await createExam(examData);
 

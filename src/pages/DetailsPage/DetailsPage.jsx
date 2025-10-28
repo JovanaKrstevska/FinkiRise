@@ -5,6 +5,8 @@ import './DetailsPage.css';
 import Button from '../../components/ui/Button/Button';
 import LabExam from '../../components/exam/LabExam/LabExam';
 import { getLabById, submitLabExam, getExamById, submitExam } from '../../services/databaseService';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../config/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 
 function DetailsPage() {
@@ -40,13 +42,32 @@ function DetailsPage() {
             if (result.success) {
                 setLabData(result.data);
 
-                // Mock subject data - you can fetch this from subjects collection too
-                const mockSubject = {
-                    name: "Веб програмирање",
-                    academicYear: "2025/2026",
-                    semesterType: "summer"
-                };
-                setSubject(mockSubject);
+                console.log('Exam/Lab data:', result.data);
+                console.log('SubjectId from exam/lab:', result.data.subjectId);
+
+                // Fetch actual subject data based on subjectId
+                if (result.data.subjectId) {
+                    try {
+                        console.log('Fetching subject with ID:', result.data.subjectId);
+                        const subjectDoc = await getDoc(doc(db, 'subjects', result.data.subjectId));
+                        if (subjectDoc.exists()) {
+                            const subjectData = subjectDoc.data();
+                            console.log('Found subject:', subjectData);
+                            console.log('Subject name:', subjectData.name);
+                            setSubject(subjectData);
+                        } else {
+                            console.error('Subject not found:', result.data.subjectId);
+                            // Fallback subject
+                            setSubject({ name: 'Непознат предмет' });
+                        }
+                    } catch (subjectError) {
+                        console.error('Error fetching subject:', subjectError);
+                        setSubject({ name: 'Непознат предмет' });
+                    }
+                } else {
+                    console.error('No subjectId found in exam/lab data');
+                    setSubject({ name: 'Непознат предмет' });
+                }
             } else {
                 console.error(`Failed to fetch ${isExam ? 'exam' : 'lab'} data:`, result.error);
             }
@@ -275,19 +296,31 @@ function DetailsPage() {
                     <div className="lab-details-container">
                         <div className="exam-results">
                             <div className="results-card">
-                                <h1 className="results-title">Стигнавте до крајот на {isExam ? 'испитот' : 'лабораториската'}!</h1>
-
-                                <div className="results-message">
-                                    <p>Резултатите од {isExam ? 'испитот' : 'лабораториската'} по предметот <strong>"{subject?.name || 'Предмет'}"</strong> ќе бидат објавени од страна на професорите. Дотолку сакате да си ги видите решенијата притеснете на копчето <strong>Преглед</strong>.</p>
-                                </div>
+                                {isExam ? (
+                                    <>
+                                        <h1 className="results-title">Крај на испитот!</h1>
+                                        <div className="results-message">
+                                            <p>Резултатите по предметот <strong>"{subject?.name || 'Име на предметот'}"</strong> ќе бидат објавени од страна на професорите</p>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <h1 className="results-title">Стигнавте до крајот на лабораториската!</h1>
+                                        <div className="results-message">
+                                            <p>Резултатите од лабораториската по предметот <strong>"{subject?.name || 'Предмет'}"</strong> ќе бидат објавени од страна на професорите. Дотолку сакате да си ги видите решенијата притеснете на копчето <strong>Преглед</strong>.</p>
+                                        </div>
+                                    </>
+                                )}
                             </div>
 
                             <div className="results-actions">
-                                <Button
-                                    className="btn-preview"
-                                    content={"Преглед"}
-                                    onClick={() => setReviewMode(true)}
-                                />
+                                {!isExam && (
+                                    <Button
+                                        className="btn-preview"
+                                        content={"Преглед"}
+                                        onClick={() => setReviewMode(true)}
+                                    />
+                                )}
                                 <Button
                                     className="btn-exit"
                                     content={"Излез"}

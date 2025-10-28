@@ -7,7 +7,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../config/firebase';
 import Button from '../../ui/Button/Button';
 
-function ExamLayout() {
+function ExamLayout({ subjectId = null }) {
     const [subjects, setSubjects] = useState([]);
     const [allSubjects, setAllSubjects] = useState([]);
     const [exams, setExams] = useState([]);
@@ -29,8 +29,10 @@ function ExamLayout() {
 
             if (userRole === 'professor') {
                 result = await getSubjectsByProfessor(currentUser.uid);
+                console.log('Raw professor subjects from database:', result.data);
             } else {
                 result = await getAllSubjects();
+                console.log('Raw all subjects from database:', result.data);
             }
 
             // Also get all subjects to show available ones for adding
@@ -42,37 +44,51 @@ function ExamLayout() {
                 setAllSubjects(allSubjectsResult.data);
             }
 
-            // Fetch ALL exams from Firebase
+            // Fetch exams for current professor only
             try {
                 const examsSnapshot = await getDocs(collection(db, 'exams'));
                 const allExams = [];
                 examsSnapshot.forEach((doc) => {
-                    allExams.push({ id: doc.id, ...doc.data() });
+                    const examData = { id: doc.id, ...doc.data() };
+                    allExams.push(examData);
                 });
-                setExams(allExams);
+                
+                // Filter exams by current professor
+                const professorExams = userRole === 'professor' 
+                    ? allExams.filter(exam => exam.professorId === currentUser.uid)
+                    : allExams;
+                
+                console.log('All exams:', allExams);
+                console.log('Professor exams:', professorExams);
+                console.log('Current user ID:', currentUser.uid);
+                
+                setExams(professorExams);
             } catch (examError) {
-                console.error('Error fetching all exams:', examError);
+                console.error('Error fetching exams:', examError);
             }
 
             if (result.success) {
-                // Filter to get unique subjects by name, preferring newer academic years
-                const uniqueSubjects = [];
-                const seenNames = new Set();
-
-                // Sort by academic year (newest first) to prefer newer versions
-                const sortedSubjects = result.data.sort((a, b) => {
-                    return b.academicYear.localeCompare(a.academicYear);
-                });
-
-                // Add unique subjects by name (first 4)
-                for (const subject of sortedSubjects) {
-                    if (!seenNames.has(subject.name) && uniqueSubjects.length < 4) {
-                        uniqueSubjects.push(subject);
-                        seenNames.add(subject.name);
-                    }
+                let displaySubjects;
+                
+                if (subjectId) {
+                    // Show only the specific subject that was clicked
+                    displaySubjects = result.data.filter(subject => subject.id === subjectId);
+                    console.log('Showing specific subject:', displaySubjects);
+                } else {
+                    // Show all subjects without any limit
+                    displaySubjects = result.data.sort((a, b) => {
+                        return b.academicYear.localeCompare(a.academicYear);
+                    });
+                    console.log('Showing all subjects:', displaySubjects.length);
                 }
 
-                setSubjects(uniqueSubjects);
+                console.log('Subjects for display:', displaySubjects.map(s => ({
+                    name: s.name,
+                    academicYear: s.academicYear,
+                    id: s.id
+                })));
+                
+                setSubjects(displaySubjects);
             } else {
                 setError(result.error || 'Failed to fetch subjects');
             }
@@ -175,7 +191,11 @@ function ExamLayout() {
                                     <div className="exam-subject-info">
                                         <div>
                                             {/* Display exams for this subject */}
-                                            {exams.filter(exam => exam.subjectId === subject.id).length > 0 ? (
+                                            {(() => {
+                                                const subjectExams = exams.filter(exam => exam.subjectId === subject.id);
+                                                console.log(`Subject "${subject.name}" (ID: ${subject.id}) has ${subjectExams.length} exams:`, subjectExams);
+                                                return subjectExams.length > 0;
+                                            })() ? (
                                                 <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                                     {exams.filter(exam => exam.subjectId === subject.id).map((exam) => (
                                                         <li key={exam.id} style={{ marginBottom: '5px' }}>
@@ -203,6 +223,7 @@ function ExamLayout() {
                                                     className="exam-create-link"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
+                                                        console.log('Creating exam for subject:', subject.name, 'with ID:', subject.id);
                                                         navigate(`/professor/exams/create/${subject.id}`);
                                                     }}
                                                 >
