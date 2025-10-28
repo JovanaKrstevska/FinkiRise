@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './ProfessorSubjectGrid.css';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useSubjectHistory } from '../../../contexts/SubjectHistoryContext';
 import { getSubjectsByProfessor, clearAndInitializeSampleData } from '../../../services/databaseService';
 import CreateCourseModal from '../../modals/CreateCourseModal/CreateCourseModal';
 
@@ -10,6 +11,7 @@ function ProfessorSubjectGrid() {
     const [loading, setLoading] = useState(true);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const { currentUser } = useAuth();
+    const { addSubjectToHistory } = useSubjectHistory();
     const itemsPerPage = 6;
 
     useEffect(() => {
@@ -168,7 +170,14 @@ function ProfessorSubjectGrid() {
 
             <div className="professor-subject-grid">
                 {currentSubjects.map((subject) => (
-                    <div key={subject.id} className="professor-subject-card">
+                    <div 
+                        key={subject.id} 
+                        className="professor-subject-card"
+                        onClick={() => {
+                            addSubjectToHistory(subject);
+                            console.log('📚 Professor subject clicked:', subject.name);
+                        }}
+                    >
                         <div className="subject-logo">
                             <img
                                 src="/assets/icons/finki_subject_logo.svg"

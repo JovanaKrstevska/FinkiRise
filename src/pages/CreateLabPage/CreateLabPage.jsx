@@ -30,14 +30,24 @@ function CreateLabPage() {
     ];
 
     const handleQuestionTypeChange = (type) => {
-        setCurrentQuestion(prev => ({
-            ...prev,
+        const newQuestion = {
             type,
-            options: type === 'multiple-choice' ? ['', '', '', ''] : undefined,
-            correctAnswer: type === 'multiple-choice' ? 0 : undefined,
-            placeholder: type === 'coding' ? 'function example() {\n    // Your code here\n}' : undefined,
-            acceptedTypes: type === 'file-upload' ? '.html,.css,.js,.zip' : undefined
-        }));
+            question: currentQuestion.question,
+            points: currentQuestion.points,
+            uploadedFile: currentQuestion.uploadedFile
+        };
+
+        // Only add fields that are relevant for this question type
+        if (type === 'multiple-choice') {
+            newQuestion.options = ['', '', '', ''];
+            newQuestion.correctAnswer = 0;
+        } else if (type === 'coding') {
+            newQuestion.placeholder = 'function example() {\n    // Your code here\n}';
+        } else if (type === 'file-upload') {
+            newQuestion.acceptedTypes = '.html,.css,.js,.zip';
+        }
+
+        setCurrentQuestion(newQuestion);
     };
 
     const handleOptionChange = (index, value) => {
@@ -62,10 +72,31 @@ function CreateLabPage() {
     const addQuestion = () => {
         if (!currentQuestion.question.trim()) return;
 
+        // Create clean question object without undefined values
         const newQuestion = {
-            ...currentQuestion,
-            id: Date.now()
+            id: Date.now(),
+            type: currentQuestion.type,
+            question: currentQuestion.question,
+            points: currentQuestion.points || 5
         };
+
+        // Only add fields that exist and are not undefined
+        if (currentQuestion.type === 'multiple-choice') {
+            newQuestion.options = currentQuestion.options || ['', '', '', ''];
+            newQuestion.correctAnswer = currentQuestion.correctAnswer || 0;
+        } else if (currentQuestion.type === 'coding') {
+            if (currentQuestion.placeholder) {
+                newQuestion.placeholder = currentQuestion.placeholder;
+            }
+        } else if (currentQuestion.type === 'file-upload') {
+            if (currentQuestion.acceptedTypes) {
+                newQuestion.acceptedTypes = currentQuestion.acceptedTypes;
+            }
+        }
+
+        if (currentQuestion.uploadedFile) {
+            newQuestion.uploadedFile = currentQuestion.uploadedFile;
+        }
 
         setQuestions(prev => [...prev, newQuestion]);
         setCurrentQuestion({
@@ -85,11 +116,34 @@ function CreateLabPage() {
     const updateQuestion = () => {
         if (selectedQuestionIndex === null) return;
 
-        const updatedQuestions = [...questions];
-        updatedQuestions[selectedQuestionIndex] = {
-            ...currentQuestion,
-            id: questions[selectedQuestionIndex].id
+        // Create clean updated question object without undefined values
+        const updatedQuestion = {
+            id: questions[selectedQuestionIndex].id,
+            type: currentQuestion.type,
+            question: currentQuestion.question,
+            points: currentQuestion.points || 5
         };
+
+        // Only add fields that exist and are not undefined
+        if (currentQuestion.type === 'multiple-choice') {
+            updatedQuestion.options = currentQuestion.options || ['', '', '', ''];
+            updatedQuestion.correctAnswer = currentQuestion.correctAnswer || 0;
+        } else if (currentQuestion.type === 'coding') {
+            if (currentQuestion.placeholder) {
+                updatedQuestion.placeholder = currentQuestion.placeholder;
+            }
+        } else if (currentQuestion.type === 'file-upload') {
+            if (currentQuestion.acceptedTypes) {
+                updatedQuestion.acceptedTypes = currentQuestion.acceptedTypes;
+            }
+        }
+
+        if (currentQuestion.uploadedFile) {
+            updatedQuestion.uploadedFile = currentQuestion.uploadedFile;
+        }
+
+        const updatedQuestions = [...questions];
+        updatedQuestions[selectedQuestionIndex] = updatedQuestion;
 
         setQuestions(updatedQuestions);
         setSelectedQuestionIndex(null);
@@ -148,7 +202,7 @@ function CreateLabPage() {
 
             if (result.success) {
                 alert('Лабораториската е успешно креирана!');
-                navigate('/lab'); // Navigate back to lab page
+                navigate('/labs'); // Navigate back to lab page
             } else {
                 console.error('Lab creation failed:', result.error);
                 alert(`Грешка при креирање: ${result.error || 'Непозната грешка'}`);

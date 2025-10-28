@@ -116,12 +116,12 @@ function LabExam({ labData, onSubmit, onExit }) {
                             )}
 
                             {currentQ.type === 'file-upload' && (
-                                <div className="file-upload-area">
+                                <div className="file-upload-area-labexam">
                                     <input
                                         type="file"
                                         accept={currentQ.acceptedTypes}
                                         onChange={(e) => handleFileUpload(currentQ.id, e.target.files[0])}
-                                        className="file-input-field"
+                                        className="file-input-field-labexam"
                                     />
                                     {answers[currentQ.id] && (
                                         <div className="uploaded-file-info">

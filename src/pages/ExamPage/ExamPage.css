@@ -1,0 +1,56 @@
+.exampage {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+}
+
+.exams-content {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.main-section-exams {
+    flex: 2;
+}
+
+.sidebar-exams {
+    position: relative;
+    top: 3vw;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 350px;
+}
+
+@media (max-width: 768px) {
+    .exams-content {
+        flex-direction: column;
+        padding: 10px;
+    }
+    
+    .sidebar-exams {
+        flex-direction: row;
+        gap: 10px;
+        max-width: none;
+    }
+    
+    .sidebar-exams > * {
+        flex: 1;
+    }
+    
+    .main-section-exams {
+        padding: 20px;
+    }
+}
+
+/* Exam page specific styling */
+.exampage h1 {
+    color: #4A90A4;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { getTutorialsByUser, getUserProfile, saveCompleteProfile } from '../../services/databaseService';
+import { getUserProfile, saveCompleteProfile } from '../../services/databaseService';
 import NavBar from '../../components/ui/NavBar/NavBar';
 import ProfileLayout from '../../components/layouts/ProfileLayout/ProfileLayout';
 import './ProfilePage.css';
@@ -26,7 +26,7 @@ function ProfilePage() {
         cvFileName: null
     });
 
-    const [userTutorials, setUserTutorials] = useState([]);
+
 
 
 
@@ -34,7 +34,6 @@ function ProfilePage() {
     useEffect(() => {
         if (currentUser) {
             loadUserProfile();
-            fetchUserTutorials();
         }
     }, [currentUser]);
 
@@ -114,18 +113,7 @@ function ProfilePage() {
         return 'student';
     };
 
-    const fetchUserTutorials = async () => {
-        try {
-            const result = await getTutorialsByUser(currentUser.uid);
-            if (result.success) {
-                setUserTutorials(result.data);
-            } else {
-                console.error('Error fetching user tutorials:', result.error);
-            }
-        } catch (error) {
-            console.error('Error fetching user tutorials:', error);
-        }
-    };
+
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
@@ -243,7 +231,6 @@ function ProfilePage() {
                 <ProfileLayout
                     userRole={userRole}
                     profileData={profileData}
-                    userTutorials={userTutorials}
                     onImageUpload={handleImageUpload}
                     onProfileUpdate={updateProfileData}
                     currentUser={currentUser}

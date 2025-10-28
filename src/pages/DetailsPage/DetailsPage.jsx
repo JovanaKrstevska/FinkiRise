@@ -54,7 +54,7 @@ function DetailsPage() {
 
 
     const handleBackToLab = () => {
-        navigate('/lab');
+        navigate('/labs');
     };
 
     const handleStartLab = () => {

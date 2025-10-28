@@ -1,0 +1,320 @@
+.exam-subject-layout {
+    position: relative;
+    right: 5px;
+    top: 0.5vw;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(90, 160, 185, 0.15);
+    margin: 0 auto 30px auto;
+    border: 3px solid #b1d8ea;
+    width: 90%;
+}
+
+.exam-subject-container {
+    width: 90vw;
+    min-height: 38vw;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.exam-subject-card {
+    background: white;
+    border: 2px solid #4a90a4;
+    border-radius: 12px;
+    padding: 0;
+    overflow: visible;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: 80px;
+}
+
+.exam-subject-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+.exam-subject-card-header {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%);
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exam-subject-name {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #015E86;
+    letter-spacing: 0.3px;
+}
+
+.exam-subject-card-content {
+    padding: 5px 20px;
+    display: block !important;
+    width: 100%;
+    min-height: 40px;
+    background: transparent;
+}
+
+.exam-subject-info {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 30px !important;
+}
+
+.exam-subject-star-icon {
+    color: #4a90a4 !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    margin-right: 7px !important;
+}
+
+.exam-subject-name {
+    color: #015E86 !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2px !important;
+    display: inline-block !important;
+    visibility: visible !important;
+}
+
+.exam-professor-edit-btn-small {
+    background-color: #4a90a4;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.exam-professor-edit-btn-small:hover {
+    background-color: #3a7a8a;
+    transform: translateY(-1px);
+}
+
+.exam-create-link {
+    color: #4a90a4;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 8px;
+    text-decoration: underline;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.exam-create-link:hover {
+    color: #3a7a8a;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+/* Professor create section */
+.exam-professor-create-section {
+    margin-top: 5px;
+}
+
+.exam-professor-create-card-simple {
+    background: white;
+    border: 2px dashed #4a90a4;
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.exam-professor-create-card-simple:hover {
+    border-color: #3a7a8a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.exam-professor-create-btn-simple {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 30px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #4a90a4;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.exam-professor-create-btn-simple:hover {
+    background-color: rgba(74, 144, 164, 0.05);
+    color: #3a7a8a;
+}
+
+.exam-professor-plus-icon-simple {
+    font-size: 24px;
+    font-weight: 300;
+}
+
+.exam-professor-create-text-simple {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.exam-btn-dodaj {
+    padding: 8px 16px;
+    background-color: #4a90a4;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 20%;
+}
+
+.exam-btn-otkazi {
+    padding: 8px 16px;
+    background-color: #4a90a4;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 20%;
+}
+
+/* Loading and error states */
+.exam-loading-message,
+.exam-error-message,
+.exam-no-subjects-message {
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 18px;
+    color: #4a90a4;
+    background: white;
+    border: 2px solid #4a90a4;
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.exam-error-message {
+    color: #d32f2f;
+    border-color: #d32f2f;
+}
+
+.exam-loading-message {
+    color: #666;
+    border-color: #ddd;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .exam-subject-layout {
+        padding: 16px;
+    }
+
+    .exam-subject-card-header {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .exam-subject-card-content {
+        padding: 12px 16px;
+    }
+
+    .exam-subject-name {
+        font-size: 16px;
+    }
+
+    .exam-subject-name {
+        font-size: 14px;
+    }
+
+    .exam-professor-edit-btn-small {
+        align-self: flex-end;
+    }
+
+    .exam-create-link {
+        display: block;
+        margin-left: 0;
+        margin-top: 5px;
+        font-size: 13px;
+    }
+
+    .exam-professor-create-btn-simple {
+        padding: 25px 15px;
+    }
+
+    .exam-professor-plus-icon-simple {
+        font-size: 20px;
+    }
+
+    .exam-professor-create-text-simple {
+        font-size: 14px;
+    }
+}
+
+/* Animation for loading state */
+.exam-subject-card {
+    animation: examSubjectFadeInUp 0.3s ease-out;
+}
+
+@keyframes examSubjectFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus states for accessibility */
+.exam-subject-card:focus {
+    outline: 2px solid #4a90a4;
+    outline-offset: 2px;
+}
+
+.exam-subject-card:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Force visibility of exam content */
+.exam-subject-card .exam-subject-card-content {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+.exam-subject-card .exam-subject-card-content .exam-subject-info {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+}
+
+.exam-subject-card .exam-subject-card-content .exam-subject-info .exam-subject-star-icon,
+.exam-subject-card .exam-subject-card-content .exam-subject-info .exam-subject-name {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}

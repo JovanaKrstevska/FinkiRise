@@ -309,7 +309,7 @@
     background: white;
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     text-align: center;
     height: 100%;
 }
@@ -524,7 +524,7 @@
 .tutorials-navigation {
     position: relative;
     top: 20vw;
-    right: 15vw;
+    left: -16vw;
     display: flex;
     gap: 10px;
 }
@@ -554,6 +554,8 @@
     /* Show 3 items at 60px each */
     overflow: hidden;
     border-radius: 8px;
+    background-color: #0a6a797a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .student-tutorials-title {
@@ -610,7 +612,7 @@
     background: #78AEC5;
     border-radius: 15px;
     padding: 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .subjects-header {

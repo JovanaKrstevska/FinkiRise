@@ -110,8 +110,16 @@
     transform: scale(1.05);
 }
 
+.professor-subject-card .subject-name {
+    color: #015E86 !important;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
 .subject-name {
-    color: #22657e;
+    color: #015E86 !important;
     font-size: 16px;
     font-weight: 600;
     margin-top: 5px;

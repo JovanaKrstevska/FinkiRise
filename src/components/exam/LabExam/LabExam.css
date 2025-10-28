@@ -172,9 +172,11 @@
 }
 
 /* File Upload */
-.file-upload-area {
+.file-upload-area-labexam {
+    position: relative;
+    top: 1vw;
     width: 74vw;
-    height: 50%;
+    height: 70%;
     padding: 20px;
     border: 2px dashed #4a90a4;
     border-radius: 10px;
@@ -182,7 +184,7 @@
     background-color: #f0f8ff;
 }
 
-.file-input-field {
+.file-input-field-labexam {
     position: relative;
     top: -1.5vw;
     left: -1vw;
@@ -192,7 +194,7 @@
     background: white;
     border-radius: 5px;
     cursor: pointer;
-    height: 107%;
+    height: 105%;
     width: 75vw;
 }
 

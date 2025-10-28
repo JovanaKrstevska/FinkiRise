@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { getSubjectsByProfessor } from '../../../services/databaseService';
+import TutorialsList from '../../widgets/TutorialsList/TutorialsList';
 import './ProfileLayout.css';
 import Input from "../../ui/Input/Input";
 
-function ProfileLayout({ userRole, profileData, userTutorials, onImageUpload, onProfileUpdate, currentUser }) {
+function ProfileLayout({ userRole, profileData, onImageUpload, onProfileUpdate, currentUser }) {
     const [tasks, setTasks] = useState([
         { id: 1, text: 'Прегледување на домашните', completed: true },
         { id: 2, text: 'Консултации', completed: true },
@@ -11,8 +12,7 @@ function ProfileLayout({ userRole, profileData, userTutorials, onImageUpload, on
         { id: 4, text: 'Административни таскови', completed: false }
     ]);
 
-    const [currentTutorialSlide, setCurrentTutorialSlide] = useState(0);
-    const tutorialsPerSlide = 3;
+
 
     const [recentSubjects, setRecentSubjects] = useState([]);
     const [currentSubjectSlide, setCurrentSubjectSlide] = useState(0);
@@ -33,17 +33,7 @@ function ProfileLayout({ userRole, profileData, userTutorials, onImageUpload, on
         onProfileUpdate(profileData);
     };
 
-    const nextTutorialSlide = () => {
-        const totalTutorials = userTutorials.length > 0 ? userTutorials.length : 6;
-        const maxSlide = Math.ceil(totalTutorials / tutorialsPerSlide) - 1;
-        setCurrentTutorialSlide(prev => prev < maxSlide ? prev + 1 : 0);
-    };
 
-    const prevTutorialSlide = () => {
-        const totalTutorials = userTutorials.length > 0 ? userTutorials.length : 6;
-        const maxSlide = Math.ceil(totalTutorials / tutorialsPerSlide) - 1;
-        setCurrentTutorialSlide(prev => prev > 0 ? prev - 1 : maxSlide);
-    };
 
     // Subject navigation functions
     const nextSubjectSlide = () => {
@@ -90,11 +80,11 @@ function ProfileLayout({ userRole, profileData, userTutorials, onImageUpload, on
             const fetchSubjects = async () => {
                 try {
                     console.log('🔍 Fetching subjects for user:', currentUser.uid, 'Role:', userRole);
-                    
+
                     // Try to get subjects by professor first
                     const result = await getSubjectsByProfessor(currentUser.uid);
                     console.log('📊 Firebase result:', result);
-                    
+
                     if (result.success && result.data && result.data.length > 0) {
                         console.log('📚 Found subjects:', result.data);
                         const mostRecent = getMostRecentSubjects(result.data);
@@ -106,7 +96,7 @@ function ProfileLayout({ userRole, profileData, userTutorials, onImageUpload, on
                         const { getAllSubjects } = await import('../../../services/databaseService');
                         const allResult = await getAllSubjects();
                         console.log('📊 All subjects result:', allResult);
-                        
+
                         if (allResult.success && allResult.data && allResult.data.length > 0) {
                             const mostRecent = getMostRecentSubjects(allResult.data);
                             console.log('🎯 All subjects - most recent:', mostRecent);
@@ -320,38 +310,7 @@ function ProfileLayout({ userRole, profileData, userTutorials, onImageUpload, on
                         </div>
 
                         {/* Tutorials */}
-                        <div className="student-tutorials-card">
-                            <div className="tutorials-header">
-                                <h3 className="student-tutorials-title">Твои Туторијали:</h3>
-                                <div className="tutorials-navigation">
-                                    <button onClick={prevTutorialSlide} className="tutorial-nav-btn tutorial-prev">
-                                        ◀
-                                    </button>
-                                    <button onClick={nextTutorialSlide} className="tutorial-nav-btn tutorial-next">
-                                        ▶
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="tutorials-slider">
-                                <ul className="student-tutorials-list" style={{
-                                    transform: `translateY(-${currentTutorialSlide * (tutorialsPerSlide * 60)}px)`
-                                }}>
-                                    {userTutorials.length > 0 ? (
-                                        userTutorials.map((tutorial) => (
-                                            <li key={tutorial.id} className="student-tutorial-item">
-                                                {tutorial.title}
-                                            </li>
-                                        ))
-                                    ) : (
-                                        Array.from({ length: 6 }, (_, index) => (
-                                            <li key={index} className="student-tutorial-item">
-                                                Име на Туторијалот
-                                            </li>
-                                        ))
-                                    )}
-                                </ul>
-                            </div>
-                        </div>
+                        <TutorialsList />
                     </div>
                 </div>
 

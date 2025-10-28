@@ -1,17 +1,16 @@
-import './LabLayout.css';
+import './ExamLayout.css';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getAllSubjects, getSubjectsByProfessor } from '../../../services/databaseService';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../config/firebase';
-import Input from '../../ui/Input/Input';
 import Button from '../../ui/Button/Button';
 
-function LabLayout() {
+function ExamLayout() {
     const [subjects, setSubjects] = useState([]);
     const [allSubjects, setAllSubjects] = useState([]);
-    const [labs, setLabs] = useState([]);
+    const [exams, setExams] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [showCreateForm, setShowCreateForm] = useState(false);
@@ -21,20 +20,6 @@ function LabLayout() {
 
     useEffect(() => {
         fetchSubjects();
-    }, []);
-
-    // Load displayed subjects from localStorage
-    useEffect(() => {
-        const savedDisplayedSubjects = localStorage.getItem('displayedSubjects');
-        if (savedDisplayedSubjects) {
-            try {
-                const parsedSubjects = JSON.parse(savedDisplayedSubjects);
-                // We'll merge these with fetched subjects after they're loaded
-                console.log('Loaded displayed subjects from localStorage:', parsedSubjects);
-            } catch (error) {
-                console.error('Error parsing saved subjects:', error);
-            }
-        }
     }, []);
 
     const fetchSubjects = async () => {
@@ -57,18 +42,16 @@ function LabLayout() {
                 setAllSubjects(allSubjectsResult.data);
             }
 
-            // Fetch ALL labs from Firebase
+            // Fetch ALL exams from Firebase
             try {
-                const labsSnapshot = await getDocs(collection(db, 'labs'));
-                const allLabs = [];
-                labsSnapshot.forEach((doc) => {
-                    allLabs.push({ id: doc.id, ...doc.data() });
+                const examsSnapshot = await getDocs(collection(db, 'exams'));
+                const allExams = [];
+                examsSnapshot.forEach((doc) => {
+                    allExams.push({ id: doc.id, ...doc.data() });
                 });
-                console.log('All labs from Firebase:', allLabs);
-                console.log('Lab IDs:', allLabs.map(lab => ({ title: lab.title, id: lab.id })));
-                setLabs(allLabs);
-            } catch (labError) {
-                console.error('Error fetching all labs:', labError);
+                setExams(allExams);
+            } catch (examError) {
+                console.error('Error fetching all exams:', examError);
             }
 
             if (result.success) {
@@ -89,66 +72,7 @@ function LabLayout() {
                     }
                 }
 
-                // Add 5th subject - another unique one if available
-                for (const subject of sortedSubjects) {
-                    if (!seenNames.has(subject.name) && uniqueSubjects.length < 5) {
-                        uniqueSubjects.push(subject);
-                        seenNames.add(subject.name);
-                        break;
-                    }
-                }
-
-                // Add 6th subject - same subject but different semester/year
-                for (const subject of sortedSubjects) {
-                    if (uniqueSubjects.length >= 6) break;
-
-                    // Find a subject that has the same name as one we already have but different year/semester
-                    const existingSubject = uniqueSubjects.find(s => s.name === subject.name);
-                    if (existingSubject &&
-                        (existingSubject.academicYear !== subject.academicYear ||
-                            existingSubject.semesterType !== subject.semesterType) &&
-                        !uniqueSubjects.find(s => s.id === subject.id)) {
-                        uniqueSubjects.push(subject);
-                        break;
-                    }
-                }
-
-                // If we still don't have 6, fill with any remaining subjects
-                if (uniqueSubjects.length < 6) {
-                    for (const subject of sortedSubjects) {
-                        if (uniqueSubjects.length >= 6) break;
-                        if (!uniqueSubjects.find(s => s.id === subject.id)) {
-                            uniqueSubjects.push(subject);
-                        }
-                    }
-                }
-
-                // Load saved displayed subjects and merge with default ones
-                const savedDisplayedSubjects = localStorage.getItem('displayedSubjects');
-                let finalSubjects = uniqueSubjects;
-
-                if (savedDisplayedSubjects) {
-                    try {
-                        const savedSubjectIds = JSON.parse(savedDisplayedSubjects);
-                        const savedSubjects = result.data.filter(subject =>
-                            savedSubjectIds.includes(subject.id)
-                        );
-
-                        // Combine unique subjects with saved ones, avoiding duplicates
-                        const allDisplayedSubjects = [...uniqueSubjects];
-                        savedSubjects.forEach(savedSubject => {
-                            if (!allDisplayedSubjects.find(s => s.id === savedSubject.id)) {
-                                allDisplayedSubjects.push(savedSubject);
-                            }
-                        });
-
-                        finalSubjects = allDisplayedSubjects;
-                    } catch (error) {
-                        console.error('Error loading saved subjects:', error);
-                    }
-                }
-
-                setSubjects(finalSubjects);
+                setSubjects(uniqueSubjects);
             } else {
                 setError(result.error || 'Failed to fetch subjects');
             }
@@ -160,12 +84,8 @@ function LabLayout() {
         }
     };
 
-    const handleLabClick = (subject) => {
-        navigate(`/lab/${subject.id}`);
-    };
-
     const formatSubjectName = (subject) => {
-        return `${subject.name} - ${subject.academicYear}`;
+        return `Испит ${new Date().toLocaleDateString('mk-MK')} - Термин ${Math.floor(Math.random() * 4) + 1}`;
     };
 
     const handleAddExistingSubject = () => {
@@ -176,14 +96,8 @@ function LabLayout() {
 
         const selectedSubject = allSubjects.find(s => s.id === selectedSubjectId);
         if (selectedSubject) {
-            // Add the selected subject to the displayed subjects
             const updatedSubjects = [...subjects, selectedSubject];
             setSubjects(updatedSubjects);
-
-            // Save to localStorage
-            const subjectIds = updatedSubjects.map(s => s.id);
-            localStorage.setItem('displayedSubjects', JSON.stringify(subjectIds));
-
             setSelectedSubjectId('');
             setShowCreateForm(false);
             alert('Предметот е успешно додаден!');
@@ -194,11 +108,6 @@ function LabLayout() {
         if (window.confirm('Дали сте сигурни дека сакате да го отстраните овој предмет од приказот?')) {
             const updatedSubjects = subjects.filter(s => s.id !== subjectId);
             setSubjects(updatedSubjects);
-
-            // Update localStorage
-            const subjectIds = updatedSubjects.map(s => s.id);
-            localStorage.setItem('displayedSubjects', JSON.stringify(subjectIds));
-
             alert('Предметот е успешно отстранет!');
         }
     };
@@ -211,9 +120,9 @@ function LabLayout() {
 
     if (loading) {
         return (
-            <div className="lab-layout">
-                <div className="lab-container">
-                    <div className="loading-message">Loading subjects...</div>
+            <div className="exam-subject-layout">
+                <div className="exam-subject-container">
+                    <div className="exam-loading-message">Loading subjects...</div>
                 </div>
             </div>
         );
@@ -221,22 +130,22 @@ function LabLayout() {
 
     if (error) {
         return (
-            <div className="lab-layout">
-                <div className="lab-container">
-                    <div className="error-message">Error: {error}</div>
+            <div className="exam-subject-layout">
+                <div className="exam-subject-container">
+                    <div className="exam-error-message">Error: {error}</div>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="lab-layout">
-            <div className="lab-container">
+        <div className="exam-subject-layout">
+            <div className="exam-subject-container">
                 {subjects.length === 0 ? (
-                    <div className="no-subjects-message">
+                    <div className="exam-no-subjects-message">
                         {userRole === 'professor'
                             ? 'No subjects available. Please create subjects first.'
-                            : 'No subjects available for lab exercises.'
+                            : 'No subjects available for exams.'
                         }
                     </div>
                 ) : (
@@ -244,63 +153,58 @@ function LabLayout() {
                         {subjects.map((subject) => (
                             <div
                                 key={subject.id}
-                                className="lab-card"
+                                className="exam-subject-card"
                             >
-                                <div className="lab-card-header">
-                                    <h3 className="subject-name-lab">{formatSubjectName(subject)}</h3>
+                                <div className="exam-subject-card-header">
+                                    <h3 className="exam-subject-name">{formatSubjectName(subject)}</h3>
                                     {userRole === 'professor' && (
                                         <button
-                                            className="professor-edit-btn-small"
+                                            className="exam-professor-edit-btn-small"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleRemoveSubject(subject.id);
                                             }}
-                                            style={{ backgroundColor: '#4a90a4',
-                                                    width: '10vw'
-                                             }}
                                         >
                                             Remove
                                         </button>
                                     )}
                                 </div>
-                                <div className="lab-card-content">
-                                    <div className="lab-info">
+                                <div className="exam-subject-card-content">
+                                    <div className="exam-subject-info">
                                         <div>
-                                            {/* Display ALL labs for this subject */}
-                                            {labs.filter(lab => lab.subjectId === subject.id).length > 0 ? (
+                                            {/* Display exams for this subject */}
+                                            {exams.filter(exam => exam.subjectId === subject.id).length > 0 ? (
                                                 <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                                                    {labs.filter(lab => lab.subjectId === subject.id).map((lab) => (
-                                                        <li key={lab.id} style={{ marginBottom: '5px' }}>
-                                                            <span className="star-icon">★</span>
+                                                    {exams.filter(exam => exam.subjectId === subject.id).map((exam) => (
+                                                        <li key={exam.id} style={{ marginBottom: '5px' }}>
+                                                            <span className="exam-subject-star-icon">★</span>
                                                             <span
-                                                                className="lab-name"
+                                                                className="exam-subject-name"
                                                                 style={{ cursor: 'pointer', textDecoration: 'underline' }}
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
-                                                                    console.log('Clicking lab:', lab.title, 'with ID:', lab.id);
-                                                                    console.log('Navigating to:', `/labs/${lab.id}`);
-                                                                    navigate(`/labs/${lab.id}`);
+                                                                    navigate(`/exams/${exam.id}`);
                                                                 }}
                                                             >
-                                                                {lab.title}
+                                                                {exam.title || 'Име на испитот'}
                                                             </span>
                                                         </li>
                                                     ))}
                                                 </ul>
                                             ) : (
-                                                <span className="lab-name">Лабораториска вежба</span>
+                                                <span className="exam-subject-name">Име на испитот</span>
                                             )}
 
-                                            {/* Create new lab link - ONLY FOR PROFESSORS */}
+                                            {/* Create new exam link - ONLY FOR PROFESSORS */}
                                             {userRole === 'professor' && (
                                                 <span
-                                                    className="create-lab-link"
+                                                    className="exam-create-link"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        navigate(`/professor/labs/create/${subject.id}`);
+                                                        navigate(`/professor/exams/create/${subject.id}`);
                                                     }}
                                                 >
-                                                    + Креирај нова
+                                                    + Креирај нов
                                                 </span>
                                             )}
                                         </div>
@@ -311,19 +215,19 @@ function LabLayout() {
 
                         {/* Professor-only create new section */}
                         {userRole === 'professor' && (
-                            <div className="professor-create-section">
+                            <div className="exam-professor-create-section">
                                 {!showCreateForm ? (
-                                    <div className="professor-create-card-simple">
+                                    <div className="exam-professor-create-card-simple">
                                         <button
-                                            className="professor-create-btn-simple"
+                                            className="exam-professor-create-btn-simple"
                                             onClick={() => setShowCreateForm(true)}
                                         >
-                                            <span className="professor-plus-icon-simple">+</span>
-                                            <span className="professor-create-text-simple">Креирај ново</span>
+                                            <span className="exam-professor-plus-icon-simple">+</span>
+                                            <span className="exam-professor-create-text-simple">Креирај ново</span>
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="professor-create-card-simple">
+                                    <div className="exam-professor-create-card-simple">
                                         <div style={{ padding: '20px' }}>
                                             <h3 style={{ marginBottom: '15px' }}>Додај постоечки предмет</h3>
                                             <select
@@ -348,7 +252,7 @@ function LabLayout() {
                                             <div style={{ display: 'flex', gap: '10px' }}>
                                                 <Button
                                                     onClick={handleAddExistingSubject}
-                                                    className='btn-dodaj'
+                                                    className='exam-btn-dodaj'
                                                     content={"Додај"}
                                                 />
                                                 <Button
@@ -356,7 +260,7 @@ function LabLayout() {
                                                         setShowCreateForm(false);
                                                         setSelectedSubjectId('');
                                                     }}
-                                                    className='btn-otkazi'
+                                                    className='exam-btn-otkazi'
                                                     content={"Откажи"}
                                                 />
                                             </div>
@@ -372,4 +276,4 @@ function LabLayout() {
     );
 }
 
-export default LabLayout;
+export default ExamLayout;

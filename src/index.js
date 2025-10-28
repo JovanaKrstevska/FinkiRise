@@ -13,17 +13,21 @@ import LabPage from './pages/LabPage/LabPage';
 import DetailsPage from './pages/DetailsPage/DetailsPage';
 import CreateLabPage from './pages/CreateLabPage/CreateLabPage';
 import { AuthProvider } from './contexts/AuthContext';
+import { SubjectHistoryProvider } from './contexts/SubjectHistoryContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import './utils/setupTestData'; // For development testing
 import './utils/resetDatabase'; // For database reset
 import TutorialPage from './pages/TutorialPage/TutorialPage';
+import ExamPage from './pages/ExamPage/ExamPage';
+import ExamDetailPage from './pages/ExamDetailPage/ExamDetailPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <React.StrictMode>
       <AuthProvider>
-        <Routes>
+        <SubjectHistoryProvider>
+          <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/home' element={
@@ -51,19 +55,29 @@ root.render(
               <AboutUsPage />
             </ProtectedRoute>
           } />
-          <Route path='/tutorial' element={
+          <Route path='/tutorials' element={
             <ProtectedRoute>
               <TutorialPage />
             </ProtectedRoute>
           } />
-          <Route path='/lab' element={
+          <Route path='/labs' element={
             <ProtectedRoute>
               <LabPage />
             </ProtectedRoute>
           } />
-          <Route path='/lab/:labId' element={
+          <Route path='/exams' element={
+            <ProtectedRoute>
+              <ExamPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/labs/:labId' element={
             <ProtectedRoute>
               <DetailsPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/exams/:subjectId' element={
+            <ProtectedRoute>
+              <ExamDetailPage />
             </ProtectedRoute>
           } />
           <Route path='/professor/labs/create/:subjectId' element={
@@ -71,7 +85,8 @@ root.render(
               <CreateLabPage />
             </ProtectedRoute>
           } />
-        </Routes>
+          </Routes>
+        </SubjectHistoryProvider>
       </AuthProvider>
     </React.StrictMode>
   </BrowserRouter>

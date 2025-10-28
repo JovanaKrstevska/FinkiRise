@@ -1,0 +1,124 @@
+.recent-subjects-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.recent-subjects-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.recent-subjects-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.clear-history-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.clear-history-btn:hover {
+    background: #c82333;
+}
+
+.recent-subjects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.recent-subject-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 4px solid #8bbbd1;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.recent-subject-item:hover {
+    background: #e9ecef;
+    transform: translateX(2px);
+}
+
+.subject-info {
+    flex: 1;
+}
+
+.subject-name {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.subject-details {
+    margin: 0;
+    font-size: 12px;
+    color: #666;
+}
+
+.access-time {
+    font-size: 11px;
+    color: #999;
+    font-weight: 500;
+    white-space: nowrap;
+    margin-left: 10px;
+}
+
+.no-recent-subjects {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.no-recent-subjects p {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.no-recent-subjects small {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Scrollbar styling */
+.recent-subjects-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.recent-subjects-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+}
+
+.recent-subjects-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+}
+
+.recent-subjects-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

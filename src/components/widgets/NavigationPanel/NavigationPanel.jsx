@@ -9,18 +9,18 @@ function NavigationPanel() {
     const navigationItems = [
         {
             title: "Туторијали",
-            studentAction: () => navigate('/tutorial'),
-            professorAction: () => navigate('/tutorial')
+            studentAction: () => navigate('/tutorials'),
+            professorAction: () => navigate('/tutorials')
         },
         {
             title: "Лабораториски",
-            studentAction: () => navigate('/lab'),
-            professorAction: () => navigate('/lab')
+            studentAction: () => navigate('/labs'),
+            professorAction: () => navigate('/labs')
         },
         {
             title: "Испити",
-            studentAction: () => console.log('Student: View exams'),
-            professorAction: () => console.log('Professor: Create exams')
+            studentAction: () => navigate('/exams'),
+            professorAction: () => navigate('/exams')
         }
     ];
 

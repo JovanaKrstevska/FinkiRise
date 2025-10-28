@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './SubjectGrid.css';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useSubjectHistory } from '../../../contexts/SubjectHistoryContext';
 import { getAllSubjects, getSubjectsByAcademicPeriod } from '../../../services/databaseService';
 
 function SubjectGrid() {
@@ -10,6 +12,9 @@ function SubjectGrid() {
     const [selectedAcademicYear, setSelectedAcademicYear] = useState('all');
     const [selectedSemesterType, setSelectedSemesterType] = useState('all');
     const { currentUser } = useAuth();
+    const { addSubjectToHistory } = useSubjectHistory();
+    const navigate = useNavigate();
+    const location = useLocation();
     const itemsPerPage = 6;
 
     useEffect(() => {
@@ -152,7 +157,21 @@ function SubjectGrid() {
 
             <div className="subject-grid">
                 {currentSubjects.map((subject) => (
-                    <div key={subject.id} className="subject-card">
+                    <div
+                        key={subject.id}
+                        className="subject-card"
+                        onClick={() => {
+                            addSubjectToHistory(subject);
+                            console.log('📚 Subject clicked:', subject.name);
+                            
+                            // Navigate based on current page
+                            if (location.pathname === '/exams') {
+                                navigate(`/exams/${subject.id}`);
+                            } else if (location.pathname === '/labs') {
+                                navigate(`/courses/${subject.id}`);
+                            }
+                        }}
+                    >
                         <div className="subject-logo">
                             <img
                                 src="/assets/icons/finki_subject_logo.svg"
