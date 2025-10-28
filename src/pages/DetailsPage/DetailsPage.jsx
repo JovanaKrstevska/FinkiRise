@@ -4,11 +4,11 @@ import NavBar from '../../components/ui/NavBar/NavBar';
 import './DetailsPage.css';
 import Button from '../../components/ui/Button/Button';
 import LabExam from '../../components/exam/LabExam/LabExam';
-import { getLabById, submitLabExam } from '../../services/databaseService';
+import { getLabById, submitLabExam, getExamById, submitExam } from '../../services/databaseService';
 import { useAuth } from '../../contexts/AuthContext';
 
 function DetailsPage() {
-    const { labId } = useParams();
+    const { labId, examId } = useParams();
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     const [subject, setSubject] = useState(null);
@@ -20,19 +20,25 @@ function DetailsPage() {
     const [reviewMode, setReviewMode] = useState(false);
     const [currentReviewQuestion, setCurrentReviewQuestion] = useState(0);
 
-    useEffect(() => {
-        fetchLabData();
-    }, [labId]);
+    // Determine if this is a lab or exam
+    const isExam = !!examId;
+    const contentId = examId || labId;
 
-    const fetchLabData = async () => {
+    useEffect(() => {
+        fetchContentData();
+    }, [contentId, isExam]);
+
+    const fetchContentData = async () => {
         try {
             setLoading(true);
 
-            // Fetch lab data from Firebase
-            const labResult = await getLabById(labId);
+            // Fetch data from Firebase based on type
+            const result = isExam
+                ? await getExamById(contentId)
+                : await getLabById(contentId);
 
-            if (labResult.success) {
-                setLabData(labResult.data);
+            if (result.success) {
+                setLabData(result.data);
 
                 // Mock subject data - you can fetch this from subjects collection too
                 const mockSubject = {
@@ -42,10 +48,10 @@ function DetailsPage() {
                 };
                 setSubject(mockSubject);
             } else {
-                console.error('Failed to fetch lab data:', labResult.error);
+                console.error(`Failed to fetch ${isExam ? 'exam' : 'lab'} data:`, result.error);
             }
         } catch (error) {
-            console.error('Error fetching lab data:', error);
+            console.error(`Error fetching ${isExam ? 'exam' : 'lab'} data:`, error);
         } finally {
             setLoading(false);
         }
@@ -54,7 +60,7 @@ function DetailsPage() {
 
 
     const handleBackToLab = () => {
-        navigate('/labs');
+        navigate(isExam ? '/exams' : '/labs');
     };
 
     const handleStartLab = () => {
@@ -86,7 +92,7 @@ function DetailsPage() {
             // Save submission to Firebase
             const submissionData = {
                 studentId: currentUser.uid,
-                labId: labData.id,
+                [isExam ? 'examId' : 'labId']: labData.id,
                 subjectId: labData.subjectId,
                 answers: submission.answers,
                 score: score,
@@ -95,7 +101,9 @@ function DetailsPage() {
                 completedAt: submission.completedAt
             };
 
-            const result = await submitLabExam(submissionData);
+            const result = isExam
+                ? await submitExam(submissionData)
+                : await submitLabExam(submissionData);
 
             if (result.success) {
                 console.log('✅ Exam submitted successfully:', result.id);
@@ -124,7 +132,7 @@ function DetailsPage() {
         return (
             <div>
                 <NavBar />
-                <div className="lab-details-loading">Loading lab data...</div>
+                <div className="lab-details-loading">Loading {isExam ? 'exam' : 'lab'} data...</div>
             </div>
         );
     }
@@ -139,6 +147,7 @@ function DetailsPage() {
                         labData={labData}
                         onSubmit={handleExamSubmit}
                         onExit={handleExamExit}
+                        isExam={isExam}
                     />
                 </div>
             </div>
@@ -266,10 +275,10 @@ function DetailsPage() {
                     <div className="lab-details-container">
                         <div className="exam-results">
                             <div className="results-card">
-                                <h1 className="results-title">Стигнавте до крајот на лабораториската!</h1>
+                                <h1 className="results-title">Стигнавте до крајот на {isExam ? 'испитот' : 'лабораториската'}!</h1>
 
                                 <div className="results-message">
-                                    <p>Резултатите од лабораториската по предметот <strong>"{subject?.name || 'Предмет'}"</strong> ќе бидат објавени од страна на професорите. Дотолку сакате да си ги видите решенијата притеснете на копчето <strong>Преглед</strong>.</p>
+                                    <p>Резултатите од {isExam ? 'испитот' : 'лабораториската'} по предметот <strong>"{subject?.name || 'Предмет'}"</strong> ќе бидат објавени од страна на професорите. Дотолку сакате да си ги видите решенијата притеснете на копчето <strong>Преглед</strong>.</p>
                                 </div>
                             </div>
 
@@ -307,17 +316,45 @@ function DetailsPage() {
                         <h1 className="lab-title">{labData.title}</h1>
 
                         <div className="lab-description">
-                            <h3 className="description-title">НАПОМЕНА:</h3>
-                            <p className="description-text">
-                                Лабораториската вежба не е задолжителна и носи дополнителни поени.
-                                Секое прашање носи по 5 поени и нема негативни поени. Може само еднаш
-                                да ја направите лабораториската вежба.
-                            </p>
+                            {isExam ? (
+                                <>
+                                    <p className="description-text">
+                                        За да го положите овој дел треба да извадите мин <strong>50 поени</strong>.
+                                        Материјали Ви се дозволени така што кликање на копчето материјали
+                                        автоматски ќе ви се симнат сите дадени материјали кои Ви се потребни.
+                                    </p>
+                                    <h3 className="description-title">НАПОМЕНА:</h3>
+                                    <p className="description-text">
+                                        За секое помагање, зборување и препишување, <strong>Ви се сопира испитот</strong> и ќе бидете на дисциплинска комисија!
+                                    </p>
+                                    <div style={{ textAlign: 'center', margin: '20px 0', fontSize: '24px', fontWeight: 'bold', color: '#2196F3' }}>
+                                        Со среќа!
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <h3 className="description-title">НАПОМЕНА:</h3>
+                                    <p className="description-text">
+                                        Лабораториската вежба не е задолжителна и носи дополнителни поени.
+                                        Секое прашање носи по 5 поени и нема негативни поени. Може само еднаш
+                                        да ја направите лабораториската вежба.
+                                    </p>
+                                </>
+                            )}
                         </div>
 
                         <div className="lab-stats">
-                            <span className="total-questions">Вкупно број на прашања: {labData.questions.length}</span>
-                            <span className="total-points">Вкупно поени: {labData.questions.reduce((sum, q) => sum + q.points, 0)}</span>
+                            {isExam ? (
+                                <>
+                                    <span className="total-questions">Време: 01:30 минути</span>
+                                    <span className="total-points">Вкупно број на прашања: {labData.questions.length}</span>
+                                </>
+                            ) : (
+                                <>
+                                    <span className="total-questions">Вкупно број на прашања: {labData.questions.length}</span>
+                                    <span className="total-points">Вкупно поени: {labData.questions.reduce((sum, q) => sum + q.points, 0)}</span>
+                                </>
+                            )}
                         </div>
 
                         <button className="start-lab-btn" onClick={handleStartLab}>

@@ -1,13 +1,64 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './LabExam.css';
 
-function LabExam({ labData, onSubmit, onExit }) {
+function LabExam({ labData, onSubmit, onExit, isExam = false }) {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [answers, setAnswers] = useState({});
+    const [timeLeft, setTimeLeft] = useState(isExam ? 90 * 60 : null); // 90 minutes in seconds for exams
+    const [startTime] = useState(new Date()); // Track when exam/lab started
+
+    const answersRef = useRef(answers);
+    const onSubmitRef = useRef(onSubmit);
 
     const questions = labData?.questions || [];
 
-    // Timer removed - no time limit for lab exam
+    // Keep refs updated
+    useEffect(() => {
+        answersRef.current = answers;
+    }, [answers]);
+
+    useEffect(() => {
+        onSubmitRef.current = onSubmit;
+    }, [onSubmit]);
+
+    // Timer for exams only - simplified approach
+    useEffect(() => {
+        if (!isExam) return;
+
+
+        
+        const timer = setInterval(() => {
+            setTimeLeft(currentTime => {
+                const newTime = currentTime - 1;
+                
+                if (newTime <= 0) {
+                    clearInterval(timer);
+                    // Auto submit
+                    const submission = {
+                        answers: answersRef.current,
+                        completedAt: new Date(),
+                        timeSpent: (90 * 60)
+                    };
+                    onSubmitRef.current(submission);
+                    return 0;
+                }
+                
+                return newTime;
+            });
+        }, 1000);
+
+        return () => {
+            clearInterval(timer);
+        };
+    }, [isExam]);
+
+    // Format time for display (HH:MM)
+    const formatTime = (seconds) => {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = seconds % 60;
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    };
 
     // Exam starts immediately, no need for handleStartExam
 
@@ -38,10 +89,22 @@ function LabExam({ labData, onSubmit, onExit }) {
     };
 
     const handleSubmitExam = () => {
+        // Calculate time spent
+        let timeSpent = 0;
+        const completedAt = new Date();
+        
+        if (isExam && timeLeft !== null) {
+            // For exams: initial time (90 minutes = 5400 seconds) minus remaining time
+            timeSpent = (90 * 60) - timeLeft;
+        } else {
+            // For labs: calculate actual time spent from start to completion
+            timeSpent = Math.floor((completedAt - startTime) / 1000); // in seconds
+        }
+
         const submission = {
             answers,
-            completedAt: new Date(),
-            timeSpent: 0 // No time tracking
+            completedAt: completedAt,
+            timeSpent: timeSpent
         };
         onSubmit(submission);
     };
@@ -155,6 +218,13 @@ function LabExam({ labData, onSubmit, onExit }) {
                     </div>
                 </div>
             </div>
+
+            {/* Timer for exams only */}
+            {isExam && timeLeft !== null && (
+                <div className="exam-timer">
+                    Време: {formatTime(timeLeft)}
+                </div>
+            )}
         </div>
     );
 }

@@ -20,6 +20,7 @@ import './utils/resetDatabase'; // For database reset
 import TutorialPage from './pages/TutorialPage/TutorialPage';
 import ExamPage from './pages/ExamPage/ExamPage';
 import ExamDetailPage from './pages/ExamDetailPage/ExamDetailPage';
+import CreateExamPage from './pages/CreateExamPage/CreateExamPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -83,6 +84,16 @@ root.render(
           <Route path='/professor/labs/create/:subjectId' element={
             <ProtectedRoute>
               <CreateLabPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/exams/detail/:examId' element={
+            <ProtectedRoute>
+              <DetailsPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/professor/exams/create/:subjectId' element={
+            <ProtectedRoute>
+              <CreateExamPage />
             </ProtectedRoute>
           } />
           </Routes>

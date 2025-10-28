@@ -630,6 +630,114 @@ export const getLabsByProfessor = async (professorId) => {
 
 
 
+// Exam Management
+export const createExam = async (examData) => {
+    try {
+        const docRef = await addDoc(collection(db, 'exams'), {
+            ...examData,
+            createdAt: serverTimestamp()
+        });
+        return { success: true, id: docRef.id };
+    } catch (error) {
+        console.error('Error creating exam:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const getExamsByProfessor = async (professorId) => {
+    try {
+        console.log('🔍 Database: Getting exams for professor:', professorId);
+        const q = query(
+            collection(db, 'exams'),
+            where('professorId', '==', professorId)
+        );
+        const querySnapshot = await getDocs(q);
+        const exams = [];
+        querySnapshot.forEach((doc) => {
+            exams.push({ id: doc.id, ...doc.data() });
+        });
+        console.log('✅ Database: Found exams:', exams.length);
+        return { success: true, data: exams };
+    } catch (error) {
+        console.error('❌ Database: Error getting exams by professor:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const getExamsBySubject = async (subjectId) => {
+    try {
+        console.log('🔍 Database: Getting exams for subject:', subjectId);
+        const q = query(
+            collection(db, 'exams'),
+            where('subjectId', '==', subjectId)
+        );
+        const querySnapshot = await getDocs(q);
+        const exams = [];
+        querySnapshot.forEach((doc) => {
+            exams.push({ id: doc.id, ...doc.data() });
+        });
+        console.log('✅ Database: Found exams for subject:', exams.length);
+        return { success: true, data: exams };
+    } catch (error) {
+        console.error('❌ Database: Error getting exams by subject:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const getExamById = async (examId) => {
+    try {
+        console.log('🔍 Database: Getting exam by ID:', examId);
+        const docRef = doc(db, 'exams', examId);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            const exam = { id: docSnap.id, ...docSnap.data() };
+            console.log('✅ Database: Found exam by ID:', exam);
+            return { success: true, data: exam };
+        } else {
+            console.log('❌ Database: No exam found with ID:', examId);
+            return { success: false, error: 'Exam not found' };
+        }
+    } catch (error) {
+        console.error('❌ Database: Error getting exam by ID:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+// Exam Submissions
+export const submitExam = async (submissionData) => {
+    try {
+        const docRef = await addDoc(collection(db, 'examSubmissions'), {
+            ...submissionData,
+            submittedAt: serverTimestamp()
+        });
+        return { success: true, id: docRef.id };
+    } catch (error) {
+        console.error('Error submitting exam:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const getExamSubmissions = async (studentId, examId) => {
+    try {
+        const q = query(
+            collection(db, 'examSubmissions'),
+            where('studentId', '==', studentId),
+            where('examId', '==', examId),
+            orderBy('submittedAt', 'desc')
+        );
+        const querySnapshot = await getDocs(q);
+        const submissions = [];
+        querySnapshot.forEach((doc) => {
+            submissions.push({ id: doc.id, ...doc.data() });
+        });
+        return { success: true, data: submissions };
+    } catch (error) {
+        console.error('Error getting exam submissions:', error);
+        return { success: false, error: error.message };
+    }
+};
+
 // Lab Submissions
 export const submitLabExam = async (submissionData) => {
     try {

@@ -85,7 +85,9 @@ function ExamLayout() {
     };
 
     const formatSubjectName = (subject) => {
-        return `Испит ${new Date().toLocaleDateString('mk-MK')} - Термин ${Math.floor(Math.random() * 4) + 1}`;
+        // Use subject ID to generate a consistent term number (1-4)
+        const termNumber = (subject.id.charCodeAt(0) % 4) + 1;
+        return `Испит ${new Date().toLocaleDateString('mk-MK')} - Термин ${termNumber}`;
     };
 
     const handleAddExistingSubject = () => {
@@ -183,7 +185,7 @@ function ExamLayout() {
                                                                 style={{ cursor: 'pointer', textDecoration: 'underline' }}
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
-                                                                    navigate(`/exams/${exam.id}`);
+                                                                    navigate(`/exams/detail/${exam.id}`);
                                                                 }}
                                                             >
                                                                 {exam.title || 'Име на испитот'}

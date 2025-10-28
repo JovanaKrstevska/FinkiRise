@@ -12,4 +12,5 @@ function LabPage() {
         </div>
     );
 }
+
 export default LabPage;
