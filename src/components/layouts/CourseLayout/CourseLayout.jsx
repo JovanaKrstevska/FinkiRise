@@ -76,7 +76,13 @@ function CourseLayout({ subjectId }) {
                 {/* Progress Card */}
                 <div className="progress-card">
                     <div className="progress-header">
-                        <button className="back-btn">Беј</button>
+                        <div className="subject-badge">
+                            <img 
+                                src="/assets/icons/finki_subject_logo.svg" 
+                                alt="Subject Badge" 
+                                className="badge-image"
+                            />
+                        </div>
                         <h3 className="progress-title">Прогрес на активности</h3>
                     </div>
                     
@@ -155,16 +161,28 @@ function CourseLayout({ subjectId }) {
                             <span className="notification-text">Соопштенија</span>
                         </div>
                         <div className="notification-item">
-                            <span className="notification-icon">⭐</span>
+                            <img 
+                                src="/assets/icons/star.svg" 
+                                alt="Star" 
+                                className="notification-icon-img"
+                            />
                             <span className="notification-text">Анкета за изработка на лабораториски вежби</span>
                         </div>
                         <div className="notification-item">
-                            <span className="notification-icon">⭐</span>
+                            <img 
+                                src="/assets/icons/star.svg" 
+                                alt="Star" 
+                                className="notification-icon-img"
+                            />
                             <span className="notification-text">Анкета за изработка на испитот во септември</span>
                         </div>
                         <div className="notification-item">
-                            <span className="notification-icon">🕐</span>
-                            <span className="notification-text">Соба за онлајн час</span>
+                            <img 
+                                src="/assets/icons/big_blue_button.svg" 
+                                alt="Clock" 
+                                className="notification-icon-img-play"
+                            />
+                            <span className="notification-text-play">Соба за онлајн час</span>
                         </div>
                     </div>
                 </div>
@@ -174,38 +192,38 @@ function CourseLayout({ subjectId }) {
                     <div className="section-card">
                         <h4 className="section-title">Предавања</h4>
                         <div className="section-list">
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
                         </div>
                     </div>
 
                     <div className="section-card">
                         <h4 className="section-title">Аудиториски вежби</h4>
                         <div className="section-list">
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item green">📄</div>
-                            <div className="section-item green">📄</div>
-                            <div className="section-item green">📄</div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/exel_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/exel_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/exel_icon.svg'/></div>
                         </div>
                     </div>
 
                     <div className="section-card">
                         <h4 className="section-title">Литература</h4>
                         <div className="section-list">
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item green">📄</div>
-                            <div className="section-item green">📄</div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/exel_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/exel_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/exel_icon.svg'/></div>
                         </div>
                     </div>
 
@@ -223,42 +241,42 @@ function CourseLayout({ subjectId }) {
                     <div className="section-card">
                         <h4 className="section-title">Квизови</h4>
                         <div className="section-list">
-                            <div className="section-item gray">🏆</div>
-                            <div className="section-item gray">🏆</div>
-                            <div className="section-item gray">🏆</div>
-                            <div className="section-item gray">🏆</div>
+                            <div className="section-item blue">📝</div>
+                            <div className="section-item blue">📝</div>
+                            <div className="section-item blue">📝</div>
+                            <div className="section-item blue">📝</div>
                         </div>
                     </div>
 
                     <div className="section-card">
                         <h4 className="section-title">Лабораториски вежби</h4>
                         <div className="section-list">
-                            <div className="section-item blue">🧪</div>
-                            <div className="section-item blue">🧪</div>
-                            <div className="section-item blue">🧪</div>
-                            <div className="section-item blue">🧪</div>
+                            <div className="section-item blue">💻</div>
+                            <div className="section-item blue">💻</div>
+                            <div className="section-item blue">💻</div>
+                            <div className="section-item blue">💻</div>
                         </div>
                     </div>
 
                     <div className="section-card">
                         <h4 className="section-title">Домашни</h4>
                         <div className="section-list">
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
-                            <div className="section-item red">📄</div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
                         </div>
                     </div>
 
                     <div className="section-card">
                         <h4 className="section-title">Резултати</h4>
                         <div className="section-list">
-                            <div className="section-item red">📊</div>
-                            <div className="section-item red">📊</div>
-                            <div className="section-item red">📊</div>
-                            <div className="section-item red">📊</div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
+                            <div className="section-item blue"><img src='../assets/icons/pdf_icon.svg'/></div>
                         </div>
                     </div>
                 </div>

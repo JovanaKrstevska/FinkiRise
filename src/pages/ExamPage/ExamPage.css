@@ -23,6 +23,7 @@
     flex-direction: column;
     gap: 20px;
     max-width: 350px;
+    max-height: 44vw;
 }
 
 @media (max-width: 768px) {

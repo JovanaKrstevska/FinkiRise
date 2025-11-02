@@ -4,6 +4,13 @@
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border: 1px solid #e0e0e0;
+    position: relative;
+    bottom: 2vw;
+}
+
+/* Hide RecentSubjects on course pages */
+.course-page .recent-subjects-widget {
+    display: none !important;
 }
 
 .recent-subjects-header {
@@ -41,7 +48,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    max-height: 400px;
+    max-height: 300px;
     overflow-y: auto;
 }
 

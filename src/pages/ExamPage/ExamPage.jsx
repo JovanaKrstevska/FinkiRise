@@ -22,7 +22,7 @@ function ExamPage() {
                 </div>
                 <div className="sidebar-exams">
                     <Calendar />
-                    <h1 style={{ color: '#015E86', textAlign: 'center', position: 'relative', right: '0.5vw', fontSize: '25px' }}>
+                    <h1 style={{ color: '#015E86', textAlign: 'center', position: 'relative', fontSize: '25px' }}>
                         Неодамна посетени курсеви
                     </h1>
                     <RecentSubjects />

@@ -1,5 +1,4 @@
 .course-layout {
-    background: linear-gradient(to bottom, #87ceeb 0%, #87ceeb 100px, #f0f8ff 100px);
     min-height: 100vh;
     padding: 0;
 }
@@ -28,16 +27,17 @@
 }
 
 .course-semester {
-    font-size: 16px;
+    font-size: 20px;
     color: #2c5282;
     font-weight: 500;
+    border-bottom: 2px solid #2c5282;
 }
 
 /* Main Container */
 .course-container {
     padding: 20px 30px;
     gap: 20px;
-    max-width: 1200px;
+    max-width: 1500px;
     margin: 0 auto;
 }
 
@@ -57,20 +57,28 @@
     margin-bottom: 25px;
 }
 
-.back-btn {
+.subject-badge {
+    width: 5vw;
+    height: 5vw;
     background: #e2e8f0;
-    border: none;
-    padding: 8px 16px;
     border-radius: 8px;
-    color: #64748b;
-    font-size: 14px;
-    cursor: pointer;
-    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.badge-image {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
 }
 
 .progress-title {
-    color: #2563eb;
-    font-size: 18px;
+    position: relative;
+    left: 24vw;
+    color: #015E86;
+    font-size: 28px;
     font-weight: 600;
     margin: 0;
 }
@@ -78,8 +86,11 @@
 .progress-main {
     display: flex;
     align-items: center;
-    gap: 40px;
-    margin-bottom: 30px;
+    justify-content: center;
+    gap: 60px;
+    margin-bottom: 40px;
+    position: relative;
+    bottom: 2vw;
 }
 
 .progress-circle-container {
@@ -87,28 +98,29 @@
 }
 
 .progress-circle {
-    width: 140px;
-    height: 140px;
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
-    background: conic-gradient(#22d3ee 0deg 180deg, #e0f2fe 180deg 360deg);
+    background: conic-gradient(#3484bd 0deg 180deg, #6ed0f6 180deg 360deg);
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+    box-shadow: 0 8px 25px rgba(52, 132, 189, 0.3);
 }
 
 .progress-circle::before {
     content: '';
-    width: 100px;
-    height: 100px;
+    width: 180px;
+    height: 180px;
     background: white;
     border-radius: 50%;
     position: absolute;
 }
 
 .percentage {
-    font-size: 28px;
-    font-weight: bold;
+    font-size: 36px;
+    font-weight: 900;
     color: #0f172a;
     z-index: 1;
 }
@@ -116,29 +128,41 @@
 .activity-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+    gap: 20px;
     flex: 1;
+    max-width: 500px;
 }
 
 .activity-card {
-    background: #f1f5f9;
-    border: 2px solid #cbd5e1;
-    border-radius: 12px;
-    padding: 20px;
+    background: linear-gradient(145deg, #f8fafc, #e2e8f08c);
+    border: 3px solid #015E86;
+    border-radius: 20px;
+    padding: 25px 20px;
     text-align: center;
+    box-shadow: 0 6px 20px rgba(74, 158, 255, 0.2);
+    transition: all 0.3s ease;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.activity-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(74, 158, 255, 0.3);
 }
 
 .activity-label {
-    font-size: 12px;
-    color: #64748b;
-    margin-bottom: 8px;
-    font-weight: 500;
+    font-size: 14px;
+    color: #015E86;
+    margin-bottom: 12px;
+    font-weight: 600;
 }
 
 .activity-value {
-    font-size: 20px;
-    font-weight: bold;
-    color: #0f172a;
+    font-size: 28px;
+    font-weight: 900;
+    color: #015E86;
 }
 
 /* Progress Skills Section */
@@ -147,10 +171,14 @@
 }
 
 .skills-title {
-    color: #2563eb;
-    font-size: 16px;
+    position: relative;
+    left: 31vw;
+    bottom: 1.5vw;
+    color: #015E86;
+    font-size: 27px;
     font-weight: 600;
-    margin: 0 0 20px 0;
+    margin: 0;
+    width: 14vw;
 }
 
 .skills-grid {
@@ -173,22 +201,22 @@
 
 .skill-label {
     min-width: 70px;
-    font-size: 13px;
-    color: #64748b;
+    color: #015E86;
+    font-size: 15px;
     font-weight: 500;
 }
 
 .skill-bar {
     flex: 1;
-    height: 10px;
-    background: #e0f2fe;
+    height: 15px;
+    background: #6ed0f6;
     border-radius: 5px;
     overflow: hidden;
 }
 
 .skill-fill {
     height: 100%;
-    background: #22d3ee;
+    background: #3484bd;
     border-radius: 5px;
     transition: width 0.3s ease;
 }
@@ -204,17 +232,39 @@
     align-items: center;
     gap: 12px;
     padding: 10px 0;
-    font-size: 14px;
-    color: #475569;
+    font-size: 20px;
+    color: #015E86;
 }
 
 .notification-icon {
-    font-size: 16px;
+    font-size: 25px;
     flex-shrink: 0;
+}
+
+.notification-icon-img {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+.notification-icon-img-play{
+    position: relative;
+    right: 0.5vw;
+    bottom: 0.5vw;
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    object-fit: contain;
 }
 
 .notification-text {
     flex: 1;
+}
+.notification-text-play{
+    flex: 1;
+    position: relative;
+    right: 1vw;
+    bottom: 0.5vw;
 }
 
 /* Course Sections */
@@ -222,6 +272,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    margin-top: 20px;
 }
 
 .section-card {
@@ -233,12 +284,12 @@
 }
 
 .section-title {
-    color: #2563eb;
-    font-size: 16px;
+    color: #015E86;
+    font-size: 20px;
     font-weight: 600;
     margin: 0 0 20px 0;
     padding-bottom: 10px;
-    border-bottom: 2px solid #22d3ee;
+    border-bottom: 2px solid #015E86;
 }
 
 .section-list {
@@ -253,25 +304,17 @@
     font-size: 16px;
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 1px solid transparent;
-}
-
-.section-item.red {
-    background: #fef2f2;
-    border-color: #fecaca;
-    color: #dc2626;
-}
-
-.section-item.green {
-    background: #f0fdf4;
-    border-color: #bbf7d0;
-    color: #16a34a;
+    border: 1px solid rgba(128, 128, 128, 0.455);
 }
 
 .section-item.blue {
     background: #eff6ff;
     border-color: #bfdbfe;
     color: #2563eb;
+}
+
+.section-item-play {
+    width: 2.5vw;
 }
 
 .section-item.gray {
@@ -283,6 +326,12 @@
 .section-item:hover {
     transform: translateX(5px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
 }
 
 /* Responsive Design */

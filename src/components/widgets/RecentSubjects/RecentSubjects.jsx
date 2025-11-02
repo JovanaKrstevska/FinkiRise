@@ -32,7 +32,7 @@ function RecentSubjects() {
             
             <div className="recent-subjects-list">
                 {recentSubjects.length > 0 ? (
-                    recentSubjects.map((subject) => (
+                    recentSubjects.slice(0, 3).map((subject) => (
                         <div key={subject.id} className="recent-subject-item">
                             <div className="subject-info">
                                 <h4 className="subject-name">{subject.name}</h4>
