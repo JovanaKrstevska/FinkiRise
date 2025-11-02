@@ -165,9 +165,16 @@ function SubjectGrid() {
                             console.log('📚 Subject clicked:', subject.name);
                             
                             // Navigate based on current page
-                            if (location.pathname === '/exams') {
+                            console.log('Current pathname:', location.pathname);
+                            if (location.pathname.startsWith('/exams')) {
+                                console.log('Navigating to exam page for subject:', subject.id);
                                 navigate(`/exams/${subject.id}`);
-                            } else if (location.pathname === '/labs') {
+                            } else if (location.pathname.startsWith('/courses')) {
+                                console.log('Navigating to course page for subject:', subject.id);
+                                navigate(`/courses/${subject.id}`);
+                            } else {
+                                // Default navigation for other pages (like home)
+                                console.log('Default navigation to course page for subject:', subject.id);
                                 navigate(`/courses/${subject.id}`);
                             }
                         }}

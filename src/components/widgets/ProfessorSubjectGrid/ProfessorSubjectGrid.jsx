@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './ProfessorSubjectGrid.css';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useSubjectHistory } from '../../../contexts/SubjectHistoryContext';
@@ -12,6 +13,8 @@ function ProfessorSubjectGrid() {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const { currentUser } = useAuth();
     const { addSubjectToHistory } = useSubjectHistory();
+    const navigate = useNavigate();
+    const location = useLocation();
     const itemsPerPage = 6;
 
     useEffect(() => {
@@ -176,6 +179,23 @@ function ProfessorSubjectGrid() {
                         onClick={() => {
                             addSubjectToHistory(subject);
                             console.log('📚 Professor subject clicked:', subject.name);
+                            
+                            // Navigate based on current page
+                            console.log('Current pathname:', location.pathname);
+                            if (location.pathname.startsWith('/exams')) {
+                                console.log('Navigating to exam page for subject:', subject.id);
+                                navigate(`/exams/${subject.id}`);
+                            } else if (location.pathname.startsWith('/labs')) {
+                                console.log('Navigating to course page for subject:', subject.id);
+                                navigate(`/courses/${subject.id}`);
+                            } else if (location.pathname.startsWith('/courses')) {
+                                console.log('Navigating to course page for subject:', subject.id);
+                                navigate(`/courses/${subject.id}`);
+                            } else {
+                                // Default navigation for other pages (like home)
+                                console.log('Default navigation to course page for subject:', subject.id);
+                                navigate(`/courses/${subject.id}`);
+                            }
                         }}
                     >
                         <div className="subject-logo">

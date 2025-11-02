@@ -21,6 +21,7 @@ import TutorialPage from './pages/TutorialPage/TutorialPage';
 import ExamPage from './pages/ExamPage/ExamPage';
 import ExamDetailPage from './pages/ExamDetailPage/ExamDetailPage';
 import CreateExamPage from './pages/CreateExamPage/CreateExamPage';
+import CoursePage from './pages/CoursePage/CoursePage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -69,6 +70,11 @@ root.render(
           <Route path='/exams' element={
             <ProtectedRoute>
               <ExamPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/courses/:subjectId' element={
+            <ProtectedRoute>
+              <CoursePage />
             </ProtectedRoute>
           } />
           <Route path='/labs/:labId' element={

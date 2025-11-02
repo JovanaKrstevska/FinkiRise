@@ -72,6 +72,8 @@ function LabLayout() {
             }
 
             if (result.success) {
+                let displaySubjects;
+                
                 // Filter to get unique subjects by name, preferring newer academic years
                 const uniqueSubjects = [];
                 const seenNames = new Set();
