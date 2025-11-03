@@ -66,7 +66,7 @@ function ProfessorCourseLayout({ subjectId }) {
     };
 
     const handleAddContent = (sectionType) => {
-        if (['lectures', 'exercises', 'literature', 'homework', 'results'].includes(sectionType)) {
+        if (['lectures', 'exercises', 'literature', 'recordings', 'homework', 'results'].includes(sectionType)) {
             setFileUploadModal({ isOpen: true, sectionType });
         } else if (sectionType === 'quizzes') {
             navigate(`/create-quiz/${subjectId}`);

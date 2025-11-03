@@ -70,29 +70,6 @@
     margin: 0;
 }
 
-.add-btn {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: #28a745;
-    color: white;
-    border: none;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
-}
-
-.add-btn:hover {
-    background: #218838;
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
-}
-
 .section-list {
     display: flex;
     flex-direction: column;

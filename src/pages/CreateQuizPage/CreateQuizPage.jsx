@@ -314,7 +314,7 @@ function CreateQuizPage() {
                                         <div className="quiz-answers-section-create">
                                             <div className="quiz-options-list-create">
                                                 {currentQuestion.options.map((option, index) => (
-                                                    <label key={index} className="quiz-option-item">
+                                                    <label key={index} className="option-item">
                                                         <div className="quiz-custom-checkbox-create">
                                                             <input
                                                                 type="radio"

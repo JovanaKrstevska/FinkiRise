@@ -303,7 +303,7 @@
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background: #28a745;
+    background: #4A90A4;
     color: white;
     border: none;
     font-size: 20px;
@@ -317,7 +317,7 @@
 }
 
 .add-btn:hover {
-    background: #218838;
+    background: #4A90A4;
     transform: scale(1.1);
     box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
 }
