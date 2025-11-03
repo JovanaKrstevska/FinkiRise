@@ -185,141 +185,109 @@ function TakeQuizPage() {
     return (
         <div>
             <NavBar />
-            <div className="take-quiz-page">
-                <div className="quiz-container">
-                    {/* Main Quiz Section */}
-                    <div className="quiz-main-section">
-                        <div className="quiz-header">
-                            <h1 className="quiz-title">{quiz.title}</h1>
-                            <div className="quiz-timer">
-                                <span className="timer-label">Време:</span>
-                                <span className={`timer-value ${timeLeft < 300 ? 'warning' : ''}`}>
-                                    {formatTime(timeLeft)}
-                                </span>
-                            </div>
-                        </div>
-
+            <div className="quiz-exam">
+                <div className="quiz-layout">
+                    <div className="question-section">
                         <div className="question-card">
-                            <div className="question-header">
-                                <h2 className="question-title">
-                                    Прашање {currentQuestionIndex + 1}:
-                                </h2>
-                                <span className="question-points">
-                                    {currentQuestion.points || 5} поени
-                                </span>
+                            <h2 className="question-title">Прашање {currentQuestionIndex + 1}:</h2>
+
+                            <div className="question-text-area">
+                                <div className="question-content-text">
+                                    {currentQuestion.question}
+                                </div>
                             </div>
 
-                            <div className="question-content">
-                                <p className="question-text">{currentQuestion.question}</p>
-
+                            <div className="answers-section">
                                 {/* Multiple Choice */}
                                 {currentQuestion.type === 'multiple-choice' && (
-                                    <div className="options-container">
-                                        {currentQuestion.options.map((option, index) => (
-                                            <label key={index} className="option-label">
-                                                <input
-                                                    type="radio"
-                                                    name={`question-${currentQuestion.id}`}
-                                                    value={index}
-                                                    checked={answers[currentQuestion.id] === index}
-                                                    onChange={() => handleAnswerChange(currentQuestion.id, index)}
-                                                />
-                                                <span className="option-text">{option}</span>
-                                            </label>
-                                        ))}
+                                    <div className="options-list">
+                                        {currentQuestion.options && Array.isArray(currentQuestion.options) ? (
+                                            currentQuestion.options.map((option, index) => (
+                                                <label key={index} className="option-item">
+                                                    <div className="custom-checkbox">
+                                                        <input
+                                                            type="radio"
+                                                            name={`question-${currentQuestion.id}`}
+                                                            value={index}
+                                                            checked={answers[currentQuestion.id] === index}
+                                                            onChange={() => handleAnswerChange(currentQuestion.id, index)}
+                                                        />
+                                                        <span className="checkbox-square"></span>
+                                                    </div>
+                                                    <span className="option-answer">{option}</span>
+                                                </label>
+                                            ))
+                                        ) : (
+                                            <div className="options-error">
+                                                <p>Опциите не се достапни за ова прашање.</p>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 
                                 {/* Coding/Text Area */}
                                 {currentQuestion.type === 'coding' && (
-                                    <div className="coding-container">
-                                        <textarea
-                                            className="coding-textarea"
-                                            placeholder={currentQuestion.placeholder || 'Внесете го вашиот код овде...'}
-                                            value={answers[currentQuestion.id] || ''}
-                                            onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
-                                        />
-                                    </div>
+                                    <textarea
+                                        className="code-input1"
+                                        placeholder={currentQuestion.placeholder || 'Внесете го вашиот код овде...'}
+                                        value={answers[currentQuestion.id] || ''}
+                                        onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                                        rows={8}
+                                    />
                                 )}
 
                                 {/* File Upload */}
                                 {currentQuestion.type === 'file-upload' && (
-                                    <div className="file-upload-container">
+                                    <div className="file-upload-area-labexam">
                                         <input
                                             type="file"
                                             accept={currentQuestion.acceptedTypes || '.pdf,.doc,.docx,.zip'}
                                             onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.files[0])}
-                                            className="file-input"
+                                            className="file-input-field-labexam"
                                         />
                                         {answers[currentQuestion.id] && (
-                                            <div className="uploaded-file">
-                                                📎 {answers[currentQuestion.id].name}
+                                            <div className="uploaded-file-info">
+                                                <span>Прикачен фајл: {answers[currentQuestion.id].name}</span>
                                             </div>
                                         )}
                                     </div>
                                 )}
                             </div>
-
-                            <div className="question-navigation">
-                                <Button
-                                    className="btn-prev"
-                                    content="Претходно"
-                                    onClick={prevQuestion}
-                                    disabled={currentQuestionIndex === 0}
-                                />
-                                
-                                {currentQuestionIndex === quiz.questions.length - 1 ? (
-                                    <Button
-                                        className="btn-submit"
-                                        content={isSubmitting ? "Се поднесува..." : "Заврши"}
-                                        onClick={submitQuiz}
-                                        disabled={isSubmitting}
-                                    />
-                                ) : (
-                                    <Button
-                                        className="btn-next"
-                                        content="Следно"
-                                        onClick={nextQuestion}
-                                    />
-                                )}
-                            </div>
                         </div>
                     </div>
 
-                    {/* Questions Navigation Sidebar */}
-                    <div className="questions-takequiz-sidebar">
-                        <div className="sidebar-takequiz-header">
-                            <h3>Прашања</h3>
-                            <div className="progress-info">
-                                {Object.keys(answers).length} / {quiz.questions.length} одговорени
-                            </div>
-                        </div>
-                        
-                        <div className="questions-takequiz-grid">
-                            {quiz.questions.map((question, index) => (
+                    <div className="navigation-section-quiz">
+                        <div className="navigation-card">
+                            {quiz.questions.map((_, index) => (
                                 <button
-                                    key={question.id}
-                                    className={`question-takequiz-nav-btn ${
+                                    key={index}
+                                    className={`question-nav-btn ${
                                         index === currentQuestionIndex ? 'active' : ''
                                     } ${
-                                        answers[question.id] !== undefined ? 'answered' : ''
+                                        answers[quiz.questions[index].id] !== undefined ? 'answered' : ''
                                     }`}
                                     onClick={() => goToQuestion(index)}
                                 >
-                                    {index + 1}
+                                    Прашање {index + 1}
                                 </button>
                             ))}
-                        </div>
 
-                        <div className="sidebar-actions">
-                            <Button
-                                className="btn-submit-sidebar"
-                                content={isSubmitting ? "Се поднесува..." : "Заврши квиз"}
-                                onClick={submitQuiz}
-                                disabled={isSubmitting}
-                            />
+                            <div className="submit-section">
+                                <button 
+                                    className="submit-exam-btn" 
+                                    onClick={submitQuiz}
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? "Се поднесува..." : "Заврши испит"}
+                                </button>
+                            </div>
                         </div>
                     </div>
+                </div>
+
+                {/* Timer */}
+                <div className="exam-timer">
+                    Време: {formatTime(timeLeft)}
                 </div>
             </div>
         </div>

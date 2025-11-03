@@ -12,6 +12,7 @@ function QuizPage() {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     const [quiz, setQuiz] = useState(null);
+    const [subject, setSubject] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -31,6 +32,19 @@ function QuizPage() {
                 
                 if (foundQuiz) {
                     setQuiz(foundQuiz);
+                    
+                    // Fetch subject data
+                    try {
+                        const subjectDoc = await getDoc(doc(db, 'subjects', subjectId));
+                        if (subjectDoc.exists()) {
+                            setSubject(subjectDoc.data());
+                        } else {
+                            setSubject({ name: 'Непознат предмет' });
+                        }
+                    } catch (subjectError) {
+                        console.error('Error fetching subject:', subjectError);
+                        setSubject({ name: 'Непознат предмет' });
+                    }
                 } else {
                     setError('Квизот не е пронајден');
                 }
@@ -45,6 +59,10 @@ function QuizPage() {
         }
     };
 
+    const handleBackToQuizzes = () => {
+        navigate(`/course/${subjectId}`);
+    };
+
     const startQuiz = () => {
         navigate(`/take-quiz/${subjectId}/${quizId}`);
     };
@@ -53,9 +71,7 @@ function QuizPage() {
         return (
             <div>
                 <NavBar />
-                <div className="quiz-page">
-                    <div className="loading">Се вчитува квизот...</div>
-                </div>
+                <div className="quiz-details-loading">Се вчитува квизот...</div>
             </div>
         );
     }
@@ -64,8 +80,10 @@ function QuizPage() {
         return (
             <div>
                 <NavBar />
-                <div className="quiz-page">
-                    <div className="error">{error}</div>
+                <div className="quiz-details-page">
+                    <div className="quiz-details-container">
+                        <div className="error">{error}</div>
+                    </div>
                 </div>
             </div>
         );
@@ -75,8 +93,10 @@ function QuizPage() {
         return (
             <div>
                 <NavBar />
-                <div className="quiz-page">
-                    <div className="error">Квизот не е пронајден</div>
+                <div className="quiz-details-page">
+                    <div className="quiz-details-container">
+                        <div className="error">Квизот не е пронајден</div>
+                    </div>
                 </div>
             </div>
         );
@@ -85,35 +105,33 @@ function QuizPage() {
     return (
         <div>
             <NavBar />
-            <div className="quiz-page">
-                <div className="quiz-info-container">
-                    <div className="quiz-info-card">
-                        <div className="quiz-header">
-                            <h1 className="quiz-title">{quiz.title}</h1>
-                            <div className="quiz-details">
-                                <p className="quiz-time">Време: {quiz.timeLimit || 30} минути</p>
-                                <p className="quiz-questions">Вкупно прашања: {quiz.questions?.length || 0}</p>
-                            </div>
+            <div className="quiz-details-page">
+                <div className="quiz-details-container">
+                    <div className="quiz-details-header">
+                        <span className="due-date">Рок до: 20 декември</span>
+                        <Button className="btn-nazad" content={"Назад"} onClick={handleBackToQuizzes} />
+                    </div>
+
+                    <div className="quiz-details-card">
+                        <h1 className="quiz-title">{quiz.title}</h1>
+
+                        <div className="quiz-description">
+                            <h3 className="description-title">НАПОМЕНА:</h3>
+                            <p className="description-text">
+                                Квизот не е задолжителен и носи дополнителни поени.
+                                Секое прашање носи по 5 поени и нема негативни поени. Може само еднаш
+                                да го направите квизот.
+                            </p>
                         </div>
 
-                        <div className="quiz-instructions">
-                            <h3>Инструкции:</h3>
-                            <ul>
-                                <li>Квизот се состои од {quiz.questions?.length || 0} прашања</li>
-                                <li>Имате {quiz.timeLimit || 30} минути за решавање</li>
-                                <li>Секое прашање носи {quiz.questions?.[0]?.points || 5} поени</li>
-                                <li>Можете да се вратите на претходни прашања</li>
-                                <li>Кликнете "Започни" за да го започнете квизот</li>
-                            </ul>
+                        <div className="quiz-stats">
+                            <span className="total-questions">Вкупно број на прашања: {quiz.questions?.length || 0}</span>
+                            <span className="total-points">Вкупно поени: {quiz.questions?.reduce((sum, q) => sum + (q.points || 5), 0) || 0}</span>
                         </div>
 
-                        <div className="quiz-actions">
-                            <Button
-                                className="btn-start-quiz"
-                                content="Започни"
-                                onClick={startQuiz}
-                            />
-                        </div>
+                        <button className="start-quiz-btn" onClick={startQuiz}>
+                            Започни
+                        </button>
                     </div>
                 </div>
             </div>
