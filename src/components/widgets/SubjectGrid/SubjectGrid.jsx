@@ -171,11 +171,11 @@ function SubjectGrid() {
                                 navigate(`/exams/${subject.id}`);
                             } else if (location.pathname.startsWith('/courses')) {
                                 console.log('Navigating to course page for subject:', subject.id);
-                                navigate(`/courses/${subject.id}`);
+                                navigate(`/course/${subject.id}`);
                             } else {
                                 // Default navigation for other pages (like home)
                                 console.log('Default navigation to course page for subject:', subject.id);
-                                navigate(`/courses/${subject.id}`);
+                                navigate(`/course/${subject.id}`);
                             }
                         }}
                     >

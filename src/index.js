@@ -22,6 +22,10 @@ import ExamPage from './pages/ExamPage/ExamPage';
 import ExamDetailPage from './pages/ExamDetailPage/ExamDetailPage';
 import CreateExamPage from './pages/CreateExamPage/CreateExamPage';
 import CoursePage from './pages/CoursePage/CoursePage';
+import CreateQuizPage from './pages/CreateQuizPage/CreateQuizPage';
+import QuizPage from './pages/QuizPage/QuizPage';
+import TakeQuizPage from './pages/TakeQuizPage/TakeQuizPage';
+import QuizResultsPage from './pages/QuizResultsPage/QuizResultsPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -72,7 +76,7 @@ root.render(
               <ExamPage />
             </ProtectedRoute>
           } />
-          <Route path='/courses/:subjectId' element={
+          <Route path='/course/:subjectId' element={
             <ProtectedRoute>
               <CoursePage />
             </ProtectedRoute>
@@ -90,6 +94,31 @@ root.render(
           <Route path='/professor/labs/create/:subjectId' element={
             <ProtectedRoute>
               <CreateLabPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/create-quiz/:subjectId' element={
+            <ProtectedRoute>
+              <CreateQuizPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/create-lab/:subjectId' element={
+            <ProtectedRoute>
+              <CreateLabPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/quiz/:subjectId/:quizId' element={
+            <ProtectedRoute>
+              <QuizPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/take-quiz/:subjectId/:quizId' element={
+            <ProtectedRoute>
+              <TakeQuizPage />
+            </ProtectedRoute>
+          } />
+          <Route path='/quiz-results/:subjectId/:quizId' element={
+            <ProtectedRoute>
+              <QuizResultsPage />
             </ProtectedRoute>
           } />
           <Route path='/exams/detail/:examId' element={

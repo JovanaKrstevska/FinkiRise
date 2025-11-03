@@ -1,0 +1,126 @@
+.quiz-page {
+    min-height: 85vh;
+    background: #f5f7fa;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quiz-info-container {
+    max-width: 600px;
+    width: 100%;
+}
+
+.quiz-info-card {
+    background: white;
+    border: 2px solid #4a90a4;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.quiz-header {
+    margin-bottom: 30px;
+}
+
+.quiz-title {
+    color: #4a90a4;
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+}
+
+.quiz-details {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.quiz-time,
+.quiz-questions {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.quiz-instructions {
+    text-align: left;
+    margin: 30px 0;
+    padding: 20px;
+    background: #f0f8ff;
+    border-radius: 10px;
+    border-left: 4px solid #4a90a4;
+}
+
+.quiz-instructions h3 {
+    color: #4a90a4;
+    margin: 0 0 15px 0;
+    font-size: 18px;
+}
+
+.quiz-instructions ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.quiz-instructions li {
+    margin: 8px 0;
+    color: #555;
+    line-height: 1.5;
+}
+
+.quiz-actions {
+    margin-top: 30px;
+}
+
+.btn-start-quiz {
+    background: #4a90a4;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.3);
+}
+
+.btn-start-quiz:hover {
+    background: #296374;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 144, 164, 0.4);
+}
+
+.loading,
+.error {
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 18px;
+    color: #666;
+}
+
+.error {
+    color: #dc3545;
+}
+
+@media (max-width: 768px) {
+    .quiz-info-card {
+        padding: 30px 20px;
+    }
+    
+    .quiz-title {
+        font-size: 24px;
+    }
+    
+    .quiz-details {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
