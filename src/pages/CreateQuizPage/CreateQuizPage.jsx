@@ -245,7 +245,7 @@ function CreateQuizPage() {
             await saveQuizToFirestore(quizData);
             
             alert('Квизот е успешно креиран!');
-            navigate(`/courses/${subjectId}`); // Navigate back to course page
+            navigate(`/course/${subjectId}`); // Navigate back to course page
         } catch (error) {
             console.error('Error creating quiz:', error);
             alert(`Грешка при креирање на квизот: ${error.message}`);

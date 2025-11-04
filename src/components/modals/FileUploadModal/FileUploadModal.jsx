@@ -20,22 +20,45 @@ function FileUploadModal({ isOpen, onClose, onUpload, sectionType }) {
         e.stopPropagation();
         setDragActive(false);
         
+        console.log('🎯 FileUploadModal: File dropped', e.dataTransfer.files);
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-            setSelectedFile(e.dataTransfer.files[0]);
+            const file = e.dataTransfer.files[0];
+            console.log('✅ FileUploadModal: Dropped file details', {
+                name: file.name,
+                size: file.size,
+                type: file.type
+            });
+            setSelectedFile(file);
         }
     };
 
     const handleFileSelect = (e) => {
+        console.log('📁 FileUploadModal: File selected', e.target.files);
         if (e.target.files && e.target.files[0]) {
-            setSelectedFile(e.target.files[0]);
+            const file = e.target.files[0];
+            console.log('✅ FileUploadModal: File details', {
+                name: file.name,
+                size: file.size,
+                type: file.type
+            });
+            setSelectedFile(file);
         }
     };
 
     const handleUpload = () => {
+        console.log('🚀 FileUploadModal: Starting upload', { 
+            hasFile: !!selectedFile, 
+            fileName: selectedFile?.name,
+            sectionType 
+        });
+        
         if (selectedFile) {
+            console.log('📤 FileUploadModal: Calling onUpload function');
             onUpload(selectedFile, sectionType);
             setSelectedFile(null);
             onClose();
+        } else {
+            console.warn('⚠️ FileUploadModal: No file selected');
         }
     };
 

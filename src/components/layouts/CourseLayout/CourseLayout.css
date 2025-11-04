@@ -423,3 +423,33 @@
         font-size: 24px;
     }
 }
+/* Quiz
+ and Lab specific styles */
+.question-count, .time-limit, .difficulty, .estimated-time, .created-date {
+    color: #666;
+    font-size: 12px;
+    background: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+.question-count {
+    background: #d4edda;
+    color: #155724;
+}
+
+.time-limit, .estimated-time {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.difficulty {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.created-date {
+    background: #d1ecf1;
+    color: #0c5460;
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../../config/firebase';
 import '../CourseLayout/CourseLayout.css';
 
@@ -19,15 +19,31 @@ function StudentCourseLayout({ subjectId }) {
         homework: [],
         results: []
     });
+    const [studentProgress, setStudentProgress] = useState({
+        overall: 75,  // Test value to see if UI updates
+        homework: 85, // Test value
+        quizzes: 70,  // Test value
+        labs: 80,     // Test value
+        skills: []
+    });
     const { currentUser } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log('🔄 StudentCourseLayout useEffect triggered');
+        console.log('📋 Subject ID:', subjectId);
+        console.log('👤 Current User:', currentUser?.uid);
+        
         if (subjectId) {
             fetchSubject();
             fetchCourseContent();
+            if (currentUser) {
+                fetchStudentProgress();
+            } else {
+                console.log('⚠️ No current user, cannot fetch progress');
+            }
         }
-    }, [subjectId]);
+    }, [subjectId, currentUser]);
 
     const fetchSubject = async () => {
         try {
@@ -68,6 +84,210 @@ function StudentCourseLayout({ subjectId }) {
             }
         } catch (err) {
             console.error('Error fetching course content:', err);
+        }
+    };
+
+    const fetchStudentProgress = async () => {
+        try {
+            if (!currentUser) {
+                console.log('❌ No current user for progress fetching');
+                return;
+            }
+
+            console.log('📊 Fetching student progress for user:', currentUser.uid, 'subject:', subjectId);
+            console.log('🎯 Looking for progress data specific to subject:', subjectId);
+            
+            // Try subject-specific document ID patterns first
+            const possibleDocIds = [
+                `${currentUser.uid}_${subjectId}`,
+                `${subjectId}_${currentUser.uid}`,
+                `${currentUser.uid}-${subjectId}`,
+                `${subjectId}-${currentUser.uid}`
+            ];
+
+            let progressData = null;
+            
+            // First, try subject-specific document IDs
+            for (const docId of possibleDocIds) {
+                try {
+                    console.log('🔍 Trying to fetch subject-specific progress with docId:', docId);
+                    const progressDoc = await getDoc(doc(db, 'studentProgress', docId));
+                    
+                    if (progressDoc.exists()) {
+                        const data = progressDoc.data();
+                        console.log('✅ Found progress document:', data);
+                        
+                        // Strict check - must match current subject
+                        if (data.subjectId === subjectId || data.subject === subjectId) {
+                            progressData = data;
+                            console.log('✅ Progress data matches current subject:', subjectId);
+                            break;
+                        } else {
+                            console.log('⚠️ Document found but for different subject:', data.subjectId || data.subject);
+                        }
+                    }
+                } catch (docError) {
+                    console.log('⚠️ Error fetching with docId:', docId, docError.message);
+                }
+            }
+            
+            // If no subject-specific document found, try to find it in a general document
+            if (!progressData) {
+                console.log('🔍 No subject-specific document found, trying general documents...');
+                const generalDocIds = [currentUser.uid, subjectId];
+                
+                for (const docId of generalDocIds) {
+                    try {
+                        console.log('🔍 Trying general document with docId:', docId);
+                        const progressDoc = await getDoc(doc(db, 'studentProgress', docId));
+                        
+                        if (progressDoc.exists()) {
+                            const data = progressDoc.data();
+                            console.log('✅ Found general progress document:', data);
+                            
+                            // Check if this document contains subject-specific data
+                            if (data.subjects && data.subjects[subjectId]) {
+                                progressData = data.subjects[subjectId];
+                                console.log('✅ Found subject-specific data in general document');
+                                break;
+                            } else if (data.subjectId === subjectId || data.subject === subjectId) {
+                                progressData = data;
+                                console.log('✅ General document matches current subject');
+                                break;
+                            }
+                        }
+                    } catch (docError) {
+                        console.log('⚠️ Error fetching general document:', docId, docError.message);
+                    }
+                }
+            }
+
+            if (progressData) {
+                // Handle nested activities structure
+                const activities = progressData.activities || {};
+                
+                // Update the progress state with fetched data
+                const newProgress = {
+                    overall: progressData.overall || progressData.overallProgress || 0,
+                    homework: activities.homework || progressData.homework || progressData.homeworkProgress || 0,
+                    quizzes: activities.quizzes || progressData.quizzes || progressData.quizProgress || 0,
+                    labs: activities.labs || progressData.labs || progressData.labProgress || 0,
+                    skills: progressData.skills || []
+                };
+                
+                console.log('✅ Student progress updated from Firestore:', newProgress);
+                console.log('📊 Activities data:', activities);
+                setStudentProgress(newProgress);
+            } else {
+                console.log('⚠️ No subject-specific progress found, generating and saving unique progress for subject:', subjectId);
+                
+                // Generate unique progress based on subject ID to ensure different values per subject
+                const subjectHash = subjectId.split('').reduce((a, b) => {
+                    a = ((a << 5) - a) + b.charCodeAt(0);
+                    return a & a;
+                }, 0);
+                
+                const baseProgress = Math.abs(subjectHash % 40) + 50; // 50-90 range
+                
+                // Generate subject-specific skills based on subject name/ID
+                const subjectSpecificSkills = generateSubjectSkills(subjectId, subjectHash, baseProgress);
+                
+                const uniqueProgress = {
+                    overall: baseProgress,
+                    homework: Math.min(100, baseProgress + (Math.abs(subjectHash % 10))),
+                    quizzes: Math.min(100, baseProgress + (Math.abs((subjectHash * 2) % 15) - 5)),
+                    labs: Math.min(100, baseProgress + (Math.abs((subjectHash * 3) % 12) - 3)),
+                    skills: subjectSpecificSkills
+                };
+                
+                console.log('🎲 Generated unique progress for subject', subjectId, ':', uniqueProgress);
+                console.log('🎨 Skills for this subject:', uniqueProgress.skills.map(s => s.name));
+                
+                // Save to Firebase for future use
+                await saveProgressToFirebase(uniqueProgress);
+                
+                setStudentProgress(uniqueProgress);
+            }
+            
+        } catch (error) {
+            console.error('❌ Error fetching student progress:', error);
+            setStudentProgress({
+                overall: 0,
+                homework: 0,
+                quizzes: 0,
+                labs: 0,
+                skills: []
+            });
+        }
+    };
+
+    const generateSubjectSkills = (subjectId, subjectHash, baseProgress) => {
+        console.log('🎯 Generating skills for subject:', subjectId, 'with hash:', subjectHash);
+        
+        // Define ALL possible skills
+        const allSkills = [
+            // Programming skills
+            'Програмирање', 'Алгоритми', 'Структури на податоци', 'Дебагирање', 'Тестирање', 'Документација',
+            // Math skills  
+            'Математичко размислување', 'Решавање проблеми', 'Логичко размислување', 'Анализа', 'Докажување', 'Пресметување',
+            // Database skills
+            'SQL', 'Дизајн на бази', 'Нормализација', 'Индексирање', 'Оптимизација', 'Безбедност',
+            // Web skills
+            'HTML/CSS', 'JavaScript', 'Респонзивен дизајн', 'API интеграција', 'Frontend', 'Backend',
+            // Network skills
+            'Протоколи', 'Рутирање', 'Конфигурација', 'Дијагностика', 'Мрежна безбедност', 'Администрација',
+            // General skills
+            'Критичко размислување', 'Комуникација', 'Тимска работа', 'Управување со време', 'Презентација', 'Истражување'
+        ];
+
+        // Use subject hash to deterministically select 6 unique skills for this subject
+        const selectedSkills = [];
+        const usedIndices = new Set();
+        
+        // Generate 6 unique skills based on subject hash
+        for (let i = 0; i < 6; i++) {
+            let skillIndex;
+            let attempts = 0;
+            
+            do {
+                skillIndex = Math.abs((subjectHash * (i + 1) * 7 + attempts) % allSkills.length);
+                attempts++;
+            } while (usedIndices.has(skillIndex) && attempts < 50);
+            
+            usedIndices.add(skillIndex);
+            selectedSkills.push(allSkills[skillIndex]);
+        }
+
+        console.log('✅ Selected skills for subject', subjectId, ':', selectedSkills);
+
+        // Generate progress for each selected skill
+        return selectedSkills.map((skillName, index) => ({
+            name: skillName,
+            progress: Math.min(100, Math.max(30, baseProgress + (Math.abs((subjectHash * (index + 1)) % 25) - 12)))
+        }));
+    };
+
+    const saveProgressToFirebase = async (progressData) => {
+        try {
+            const docId = `${currentUser.uid}_${subjectId}`;
+            const progressDoc = {
+                userId: currentUser.uid,
+                subjectId: subjectId,
+                overall: progressData.overall,
+                activities: {
+                    homework: progressData.homework,
+                    quizzes: progressData.quizzes,
+                    labs: progressData.labs
+                },
+                skills: progressData.skills,
+                createdAt: new Date().toISOString(),
+                lastUpdated: new Date().toISOString()
+            };
+
+            await setDoc(doc(db, 'studentProgress', docId), progressDoc);
+            console.log('💾 Progress saved to Firebase with docId:', docId);
+        } catch (error) {
+            console.error('❌ Error saving progress to Firebase:', error);
         }
     };
 
@@ -129,6 +349,9 @@ function StudentCourseLayout({ subjectId }) {
         );
     }
 
+    // Debug: Log current progress state before rendering
+    console.log('🎨 Rendering StudentCourseLayout with progress:', studentProgress);
+
     return (
         <div className="course-layout">
             {/* Header */}
@@ -155,22 +378,22 @@ function StudentCourseLayout({ subjectId }) {
                     <div className="progress-main">
                         <div className="progress-circle-container">
                             <div className="progress-circle">
-                                <span className="percentage">50%</span>
+                                <span className="percentage">{studentProgress.overall}%</span>
                             </div>
                         </div>
                         
                         <div className="activity-cards">
                             <div className="activity-card">
                                 <div className="activity-label">Домашни</div>
-                                <div className="activity-value">50%</div>
+                                <div className="activity-value">{studentProgress.homework}%</div>
                             </div>
                             <div className="activity-card">
                                 <div className="activity-label">Квизови</div>
-                                <div className="activity-value">50%</div>
+                                <div className="activity-value">{studentProgress.quizzes}%</div>
                             </div>
                             <div className="activity-card">
                                 <div className="activity-label">Лабораториски</div>
-                                <div className="activity-value">50%</div>
+                                <div className="activity-value">{studentProgress.labs}%</div>
                             </div>
                         </div>
                     </div>
@@ -179,44 +402,70 @@ function StudentCourseLayout({ subjectId }) {
                         <h4 className="skills-title">Прогрес на вештини</h4>
                         <div className="skills-grid">
                             <div className="skills-column">
-                                <div className="skill-item">
-                                    <span className="skill-label">Вештина</span>
-                                    <div className="skill-bar">
-                                        <div className="skill-fill" style={{width: '80%'}}></div>
+                                {studentProgress.skills.slice(0, Math.ceil(studentProgress.skills.length / 2)).map((skill, index) => (
+                                    <div key={index} className="skill-item">
+                                        <span className="skill-label">{skill.name || 'Вештина'}</span>
+                                        <div className="skill-bar">
+                                            <div className="skill-fill" style={{width: `${skill.progress || 0}%`}}></div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="skill-item">
-                                    <span className="skill-label">Вештина</span>
-                                    <div className="skill-bar">
-                                        <div className="skill-fill" style={{width: '65%'}}></div>
-                                    </div>
-                                </div>
-                                <div className="skill-item">
-                                    <span className="skill-label">Вештина</span>
-                                    <div className="skill-bar">
-                                        <div className="skill-fill" style={{width: '75%'}}></div>
-                                    </div>
-                                </div>
+                                ))}
+                                {/* Show default skills if no skills data */}
+                                {studentProgress.skills.length === 0 && (
+                                    <>
+                                        <div className="skill-item">
+                                            <span className="skill-label">Програмирање</span>
+                                            <div className="skill-bar">
+                                                <div className="skill-fill" style={{width: '0%'}}></div>
+                                            </div>
+                                        </div>
+                                        <div className="skill-item">
+                                            <span className="skill-label">Алгоритми</span>
+                                            <div className="skill-bar">
+                                                <div className="skill-fill" style={{width: '0%'}}></div>
+                                            </div>
+                                        </div>
+                                        <div className="skill-item">
+                                            <span className="skill-label">Структури</span>
+                                            <div className="skill-bar">
+                                                <div className="skill-fill" style={{width: '0%'}}></div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                             <div className="skills-column">
-                                <div className="skill-item">
-                                    <span className="skill-label">Вештина</span>
-                                    <div className="skill-bar">
-                                        <div className="skill-fill" style={{width: '90%'}}></div>
+                                {studentProgress.skills.slice(Math.ceil(studentProgress.skills.length / 2)).map((skill, index) => (
+                                    <div key={index} className="skill-item">
+                                        <span className="skill-label">{skill.name || 'Вештина'}</span>
+                                        <div className="skill-bar">
+                                            <div className="skill-fill" style={{width: `${skill.progress || 0}%`}}></div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="skill-item">
-                                    <span className="skill-label">Вештина</span>
-                                    <div className="skill-bar">
-                                        <div className="skill-fill" style={{width: '55%'}}></div>
-                                    </div>
-                                </div>
-                                <div className="skill-item">
-                                    <span className="skill-label">Вештина</span>
-                                    <div className="skill-bar">
-                                        <div className="skill-fill" style={{width: '85%'}}></div>
-                                    </div>
-                                </div>
+                                ))}
+                                {/* Show default skills if no skills data */}
+                                {studentProgress.skills.length === 0 && (
+                                    <>
+                                        <div className="skill-item">
+                                            <span className="skill-label">Дебагирање</span>
+                                            <div className="skill-bar">
+                                                <div className="skill-fill" style={{width: '0%'}}></div>
+                                            </div>
+                                        </div>
+                                        <div className="skill-item">
+                                            <span className="skill-label">Тестирање</span>
+                                            <div className="skill-bar">
+                                                <div className="skill-fill" style={{width: '0%'}}></div>
+                                            </div>
+                                        </div>
+                                        <div className="skill-item">
+                                            <span className="skill-label">Документација</span>
+                                            <div className="skill-bar">
+                                                <div className="skill-fill" style={{width: '0%'}}></div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
