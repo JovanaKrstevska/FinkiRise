@@ -4,6 +4,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../../config/firebase';
 import FileUploadModal from '../../modals/FileUploadModal/FileUploadModal';
+import VideoLinkModal from '../../modals/VideoLinkModal/VideoLinkModal';
 import '../CourseLayout/CourseLayout.css';
 
 function ProfessorCourseLayout({ subjectId }) {
@@ -13,8 +14,9 @@ function ProfessorCourseLayout({ subjectId }) {
     const { currentUser } = useAuth();
     const navigate = useNavigate();
 
-    // Modal states (only for file upload now)
+    // Modal states
     const [fileUploadModal, setFileUploadModal] = useState({ isOpen: false, sectionType: '' });
+    const [videoLinkModal, setVideoLinkModal] = useState(false);
 
     // Course content states
     const [courseContent, setCourseContent] = useState({
@@ -134,7 +136,10 @@ function ProfessorCourseLayout({ subjectId }) {
     const handleAddContent = (sectionType) => {
         console.log('➕ Add content clicked:', sectionType);
         
-        if (['lectures', 'exercises', 'literature', 'recordings', 'homework', 'results'].includes(sectionType)) {
+        if (sectionType === 'recordings') {
+            console.log('📹 Opening video link modal for recordings');
+            setVideoLinkModal(true);
+        } else if (['lectures', 'exercises', 'literature', 'homework', 'results'].includes(sectionType)) {
             console.log('📤 Opening file upload modal for:', sectionType);
             setFileUploadModal({ isOpen: true, sectionType });
         } else if (sectionType === 'quizzes') {
@@ -297,6 +302,40 @@ function ProfessorCourseLayout({ subjectId }) {
         console.log('✅ All chunks saved successfully');
     };
 
+    const handleVideoLinkAdd = async (videoData) => {
+        console.log('🔄 Adding video link...', videoData);
+        
+        try {
+            if (!currentUser) {
+                console.error('❌ No current user');
+                alert('You must be logged in to add recordings.');
+                return;
+            }
+
+            // Add uploadedBy field
+            const videoRecord = {
+                ...videoData,
+                uploadedBy: currentUser.uid
+            };
+
+            // Update local state
+            setCourseContent(prev => ({
+                ...prev,
+                recordings: [...(prev.recordings || []), videoRecord]
+            }));
+            console.log('🔄 Local state updated with video link');
+
+            // Save to Firestore
+            await saveCourseContentToFirestore('recordings', videoRecord);
+            console.log('💾 Video link saved to Firestore');
+            
+            alert('Recording link added successfully!');
+        } catch (error) {
+            console.error('❌ Error adding video link:', error);
+            alert(`Error adding recording: ${error.message}`);
+        }
+    };
+
 
 
     const saveCourseContentToFirestore = async (sectionType, newItem) => {
@@ -442,6 +481,17 @@ function ProfessorCourseLayout({ subjectId }) {
             return;
         }
         
+        // Handle recordings (video links) differently
+        if (sectionType === 'recordings') {
+            console.log('📹 Opening video link:', item.url);
+            if (item.url) {
+                window.open(item.url, '_blank');
+            } else {
+                alert('Video URL not found.');
+            }
+            return;
+        }
+        
         // Handle file downloads for other sections
         try {
             // Fetch the actual file data from courseFiles collection
@@ -580,7 +630,7 @@ function ProfessorCourseLayout({ subjectId }) {
                         <div className="section-header">
                             <h4 className="section-title">Предавања</h4>
                             <button 
-                                className="add-btn" 
+                                className="add-btn-section" 
                                 onClick={() => handleAddContent('lectures')}
                             >
                                 +
@@ -595,7 +645,7 @@ function ProfessorCourseLayout({ subjectId }) {
                         <div className="section-header">
                             <h4 className="section-title">Аудиториски вежби</h4>
                             <button 
-                                className="add-btn" 
+                                className="add-btn-section" 
                                 onClick={() => handleAddContent('exercises')}
                             >
                                 +
@@ -610,7 +660,7 @@ function ProfessorCourseLayout({ subjectId }) {
                         <div className="section-header">
                             <h4 className="section-title">Литература</h4>
                             <button 
-                                className="add-btn" 
+                                className="add-btn-section" 
                                 onClick={() => handleAddContent('literature')}
                             >
                                 +
@@ -625,7 +675,7 @@ function ProfessorCourseLayout({ subjectId }) {
                         <div className="section-header">
                             <h4 className="section-title">Снимени предавања</h4>
                             <button 
-                                className="add-btn" 
+                                className="add-btn-section" 
                                 onClick={() => handleAddContent('recordings')}
                             >
                                 +
@@ -640,7 +690,7 @@ function ProfessorCourseLayout({ subjectId }) {
                         <div className="section-header">
                             <h4 className="section-title">Квизови</h4>
                             <button 
-                                className="add-btn" 
+                                className="add-btn-section" 
                                 onClick={() => handleAddContent('quizzes')}
                             >
                                 +
@@ -655,7 +705,7 @@ function ProfessorCourseLayout({ subjectId }) {
                         <div className="section-header">
                             <h4 className="section-title">Лабораториски вежби</h4>
                             <button 
-                                className="add-btn" 
+                                className="add-btn-section" 
                                 onClick={() => handleAddContent('labs')}
                             >
                                 +
@@ -670,7 +720,7 @@ function ProfessorCourseLayout({ subjectId }) {
                         <div className="section-header">
                             <h4 className="section-title">Домашни</h4>
                             <button 
-                                className="add-btn" 
+                                className="add-btn-section" 
                                 onClick={() => handleAddContent('homework')}
                             >
                                 +
@@ -685,7 +735,7 @@ function ProfessorCourseLayout({ subjectId }) {
                         <div className="section-header">
                             <h4 className="section-title">Резултати</h4>
                             <button 
-                                className="add-btn" 
+                                className="add-btn-section" 
                                 onClick={() => handleAddContent('results')}
                             >
                                 +
@@ -704,6 +754,12 @@ function ProfessorCourseLayout({ subjectId }) {
                 onClose={() => setFileUploadModal({ isOpen: false, sectionType: '' })}
                 onUpload={handleFileUpload}
                 sectionType={fileUploadModal.sectionType}
+            />
+            
+            <VideoLinkModal
+                isOpen={videoLinkModal}
+                onClose={() => setVideoLinkModal(false)}
+                onAddLink={handleVideoLinkAdd}
             />
         </div>
     );

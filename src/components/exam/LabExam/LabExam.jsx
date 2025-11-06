@@ -221,7 +221,7 @@ function LabExam({ labData, onSubmit, onExit, isExam = false }) {
 
             {/* Timer for exams only */}
             {isExam && timeLeft !== null && (
-                <div className="exam-timer">
+                <div className="exam-timer-exam">
                     Време: {formatTime(timeLeft)}
                 </div>
             )}
