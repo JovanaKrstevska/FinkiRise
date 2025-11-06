@@ -278,7 +278,7 @@ function TakeQuizPage() {
                                     onClick={submitQuiz}
                                     disabled={isSubmitting}
                                 >
-                                    {isSubmitting ? "Се поднесува..." : "Заврши испит"}
+                                    {isSubmitting ? "Се поднесува..." : "Заврши квиз"}
                                 </button>
                             </div>
                         </div>

@@ -193,7 +193,14 @@ function ProfileLayout({ userRole, profileData, onImageUpload, onProfileUpdate, 
                             </div>
 
                             {/* Display professor information */}
-                            <h3 className="professor-name">{profileData?.firstName && profileData?.lastName ? `${profileData.firstName} ${profileData.lastName}` : 'Име Презиме'}</h3>
+                            <h3 className="professor-name">
+                                {profileData?.firstName && profileData?.lastName 
+                                    ? `${profileData.firstName} ${profileData.lastName}` 
+                                    : currentUser?.displayName 
+                                        ? currentUser.displayName 
+                                        : currentUser?.email?.split('@')[0] || 'Име Презиме'
+                                }
+                            </h3>
                             <div className="professor-details">
                                 <h3>Линк до Консултации</h3>
                                 <a href="https://bbb-24.finki.ukim.mk/html5client/join?sessionToken=ji2tvuuidtrmrh4e" style={{ color: "#015E86", textDecoration: "none" }}>Консултации</a>
