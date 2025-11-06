@@ -138,9 +138,9 @@ function ExamLayout({ subjectId = null }) {
 
     if (loading) {
         return (
-            <div className="exam-subject-layout">
-                <div className="exam-subject-container">
-                    <div className="exam-loading-message">Loading subjects...</div>
+            <div className="exam-layout">
+                <div className="exam-container">
+                    <div className="loading-message">Loading subjects...</div>
                 </div>
             </div>
         );
@@ -148,19 +148,19 @@ function ExamLayout({ subjectId = null }) {
 
     if (error) {
         return (
-            <div className="exam-subject-layout">
-                <div className="exam-subject-container">
-                    <div className="exam-error-message">Error: {error}</div>
+            <div className="exam-layout">
+                <div className="exam-container">
+                    <div className="error-message">Error: {error}</div>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="exam-subject-layout">
-            <div className="exam-subject-container">
+        <div className="exam-layout">
+            <div className="exam-container">
                 {subjects.length === 0 ? (
-                    <div className="exam-no-subjects-message">
+                    <div className="no-subjects-message">
                         {userRole === 'professor'
                             ? 'No subjects available. Please create subjects first.'
                             : 'No subjects available for exams.'
@@ -171,13 +171,13 @@ function ExamLayout({ subjectId = null }) {
                         {subjects.map((subject) => (
                             <div
                                 key={subject.id}
-                                className="exam-subject-card"
+                                className="exam-card"
                             >
-                                <div className="exam-subject-card-header">
-                                    <h3 className="exam-subject-name">{formatSubjectName(subject)}</h3>
+                                <div className="exam-card-header">
+                                    <h3 className="subject-name-exam">{formatSubjectName(subject)}</h3>
                                     {userRole === 'professor' && (
                                         <button
-                                            className="exam-professor-edit-btn-small"
+                                            className="professor-edit-btn-small"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleRemoveSubject(subject.id);
@@ -187,8 +187,8 @@ function ExamLayout({ subjectId = null }) {
                                         </button>
                                     )}
                                 </div>
-                                <div className="exam-subject-card-content">
-                                    <div className="exam-subject-info">
+                                <div className="exam-card-content">
+                                    <div className="exam-info">
                                         <div>
                                             {/* Display exams for this subject */}
                                             {(() => {
@@ -199,10 +199,9 @@ function ExamLayout({ subjectId = null }) {
                                                 <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                                     {exams.filter(exam => exam.subjectId === subject.id).map((exam) => (
                                                         <li key={exam.id} style={{ marginBottom: '5px' }}>
-                                                            <span className="exam-subject-star-icon">★</span>
+                                                            <span className="star-icon">★</span>
                                                             <span
-                                                                className="exam-subject-name"
-                                                                style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                                                                className="exam-name exam-link"
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
                                                                     navigate(`/exams/detail/${exam.id}`);
@@ -214,13 +213,13 @@ function ExamLayout({ subjectId = null }) {
                                                     ))}
                                                 </ul>
                                             ) : (
-                                                <span className="exam-subject-name">Име на испитот</span>
+                                                <span className="exam-name">Име на испитот</span>
                                             )}
 
                                             {/* Create new exam link - ONLY FOR PROFESSORS */}
                                             {userRole === 'professor' && (
                                                 <span
-                                                    className="exam-create-link"
+                                                    className="create-exam-link"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         console.log('Creating exam for subject:', subject.name, 'with ID:', subject.id);
@@ -238,19 +237,19 @@ function ExamLayout({ subjectId = null }) {
 
                         {/* Professor-only create new section */}
                         {userRole === 'professor' && (
-                            <div className="exam-professor-create-section">
+                            <div className="professor-create-section">
                                 {!showCreateForm ? (
-                                    <div className="exam-professor-create-card-simple">
+                                    <div className="professor-create-card-simple">
                                         <button
-                                            className="exam-professor-create-btn-simple"
+                                            className="professor-create-btn-simple"
                                             onClick={() => setShowCreateForm(true)}
                                         >
-                                            <span className="exam-professor-plus-icon-simple">+</span>
-                                            <span className="exam-professor-create-text-simple">Креирај ново</span>
+                                            <span className="professor-plus-icon-simple">+</span>
+                                            <span className="professor-create-text-simple">Креирај ново</span>
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="exam-professor-create-card-simple">
+                                    <div className="professor-create-card-simple">
                                         <div style={{ padding: '20px' }}>
                                             <h3 style={{ marginBottom: '15px' }}>Додај постоечки предмет</h3>
                                             <select
@@ -275,7 +274,7 @@ function ExamLayout({ subjectId = null }) {
                                             <div style={{ display: 'flex', gap: '10px' }}>
                                                 <Button
                                                     onClick={handleAddExistingSubject}
-                                                    className='exam-btn-dodaj'
+                                                    className='btn-dodaj'
                                                     content={"Додај"}
                                                 />
                                                 <Button
@@ -283,7 +282,7 @@ function ExamLayout({ subjectId = null }) {
                                                         setShowCreateForm(false);
                                                         setSelectedSubjectId('');
                                                     }}
-                                                    className='exam-btn-otkazi'
+                                                    className='btn-otkazi'
                                                     content={"Откажи"}
                                                 />
                                             </div>
