@@ -29,6 +29,7 @@ function CreateExamPage() {
     const [aiQuestionCount, setAiQuestionCount] = useState(5);
     const [aiDifficulty, setAiDifficulty] = useState('medium');
     const [isGenerating, setIsGenerating] = useState(false);
+    const [uploadedExamFiles, setUploadedExamFiles] = useState([]);
 
     const questionTypes = [
         { value: 'multiple-choice', label: 'Multiple Choice' },
@@ -121,6 +122,62 @@ function CreateExamPage() {
                 uploadedFile: file
             }));
         }
+    };
+
+    const handleExamFileUpload = (files) => {
+        console.log('handleExamFileUpload called with:', files);
+        
+        const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain', 'image/jpeg', 'image/jpg', 'image/png'];
+        const validFiles = [];
+        const invalidFiles = [];
+
+        // Convert FileList to Array if needed
+        const fileArray = Array.from(files);
+
+        fileArray.forEach(file => {
+            console.log('Processing file:', file.name, 'Type:', file.type);
+            
+            // Check if file already exists
+            const fileExists = uploadedExamFiles.some(existingFile => 
+                existingFile.name === file.name && existingFile.size === file.size
+            );
+
+            if (fileExists) {
+                console.log('File already exists:', file.name);
+                return;
+            }
+
+            // Validate file type
+            if (!allowedTypes.includes(file.type)) {
+                invalidFiles.push(file.name);
+                return;
+            }
+
+            // Validate file size (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                invalidFiles.push(file.name + ' (премногу голем)');
+                return;
+            }
+
+            validFiles.push(file);
+        });
+
+        // Show error for invalid files
+        if (invalidFiles.length > 0) {
+            alert(`Следните фајлови не се валидни: ${invalidFiles.join(', ')}\n\nДозволени се само PDF, Word, текстуални и слики фајлови под 10MB.`);
+        }
+
+        // Add valid files to the list
+        if (validFiles.length > 0) {
+            setUploadedExamFiles(prev => [...prev, ...validFiles]);
+            console.log('Files uploaded successfully:', validFiles.map(f => f.name));
+        }
+    };
+
+    const removeExamFile = (fileToRemove) => {
+        setUploadedExamFiles(prev => 
+            prev.filter(file => !(file.name === fileToRemove.name && file.size === fileToRemove.size))
+        );
     };
 
     const addQuestion = () => {
@@ -275,6 +332,7 @@ function CreateExamPage() {
     console.log('🔍 CreateExamPage render - AI modal state:', aiGenerationModal);
     console.log('🔍 Questions count:', questions.length);
     console.log('🔍 Selected question index:', selectedQuestionIndex);
+    console.log('🔍 Uploaded exam files:', uploadedExamFiles);
 
     return (
         <div style={{ background: 'linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%)', minHeight: '100vh' }}>
@@ -289,29 +347,33 @@ function CreateExamPage() {
                                 
                             </div>
                             <div className="create-exam-card-body">
-                                <h3>Наслов</h3>
-                                <Input
-                                    type="text"
-                                    style="exam-title-input"
-                                    value={examTitle}
-                                    onChange={(e) => setExamTitle(e.target.value)}
-                                    placeholder="Внеси текст"
-                                />
-                                <div className="create-exam-difficulty-section">
-                                    <h4>Селектирај тежина</h4>
-                                    <div className="create-exam-radio-group">
-                                        <label className="create-exam-radio-item">
-                                            <input type="radio" name="difficulty" value="easy" />
-                                            <span>Лесно</span>
-                                        </label>
-                                        <label className="create-exam-radio-item">
-                                            <input type="radio" name="difficulty" value="medium" defaultChecked />
-                                            <span>Средно</span>
-                                        </label>
-                                        <label className="create-exam-radio-item">
-                                            <input type="radio" name="difficulty" value="hard" />
-                                            <span>Тешко</span>
-                                        </label>
+                                <div className="create-exam-content-wrapper">
+                                    <div className="create-exam-title-section">
+                                        <h3>Наслов</h3>
+                                        <Input
+                                            type="text"
+                                            style="create-exam-title-input"
+                                            value={examTitle}
+                                            onChange={(e) => setExamTitle(e.target.value)}
+                                            placeholder="Внеси текст"
+                                        />
+                                    </div>
+                                    <div className="create-exam-difficulty-section">
+                                        <h4>Селектирај тежина</h4>
+                                        <div className="create-exam-radio-group">
+                                            <label className="create-exam-radio-item">
+                                                <input type="radio" name="difficulty" value="easy" />
+                                                <span>Лесно</span>
+                                            </label>
+                                            <label className="create-exam-radio-item">
+                                                <input type="radio" name="difficulty" value="medium" defaultChecked />
+                                                <span>Средно</span>
+                                            </label>
+                                            <label className="create-exam-radio-item">
+                                                <input type="radio" name="difficulty" value="hard" />
+                                                <span>Тешко</span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="create-exam-button-row">
@@ -332,15 +394,85 @@ function CreateExamPage() {
                         </div>
 
                         {/* RIGHT CARD - File Upload */}
-                        <div className="create-exam-card">
+                        <div className="create-exam-card-second">
                             <div className="create-exam-card-header">
                                 <h3>File Upload</h3>
                             </div>
                             <div className="create-exam-card-body">
-                                <div className="create-exam-file-upload-zone">
+                                <div 
+                                    className="create-exam-file-upload-zone"
+                                    onDragOver={(e) => {
+                                        e.preventDefault();
+                                        e.currentTarget.classList.add('drag-over');
+                                    }}
+                                    onDragLeave={(e) => {
+                                        e.preventDefault();
+                                        e.currentTarget.classList.remove('drag-over');
+                                    }}
+                                    onDrop={(e) => {
+                                        e.preventDefault();
+                                        e.currentTarget.classList.remove('drag-over');
+                                        const files = e.dataTransfer.files;
+                                        if (files.length > 0) {
+                                            handleExamFileUpload(files);
+                                        }
+                                    }}
+                                    onClick={() => document.getElementById('exam-file-input').click()}
+                                >
                                     <div className="create-exam-upload-icon">☁️</div>
                                     <p>Drag a file here</p>
                                     <p>or browse a file to upload</p>
+                                    <input
+                                        id="exam-file-input"
+                                        type="file"
+                                        multiple
+                                        style={{ display: 'none' }}
+                                        accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
+                                        onChange={(e) => {
+                                            if (e.target.files.length > 0) {
+                                                handleExamFileUpload(e.target.files);
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                
+                                {/* Always show uploaded files section */}
+                                <div className="create-exam-uploaded-files-section">
+                                    {uploadedExamFiles.length > 0 ? (
+                                        <div className="create-exam-uploaded-files-list">
+                                            <div className="create-exam-files-header">
+                                                <span className="create-exam-files-count">
+                                                    📁 {uploadedExamFiles.length} фајл{uploadedExamFiles.length !== 1 ? 'ови' : ''}
+                                                </span>
+                                                <button
+                                                    className="create-exam-clear-all-btn"
+                                                    onClick={() => setUploadedExamFiles([])}
+                                                >
+                                                    Избриши сè
+                                                </button>
+                                            </div>
+                                            <div className="create-exam-files-container">
+                                                {uploadedExamFiles.map((file, index) => (
+                                                    <div key={`${file.name}-${file.size}-${index}`} className="create-exam-uploaded-file-info">
+                                                        <div className="create-exam-file-details">
+                                                            <span className="create-exam-file-name">📎 {file.name}</span>
+                                                            <span className="create-exam-file-size">({(file.size / 1024).toFixed(1)} KB)</span>
+                                                        </div>
+                                                        <button
+                                                            className="create-exam-remove-file-btn"
+                                                            onClick={() => removeExamFile(file)}
+                                                        >
+                                                            ✕
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="create-exam-no-files">
+                                            <p>Нема прикачени фајлови</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -414,50 +546,57 @@ function CreateExamPage() {
                                         <h3>{selectedQuestionIndex !== null ? 'Уреди прашање' : 'Креирај прашање'}</h3>
                                     </div>
                                     <div className="create-exam-card-body">
-                                        <textarea
-                                            className="create-exam-question-input"
-                                            value={currentQuestion.question}
-                                            onChange={(e) => setCurrentQuestion(prev => ({ ...prev, question: e.target.value }))}
-                                            placeholder={selectedQuestionIndex !== null ? 'Уреди го текстот на прашањето' : 'Внеси текст на прашањето'}
-                                            rows={3}
-                                        />
-                                        <div className="create-exam-answer-options">
-                                            {currentQuestion.type === 'multiple-choice' && currentQuestion.options.map((option, index) => (
-                                                <div key={index} className="create-exam-answer-item-editable">
-                                                    <input
-                                                        type="text"
-                                                        value={option}
-                                                        onChange={(e) => handleOptionChange(index, e.target.value)}
-                                                        placeholder={`Одговор ${index + 1}`}
-                                                        className="create-exam-option-input"
-                                                    />
-                                                    <input
-                                                        type="radio"
-                                                        name="correctAnswer"
-                                                        checked={currentQuestion.correctAnswer === index}
-                                                        onChange={() => setCurrentQuestion(prev => ({ ...prev, correctAnswer: index }))}
-                                                        className="create-exam-correct-answer-radio"
-                                                    />
+                                        <div className="create-exam-question-content-section">
+                                            <Input
+                                                type="text"
+                                                style="create-exam-question-input"
+                                                value={currentQuestion.question}
+                                                onChange={(e) => setCurrentQuestion(prev => ({ ...prev, question: e.target.value }))}
+                                                placeholder="Внеси текст"
+                                            />
+
+                                            {/* Multiple Choice Options */}
+                                            {currentQuestion.type === 'multiple-choice' && (
+                                                <div className="create-exam-answers-section">
+                                                    <div className="create-exam-options-list">
+                                                        {currentQuestion.options.map((option, index) => (
+                                                            <label key={index} className="create-exam-option-item">
+                                                                <div className="create-exam-custom-checkbox">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="correct-answer"
+                                                                        value={index}
+                                                                        checked={currentQuestion.correctAnswer === index}
+                                                                        onChange={() => setCurrentQuestion(prev => ({ ...prev, correctAnswer: index }))}
+                                                                    />
+                                                                    <span className="create-exam-checkbox-square"></span>
+                                                                </div>
+                                                                <input
+                                                                    type="text"
+                                                                    className="create-exam-option-input"
+                                                                    value={option}
+                                                                    onChange={(e) => handleOptionChange(index, e.target.value)}
+                                                                    placeholder={`Одговор ${index + 1}`}
+                                                                />
+                                                            </label>
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                            ))}
-                                        </div>
-                                        <div className="create-exam-editor-toolbar">
-                                            <button className="create-exam-toolbar-button">A</button>
-                                            <button className="create-exam-toolbar-button">B</button>
-                                            <button className="create-exam-toolbar-button">I</button>
-                                            <button className="create-exam-toolbar-button">≡</button>
-                                            <button className="create-exam-toolbar-button">⋯</button>
-                                        </div>
-                                        <div className="create-exam-editor-actions">
-                                            {selectedQuestionIndex !== null ? (
-                                                <button className="create-exam-edit-btn" onClick={updateQuestion}>
-                                                    Edit
-                                                </button>
-                                            ) : (
-                                                <button className="create-exam-add-btn" onClick={addQuestion}>
-                                                    Додај
-                                                </button>
                                             )}
+
+
+
+                                            <div className="create-exam-editor-actions">
+                                                {selectedQuestionIndex !== null ? (
+                                                    <button className="create-exam-edit-btn" onClick={updateQuestion}>
+                                                        Ажурирај
+                                                    </button>
+                                                ) : (
+                                                    <button className="create-exam-add-btn" onClick={addQuestion}>
+                                                        Додај
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
