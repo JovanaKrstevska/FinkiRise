@@ -379,7 +379,11 @@ function DetailsPage() {
                         <div className="lab-stats">
                             {isExam ? (
                                 <>
-                                    <span className="total-questions">Време: 01:30 минути</span>
+                                    <span className="total-questions">
+                                        Време: {labData.timeLimit ? 
+                                            `${Math.floor(labData.timeLimit / 60)}:${(labData.timeLimit % 60).toString().padStart(2, '0')} ${labData.timeLimit >= 60 ? 'часа' : 'минути'}` 
+                                            : '01:30 минути'}
+                                    </span>
                                     <span className="total-points">Вкупно број на прашања: {labData.questions.length}</span>
                                 </>
                             ) : (

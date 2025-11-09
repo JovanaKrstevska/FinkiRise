@@ -30,6 +30,8 @@ function CreateExamPage() {
     const [aiDifficulty, setAiDifficulty] = useState('medium');
     const [isGenerating, setIsGenerating] = useState(false);
     const [uploadedExamFiles, setUploadedExamFiles] = useState([]);
+    const [examTimeLimit, setExamTimeLimit] = useState(120);
+    const [maxAttempts, setMaxAttempts] = useState(1);
 
     const questionTypes = [
         { value: 'multiple-choice', label: 'Multiple Choice' },
@@ -38,42 +40,70 @@ function CreateExamPage() {
     ];
 
     const generateQuestionsWithAI = async () => {
+        console.log('🎯 [CreateExamPage] generateQuestionsWithAI called');
+        console.log('🎯 [CreateExamPage] Uploaded files count:', uploadedExamFiles.length);
+        console.log('🎯 [CreateExamPage] AI Topic:', aiTopic);
+        console.log('🎯 [CreateExamPage] Question count:', aiQuestionCount);
+        console.log('🎯 [CreateExamPage] Difficulty:', aiDifficulty);
+        
         // Check if we have uploaded files or a topic
         if (uploadedExamFiles.length === 0 && !aiTopic.trim()) {
+            console.log('❌ [CreateExamPage] No files or topic provided');
             alert('Ве молиме прикачете фајлови или внесете тема за генерирање на прашања.');
             return;
         }
 
+        console.log('🔄 [CreateExamPage] Starting generation process...');
         setIsGenerating(true);
         
         try {
             let result;
             
             if (uploadedExamFiles.length > 0) {
-                console.log(`🤖 Generating ${aiQuestionCount} questions from ${uploadedExamFiles.length} uploaded files with ${aiDifficulty} difficulty`);
+                console.log(`🤖 [CreateExamPage] Generating ${aiQuestionCount} questions from ${uploadedExamFiles.length} uploaded files with ${aiDifficulty} difficulty`);
+                console.log('📁 [CreateExamPage] Files:', uploadedExamFiles.map(f => f.name));
                 
                 // Generate questions from uploaded files
                 result = await generateQuestionsFromFiles(uploadedExamFiles, aiQuestionCount, aiDifficulty);
+                console.log('✅ [CreateExamPage] File-based generation completed');
             } else {
-                console.log(`🤖 Generating ${aiQuestionCount} questions about "${aiTopic}" with ${aiDifficulty} difficulty`);
+                console.log(`🤖 [CreateExamPage] Generating ${aiQuestionCount} questions about "${aiTopic}" with ${aiDifficulty} difficulty`);
                 
                 // Generate questions from topic (existing functionality)
+                console.log('📦 [CreateExamPage] Importing AI service...');
                 const { generateAIQuestions } = await import('../../services/aiService');
+                console.log('📦 [CreateExamPage] AI service imported, calling generateAIQuestions...');
                 result = await generateAIQuestions(aiTopic, aiQuestionCount, aiDifficulty);
+                console.log('✅ [CreateExamPage] Topic-based generation completed');
             }
             
+            console.log('📊 [CreateExamPage] Generation result:', result);
+            
             if (result.success && result.questions.length > 0) {
-                // Add generated questions to the exam
-                const newQuestions = result.questions.map((q, index) => ({
-                    id: Date.now() + index,
-                    type: 'multiple-choice',
-                    question: q.question,
-                    options: q.options,
-                    correctAnswer: q.correctAnswer,
-                    points: q.points || 5
-                }));
+                console.log('✅ [CreateExamPage] AI Generated Questions:', result.questions);
+                console.log('✅ [CreateExamPage] Difficulty:', aiDifficulty);
+                console.log('✅ [CreateExamPage] Source:', result.source);
+                
+                // Add generated questions to the exam with TRULY unique IDs
+                const newQuestions = result.questions.map((q, index) => {
+                    const uniqueId = `${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`;
+                    console.log(`📝 [CreateExamPage] Question ${index + 1}: "${q.question.substring(0, 50)}..."`);
+                    console.log(`   Correct answer: ${q.correctAnswer}, Options: ${q.options.length}`);
+                    
+                    return {
+                        id: uniqueId,
+                        type: 'multiple-choice',
+                        question: q.question,
+                        options: [...q.options], // Create new array copy
+                        correctAnswer: q.correctAnswer,
+                        points: q.points || 5
+                    };
+                });
 
+                console.log('✅ [CreateExamPage] Created', newQuestions.length, 'unique questions');
+                console.log('📋 [CreateExamPage] Adding questions to state...');
                 setQuestions(prev => [...prev, ...newQuestions]);
+                console.log('🔒 [CreateExamPage] Closing modal...');
                 setAiGenerationModal(false);
                 setAiTopic('');
                 
@@ -82,22 +112,27 @@ function CreateExamPage() {
                     : result.source === 'fallback' 
                         ? ' (користени се примерни прашања)' 
                         : ' (генерирани со AI)';
-                    
+                
+                console.log('🎉 [CreateExamPage] Success! Showing alert...');
                 alert(`✅ ${newQuestions.length} прашања се успешно додадени${sourceMessage}!`);
             } else {
+                console.log('❌ [CreateExamPage] No questions in result');
                 throw new Error('No questions were generated');
             }
 
         } catch (error) {
-            console.error('Error generating questions:', error);
+            console.error('❌ [CreateExamPage] Error generating questions:', error);
+            console.error('❌ [CreateExamPage] Error stack:', error.stack);
             alert(`❌ Грешка при генерирање на прашања: ${error.message}`);
         } finally {
+            console.log('🏁 [CreateExamPage] Generation process finished');
             setIsGenerating(false);
         }
     };
 
     const generateQuestionsFromFiles = async (files, questionCount, difficulty) => {
         try {
+            console.log('📁 [generateQuestionsFromFiles] Reading file contents...');
             // Read file contents
             const fileContents = await Promise.all(
                 files.map(file => readFileContent(file))
@@ -105,21 +140,41 @@ function CreateExamPage() {
 
             // Combine all file contents
             const combinedContent = fileContents.join('\n\n');
+            console.log('📁 [generateQuestionsFromFiles] Combined content length:', combinedContent.length);
             
             if (combinedContent.trim().length === 0) {
                 throw new Error('Фајловите се празни или не можат да се прочитаат.');
             }
 
-            // Check if we have PDF files
-            const pdfFiles = files.filter(file => file.type === 'application/pdf');
-            const hasPdfFiles = pdfFiles.length > 0;
+            // Try to use Perplexity API with file content
+            console.log('🚀 [generateQuestionsFromFiles] Attempting to use Perplexity API with file content...');
+            
+            try {
+                const { generateAIQuestions } = await import('../../services/aiService');
+                
+                // Create a topic from file content (use first 500 chars as context)
+                const contentPreview = combinedContent.substring(0, 500);
+                const topic = `Based on this educational content: "${contentPreview}..."`;
+                
+                console.log('🚀 [generateQuestionsFromFiles] Calling Perplexity API...');
+                const result = await generateAIQuestions(topic, questionCount, difficulty);
+                
+                if (result.success && result.source === 'perplexity') {
+                    console.log('✅ [generateQuestionsFromFiles] Perplexity API succeeded!');
+                    return result;
+                }
+                
+                console.log('⚠️ [generateQuestionsFromFiles] Perplexity API returned fallback, using local generation');
+            } catch (apiError) {
+                console.log('⚠️ [generateQuestionsFromFiles] API error, falling back to local generation:', apiError.message);
+            }
 
-            // For now, let's use our improved fallback system since AI service needs Macedonian support
-            console.log('Using improved fallback system for Macedonian content generation');
+            // Fallback to local generation if API fails
+            console.log('🔄 [generateQuestionsFromFiles] Using local fallback generation');
             return generateFallbackQuestionsFromContent(combinedContent, questionCount, difficulty, files);
 
         } catch (error) {
-            console.error('Error processing files:', error);
+            console.error('❌ [generateQuestionsFromFiles] Error processing files:', error);
             throw error;
         }
     };
@@ -583,8 +638,8 @@ function CreateExamPage() {
             professorName: currentUser.displayName || currentUser.email,
             questions: questions,
             attachedFiles: attachedFiles,
-            timeLimit: 120, // 2 hours for exams
-            maxAttempts: 1,
+            timeLimit: examTimeLimit,
+            maxAttempts: maxAttempts,
             type: 'exam',
             status: 'active',
             createdDate: new Date().toISOString(),
@@ -657,21 +712,29 @@ function CreateExamPage() {
                                             placeholder="Внеси текст"
                                         />
                                     </div>
-                                    <div className="create-exam-difficulty-section">
-                                        <h4>Селектирај тежина</h4>
-                                        <div className="create-exam-radio-group">
-                                            <label className="create-exam-radio-item">
-                                                <input type="radio" name="difficulty" value="easy" />
-                                                <span>Лесно</span>
-                                            </label>
-                                            <label className="create-exam-radio-item">
-                                                <input type="radio" name="difficulty" value="medium" defaultChecked />
-                                                <span>Средно</span>
-                                            </label>
-                                            <label className="create-exam-radio-item">
-                                                <input type="radio" name="difficulty" value="hard" />
-                                                <span>Тешко</span>
-                                            </label>
+                                    <div className="create-exam-settings-section">
+                                        <div className="create-exam-setting-item">
+                                            <h4>Времетраење (минути)</h4>
+                                            <Input
+                                                type="number"
+                                                style="create-exam-time-input"
+                                                value={examTimeLimit}
+                                                onChange={(e) => setExamTimeLimit(parseInt(e.target.value) || 0)}
+                                                min="10"
+                                                max="300"
+                                            />
+                                        </div>
+                                        <div className="create-exam-setting-item">
+                                            <h4>Максимални обиди</h4>
+                                            <Input
+                                                type="number"
+                                                style="create-exam-attempts-input"
+                                                value={maxAttempts}
+                                                onChange={(e) => setMaxAttempts(parseInt(e.target.value) || 1)}
+                                                placeholder="1"
+                                                min="1"
+                                                max="5"
+                                            />
                                         </div>
                                     </div>
                                 </div>

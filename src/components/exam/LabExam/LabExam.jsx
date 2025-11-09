@@ -4,7 +4,9 @@ import './LabExam.css';
 function LabExam({ labData, onSubmit, onExit, isExam = false }) {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [answers, setAnswers] = useState({});
-    const [timeLeft, setTimeLeft] = useState(isExam ? 90 * 60 : null); // 90 minutes in seconds for exams
+    // Use timeLimit from labData (in minutes), convert to seconds. Default to 90 minutes if not set
+    const initialTimeInSeconds = isExam ? (labData?.timeLimit || 90) * 60 : null;
+    const [timeLeft, setTimeLeft] = useState(initialTimeInSeconds);
     const [startTime] = useState(new Date()); // Track when exam/lab started
 
     const answersRef = useRef(answers);
@@ -33,11 +35,11 @@ function LabExam({ labData, onSubmit, onExit, isExam = false }) {
                 
                 if (newTime <= 0) {
                     clearInterval(timer);
-                    // Auto submit
+                    // Auto submit when time runs out
                     const submission = {
                         answers: answersRef.current,
                         completedAt: new Date(),
-                        timeSpent: (90 * 60)
+                        timeSpent: initialTimeInSeconds
                     };
                     onSubmitRef.current(submission);
                     return 0;
@@ -94,8 +96,8 @@ function LabExam({ labData, onSubmit, onExit, isExam = false }) {
         const completedAt = new Date();
         
         if (isExam && timeLeft !== null) {
-            // For exams: initial time (90 minutes = 5400 seconds) minus remaining time
-            timeSpent = (90 * 60) - timeLeft;
+            // For exams: initial time minus remaining time
+            timeSpent = initialTimeInSeconds - timeLeft;
         } else {
             // For labs: calculate actual time spent from start to completion
             timeSpent = Math.floor((completedAt - startTime) / 1000); // in seconds
