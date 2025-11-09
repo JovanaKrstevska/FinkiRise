@@ -280,8 +280,8 @@ function LabLayout() {
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
                                                                     console.log('Clicking lab:', lab.title, 'with ID:', lab.id);
-                                                                    console.log('Navigating to:', `/labs/${lab.id}`);
-                                                                    navigate(`/labs/${lab.id}`);
+                                                                    console.log('Navigating to:', `/labs/${subject.id}/${lab.id}`);
+                                                                    navigate(`/labs/${subject.id}/${lab.id}`);
                                                                 }}
                                                             >
                                                                 {lab.title}

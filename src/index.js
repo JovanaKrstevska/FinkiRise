@@ -81,7 +81,7 @@ root.render(
               <CoursePage />
             </ProtectedRoute>
           } />
-          <Route path='/labs/:labId' element={
+          <Route path='/labs/:subjectId/:labId' element={
             <ProtectedRoute>
               <DetailsPage />
             </ProtectedRoute>

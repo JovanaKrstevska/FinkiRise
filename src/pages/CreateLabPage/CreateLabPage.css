@@ -237,27 +237,38 @@
     width: 20px;
     height: 20px;
     border: 2px solid #4a90a4;
-    background-color: #f8f9fa;
+    background-color: white;
     border-radius: 3px;
     position: relative;
     transition: all 0.3s ease;
 }
 
-.custom-checkbox input[type="radio"]:checked+.checkbox-square {
+.custom-checkbox-create input[type="radio"]:checked + .checkbox-square {
     background-color: #4a90a4;
     border-color: #4a90a4;
 }
 
-.custom-checkbox input[type="radio"]:checked+.checkbox-square::after {
-    content: '';
+.custom-checkbox-create input[type="radio"]:checked + .checkbox-square::after {
+    content: '✓';
     position: absolute;
-    top: 2px;
-    left: 6px;
-    width: 4px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
+    top: -2px;
+    left: 3px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Make the checkbox clickable */
+.checkbox-square-labs {
+    cursor: pointer;
+    background-color: white;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
 }
 
 .option-input {

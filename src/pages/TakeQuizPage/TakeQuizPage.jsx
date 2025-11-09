@@ -142,9 +142,10 @@ function TakeQuizPage() {
     };
 
     const formatTime = (seconds) => {
-        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
         const remainingSeconds = seconds % 60;
-        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     };
 
     if (loading) {
@@ -212,7 +213,7 @@ function TakeQuizPage() {
                                                             checked={answers[currentQuestion.id] === index}
                                                             onChange={() => handleAnswerChange(currentQuestion.id, index)}
                                                         />
-                                                        <span className="checkbox-square"></span>
+                                                        <span className="checkbox-square-take-quiz"></span>
                                                     </div>
                                                     <span className="option-answer">{option}</span>
                                                 </label>

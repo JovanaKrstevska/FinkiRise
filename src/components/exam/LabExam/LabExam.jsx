@@ -157,7 +157,7 @@ function LabExam({ labData, onSubmit, onExit, isExam = false }) {
                                                         checked={answers[currentQ.id] === index}
                                                         onChange={() => handleAnswerChange(currentQ.id, index)}
                                                     />
-                                                    <span className="checkbox-square"></span>
+                                                    <span className="checkbox-square-take-lab"></span>
                                                 </div>
                                                 <span className="option-answer">{option}</span>
                                             </label>

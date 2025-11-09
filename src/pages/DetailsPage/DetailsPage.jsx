@@ -10,7 +10,7 @@ import { db } from '../../config/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 
 function DetailsPage() {
-    const { labId, examId } = useParams();
+    const params = useParams();
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     const [subject, setSubject] = useState(null);
@@ -22,9 +22,19 @@ function DetailsPage() {
     const [reviewMode, setReviewMode] = useState(false);
     const [currentReviewQuestion, setCurrentReviewQuestion] = useState(0);
 
+    // Handle different route patterns:
+    // /labs/:subjectId/:labId -> params.labId
+    // /exams/detail/:examId -> params.examId
+    const labId = params.labId;
+    const examId = params.examId;
+    
     // Determine if this is a lab or exam
     const isExam = !!examId;
     const contentId = examId || labId;
+    
+    console.log('📍 DetailsPage params:', params);
+    console.log('📍 labId:', labId, 'examId:', examId);
+    console.log('📍 isExam:', isExam, 'contentId:', contentId);
 
     useEffect(() => {
         fetchContentData();
@@ -381,8 +391,10 @@ function DetailsPage() {
                                 <>
                                     <span className="total-questions">
                                         Време: {labData.timeLimit ? 
-                                            `${Math.floor(labData.timeLimit / 60)}:${(labData.timeLimit % 60).toString().padStart(2, '0')} ${labData.timeLimit >= 60 ? 'часа' : 'минути'}` 
-                                            : '01:30 минути'}
+                                            labData.timeLimit >= 60 
+                                                ? `${Math.floor(labData.timeLimit / 60)}:${(labData.timeLimit % 60).toString().padStart(2, '0')} часа`
+                                                : `${labData.timeLimit} минути`
+                                            : '90 минути'}
                                     </span>
                                     <span className="total-points">Вкупно број на прашања: {labData.questions.length}</span>
                                 </>

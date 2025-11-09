@@ -242,21 +242,31 @@
     transition: all 0.3s ease;
 }
 
-.quiz-custom-checkbox input[type="radio"]:checked+.quiz-checkbox-square {
+.quiz-custom-checkbox-create input[type="radio"]:checked + .quiz-checkbox-square {
     background-color: #4a90a4;
     border-color: #4a90a4;
 }
 
-.quiz-custom-checkbox input[type="radio"]:checked+.quiz-checkbox-square::after {
-    content: '';
+.quiz-custom-checkbox-create input[type="radio"]:checked + .quiz-checkbox-square::after {
+    content: '✓';
     position: absolute;
-    top: 2px;
-    left: 6px;
-    width: 4px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
+    top: -2px;
+    left: 3px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Make the checkbox clickable */
+.quiz-checkbox-square {
+    cursor: pointer;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
 }
 
 .quiz-option-input {
@@ -427,7 +437,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     position: absolute;
-    top: 34.5vw;
+    top: 33vw;
     right: 18vw;
     width: 15vw;
 }

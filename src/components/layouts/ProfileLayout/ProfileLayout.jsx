@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { getSubjectsByProfessor } from '../../../services/databaseService';
 import TutorialsList from '../../widgets/TutorialsList/TutorialsList';
+import CalendarEventModal from '../../CalendarEventModal/CalendarEventModal';
+import ClassScheduleModal from '../../ClassScheduleModal/ClassScheduleModal';
+import TaskModal from '../../TaskModal/TaskModal';
+import EventDetailModal from '../../EventDetailModal/EventDetailModal';
 import './ProfileLayout.css';
-import Input from "../../ui/Input/Input";
 
 function ProfileLayout({ userRole, profileData, onImageUpload, onProfileUpdate, currentUser }) {
     const [tasks, setTasks] = useState([
@@ -12,16 +15,89 @@ function ProfileLayout({ userRole, profileData, onImageUpload, onProfileUpdate, 
         { id: 4, text: 'Административни таскови', completed: false }
     ]);
 
+    const [calendarEvents, setCalendarEvents] = useState([]);
+    const [classSchedules, setClassSchedules] = useState([
+        { id: 1, course: 'Веб програмирање предавања', days: 'Mon, Wed', time: '9:00 AM', location: 'Просторија 117' },
+        { id: 2, course: 'Објектно-ориентирано програмирање', days: 'Tue, Thu', time: '11:00 AM', location: 'Барака 2.2' },
+        { id: 3, course: 'ЕМТ Аудиториски', days: 'Mon, Wed', time: '3:00 PM', location: 'Просторија 225' }
+    ]);
 
+    const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
+    const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+    const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+    const [isEventDetailModalOpen, setIsEventDetailModalOpen] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [currentMonth, setCurrentMonth] = useState(new Date());
 
     const [recentSubjects, setRecentSubjects] = useState([]);
     const [currentSubjectSlide, setCurrentSubjectSlide] = useState(0);
     const subjectsPerSlide = 4;
 
     const handleTaskToggle = (taskId) => {
-        setTasks(tasks.map(task =>
-            task.id === taskId ? { ...task, completed: !task.completed } : task
-        ));
+        // Delete task when checkbox is clicked
+        handleDeleteTask(taskId);
+    };
+
+    const handleAddCalendarEvent = (eventData) => {
+        const newEvent = {
+            id: Date.now(),
+            ...eventData
+        };
+        setCalendarEvents([...calendarEvents, newEvent]);
+    };
+
+    const handleAddSchedule = (scheduleData) => {
+        const newSchedule = {
+            id: Date.now(),
+            ...scheduleData
+        };
+        setClassSchedules([...classSchedules, newSchedule]);
+    };
+
+    const handleAddTask = (taskData) => {
+        const newTask = {
+            id: Date.now(),
+            text: taskData.text,
+            completed: false
+        };
+        setTasks([...tasks, newTask]);
+    };
+
+    const handleDeleteEvent = (eventId) => {
+        setCalendarEvents(calendarEvents.filter(event => event.id !== eventId));
+    };
+
+    const handleEventClick = (event) => {
+        setSelectedEvent(event);
+        setIsEventDetailModalOpen(true);
+    };
+
+    const handleDeleteSchedule = (scheduleId) => {
+        setClassSchedules(classSchedules.filter(schedule => schedule.id !== scheduleId));
+    };
+
+    const handleDeleteTask = (taskId) => {
+        setTasks(tasks.filter(task => task.id !== taskId));
+    };
+
+    // Calendar functions
+    const getDaysInMonth = (date) => {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDayOfWeek = firstDay.getDay();
+        
+        return { daysInMonth, startingDayOfWeek: startingDayOfWeek === 0 ? 6 : startingDayOfWeek - 1 };
+    };
+
+    const getEventsForDate = (date) => {
+        return calendarEvents.filter(event => event.date === date);
+    };
+
+    const formatCalendarDate = (year, month, day) => {
+        return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     };
 
     const triggerImageUpload = () => {
@@ -121,50 +197,95 @@ function ProfileLayout({ userRole, profileData, onImageUpload, onProfileUpdate, 
                         {/* Personal Calendar */}
                         <div className="professor-calendar-widget">
                             <div className="professor-widget-header">
-                                <h3>Personal Calendar</h3>
-                                <button className="professor-add-btn">+</button>
+                                <h3>Personal Calendar - {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h3>
+                                <button className="professor-add-btn" onClick={() => setIsCalendarModalOpen(true)}>+</button>
                             </div>
                             <div className="professor-calendar-grid">
                                 <div className="professor-calendar-header">
                                     <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span>
-                                    <span>Fri</span><span>Sat</span><span>Sun</span><span>Mon</span>
+                                    <span>Fri</span><span>Sat</span><span>Sun</span>
                                 </div>
                                 <div className="professor-calendar-days">
-                                    {[30, 31, 1, 2, 3, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 13, 13, 14, 15, 16, 17, 18, 19, 20, 20, 21, 22, 23, 25, 26, 27, 27, 28, 29, 31, 1, 2, 3].map((day, index) => (
-                                        <div key={index} className={`professor-calendar-day ${index === 16 ? 'office-hours' : ''} ${index === 29 ? 'grades-due' : ''}`}>
-                                            {index === 16 && <div className="professor-event-label">Office Hours</div>}
-                                            {index === 29 && <div className="professor-event-label">Grades due</div>}
-                                            {day}
-                                        </div>
-                                    ))}
+                                    {(() => {
+                                        const { daysInMonth, startingDayOfWeek } = getDaysInMonth(currentMonth);
+                                        const year = currentMonth.getFullYear();
+                                        const month = currentMonth.getMonth();
+                                        const today = new Date();
+                                        const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
+                                        const todayDate = today.getDate();
+                                        
+                                        const days = [];
+                                        
+                                        // Empty cells before month starts
+                                        for (let i = 0; i < startingDayOfWeek; i++) {
+                                            days.push(<div key={`empty-${i}`} className="professor-calendar-day empty"></div>);
+                                        }
+                                        
+                                        // Days of the month
+                                        for (let day = 1; day <= daysInMonth; day++) {
+                                            const dateStr = formatCalendarDate(year, month, day);
+                                            const dayEvents = getEventsForDate(dateStr);
+                                            const isToday = isCurrentMonth && day === todayDate;
+                                            
+                                            days.push(
+                                                <div 
+                                                    key={day} 
+                                                    className={`professor-calendar-day ${isToday ? 'today' : ''} ${dayEvents.length > 0 ? 'has-events' : ''}`}
+                                                >
+                                                    <span className="day-number">{day}</span>
+                                                    {dayEvents.map(event => (
+                                                        <div 
+                                                            key={event.id} 
+                                                            className="professor-event-label" 
+                                                            title={`${event.title} at ${event.time}`}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleEventClick(event);
+                                                            }}
+                                                        >
+                                                            <span className="event-title">{event.title}</span>
+                                                            <button 
+                                                                className="delete-event-btn"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleDeleteEvent(event.id);
+                                                                }}
+                                                            >×</button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            );
+                                        }
+                                        
+                                        return days;
+                                    })()}
                                 </div>
                             </div>
                         </div>
 
                         {/* Class Schedule */}
                         <div className="professor-schedule-widget">
-                            <h3>Class Schedule</h3>
+                            <div className="professor-widget-header">
+                                <h3>Class Schedule</h3>
+                                <button className="professor-add-btn" onClick={() => setIsScheduleModalOpen(true)}>+</button>
+                            </div>
                             <div className="professor-schedule-table">
                                 <div className="professor-schedule-header">
                                     <span>Course</span>
                                     <span>Time</span>
                                     <span>Location</span>
                                 </div>
-                                <div className="professor-schedule-row">
-                                    <span>Веб програмирање предавања</span>
-                                    <span>Mon, Wed 9:00 AM</span>
-                                    <span>Просторија 117</span>
-                                </div>
-                                <div className="professor-schedule-row">
-                                    <span>Објектно-ориентирано програмирање</span>
-                                    <span>Tue, Thu 11:00 AM</span>
-                                    <span>Барака 2.2</span>
-                                </div>
-                                <div className="professor-schedule-row">
-                                    <span>ЕМТ Аудиториски</span>
-                                    <span>Mon, Wed 3:00 PM</span>
-                                    <span>Просторија 225</span>
-                                </div>
+                                {classSchedules.map((schedule) => (
+                                    <div key={schedule.id} className="professor-schedule-row">
+                                        <span>{schedule.course}</span>
+                                        <span>{schedule.days} {schedule.time}</span>
+                                        <span>{schedule.location}</span>
+                                        <button 
+                                            className="delete-schedule-btn"
+                                            onClick={() => handleDeleteSchedule(schedule.id)}
+                                        >×</button>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -207,7 +328,7 @@ function ProfileLayout({ userRole, profileData, onImageUpload, onProfileUpdate, 
                             </div>
 
                             <div className="professor-save-controls">
-                                <button onClick={handleSave} className="save-btn">💾 Save</button>
+                                <button onClick={handleSave} className="save-btn">💾 Зачувај</button>
                             </div>
                         </div>
 
@@ -215,7 +336,7 @@ function ProfileLayout({ userRole, profileData, onImageUpload, onProfileUpdate, 
                         <div className="professor-task-widget">
                             <div className="professor-widget-header">
                                 <h3>Task Manager</h3>
-                                <button className="professor-add-btn">+</button>
+                                <button className="professor-add-btn" onClick={() => setIsTaskModalOpen(true)}>+</button>
                             </div>
                             <div className="professor-task-list">
                                 {tasks.map((task) => (
@@ -233,6 +354,29 @@ function ProfileLayout({ userRole, profileData, onImageUpload, onProfileUpdate, 
                         </div>
                     </div>
                 </div>
+
+                {/* Modals */}
+                <CalendarEventModal 
+                    isOpen={isCalendarModalOpen}
+                    onClose={() => setIsCalendarModalOpen(false)}
+                    onSave={handleAddCalendarEvent}
+                />
+                <ClassScheduleModal 
+                    isOpen={isScheduleModalOpen}
+                    onClose={() => setIsScheduleModalOpen(false)}
+                    onSave={handleAddSchedule}
+                />
+                <TaskModal 
+                    isOpen={isTaskModalOpen}
+                    onClose={() => setIsTaskModalOpen(false)}
+                    onSave={handleAddTask}
+                />
+                <EventDetailModal 
+                    isOpen={isEventDetailModalOpen}
+                    onClose={() => setIsEventDetailModalOpen(false)}
+                    event={selectedEvent}
+                    onDelete={handleDeleteEvent}
+                />
             </div>
         );
     }
@@ -274,7 +418,7 @@ function ProfileLayout({ userRole, profileData, onImageUpload, onProfileUpdate, 
                         </div>
 
                         <div className="student-save-controls">
-                            <button onClick={handleSave} className="save-btn">💾 Save</button>
+                            <button onClick={handleSave} className="save-btn">💾 Зачувај</button>
                         </div>
 
                         <div className="student-cv-section">

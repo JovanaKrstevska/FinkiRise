@@ -197,10 +197,62 @@ function CreateLabPage() {
         };
 
         try {
-            console.log('Saving lab data:', labData);
+            console.log('💾 Saving lab data:', labData);
+            console.log('🔑 SubjectId from URL params:', subjectId);
+            console.log('🔑 SubjectId being saved:', labData.subjectId);
+            
+            // Save to labs collection
             const result = await createLab(labData);
 
             if (result.success) {
+                // Also save to courseContent document
+                try {
+                    const { doc, getDoc, setDoc, updateDoc, arrayUnion } = await import('firebase/firestore');
+                    const { db } = await import('../../config/firebase');
+                    
+                    const contentDocRef = doc(db, 'courseContent', subjectId);
+                    const contentDoc = await getDoc(contentDocRef);
+                    
+                    const labReference = {
+                        id: result.id,
+                        title: labData.title,
+                        name: labData.title,
+                        createdDate: new Date().toISOString(),
+                        type: 'lab'
+                    };
+                    
+                    if (contentDoc.exists()) {
+                        // Update existing document
+                        await updateDoc(contentDocRef, {
+                            labs: arrayUnion(labReference),
+                            lastUpdated: new Date().toISOString(),
+                            updatedBy: currentUser.uid
+                        });
+                        console.log('✅ Lab added to courseContent document');
+                    } else {
+                        // Create new document
+                        const initialData = {
+                            lectures: [],
+                            exercises: [],
+                            literature: [],
+                            recordings: [],
+                            quizzes: [],
+                            labs: [labReference],
+                            homework: [],
+                            results: [],
+                            createdDate: new Date().toISOString(),
+                            createdBy: currentUser.uid,
+                            lastUpdated: new Date().toISOString(),
+                            updatedBy: currentUser.uid
+                        };
+                        await setDoc(contentDocRef, initialData);
+                        console.log('✅ Created courseContent document with lab');
+                    }
+                } catch (contentError) {
+                    console.error('⚠️ Error adding lab to courseContent:', contentError);
+                    // Don't fail the whole operation if this fails
+                }
+                
                 alert('Лабораториската е успешно креирана!');
                 navigate('/labs'); // Navigate back to lab page
             } else {

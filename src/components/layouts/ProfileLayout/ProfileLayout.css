@@ -43,7 +43,7 @@
 }
 
 .professor-add-btn {
-    background: #4A90E2;
+    background: #3899C2;
     color: white;
     border: none;
     border-radius: 50%;
@@ -723,7 +723,7 @@
 }
 
 .save-btn {
-    background: #4A90E2;
+    background: #3899C2;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -948,4 +948,105 @@ ar Styles */
     .sidebar-link:hover {
         transform: none;
     }
+}
+/* Cal
+endar Updates */
+.professor-calendar-header {
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.professor-calendar-days {
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.professor-calendar-day.empty {
+    background: transparent;
+    cursor: default;
+}
+
+.professor-calendar-day.today {
+    background: #4A90E2;
+    color: white;
+    font-weight: bold;
+}
+
+.professor-calendar-day.has-events {
+    background: #E8F4FD;
+}
+
+.professor-calendar-day .day-number {
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    font-size: 10px;
+}
+
+.professor-event-label {
+    font-size: 8px;
+    background: #4A90E2;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+    margin-top: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.professor-event-label:hover {
+    background: #357ABD;
+}
+
+.professor-event-label .event-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.delete-event-btn,
+.delete-schedule-btn,
+.delete-task-btn {
+    background: rgba(255, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+    transition: background 0.2s;
+}
+
+.delete-event-btn:hover,
+.delete-schedule-btn:hover,
+.delete-task-btn:hover {
+    background: rgba(255, 0, 0, 0.9);
+}
+
+.professor-schedule-row {
+    grid-template-columns: 2fr 2fr 1fr 30px;
+    align-items: center;
+}
+
+.professor-task-item {
+    position: relative;
+}
+
+.delete-task-btn {
+    margin-left: auto;
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
 }

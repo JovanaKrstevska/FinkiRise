@@ -69,9 +69,20 @@ function StudentCourseLayout({ subjectId }) {
     const fetchCourseContent = async () => {
         try {
             const contentDoc = await getDoc(doc(db, 'courseContent', subjectId));
+            let contentData = {
+                lectures: [],
+                exercises: [],
+                literature: [],
+                recordings: [],
+                quizzes: [],
+                labs: [],
+                homework: [],
+                results: []
+            };
+            
             if (contentDoc.exists()) {
                 const data = contentDoc.data();
-                setCourseContent({
+                contentData = {
                     lectures: data.lectures || [],
                     exercises: data.exercises || [],
                     literature: data.literature || [],
@@ -80,8 +91,35 @@ function StudentCourseLayout({ subjectId }) {
                     labs: data.labs || [],
                     homework: data.homework || [],
                     results: data.results || []
-                });
+                };
             }
+            
+            // Fetch labs from labs collection (same as professor side)
+            try {
+                console.log('🔍 [Student] Fetching labs for subjectId:', subjectId);
+                const { collection, query, where, getDocs } = await import('firebase/firestore');
+                const labsQuery = query(
+                    collection(db, 'labs'),
+                    where('subjectId', '==', subjectId)
+                );
+                const labsSnapshot = await getDocs(labsQuery);
+                const labs = [];
+                labsSnapshot.forEach(doc => {
+                    const labData = { id: doc.id, ...doc.data() };
+                    console.log('📋 [Student] Lab found:', {
+                        id: doc.id,
+                        title: labData.title,
+                        subjectId: labData.subjectId
+                    });
+                    labs.push(labData);
+                });
+                contentData.labs = labs;
+                console.log('✅ [Student] Labs fetched:', labs.length);
+            } catch (labError) {
+                console.error('❌ [Student] Error fetching labs:', labError);
+            }
+            
+            setCourseContent(contentData);
         } catch (err) {
             console.error('Error fetching course content:', err);
         }
@@ -321,7 +359,7 @@ function StudentCourseLayout({ subjectId }) {
             navigate(`/quiz/${subjectId}/${item.id}`);
         } else if (sectionType === 'labs') {
             // Navigate to lab page
-            navigate(`/lab/${subjectId}/${item.id}`);
+            navigate(`/labs/${subjectId}/${item.id}`);
         }
     };
 

@@ -211,10 +211,6 @@ function ProfessorSubjectGrid() {
                                 <span className="stat-number">{subject.enrolledStudents || 0}</span>
                                 <span className="stat-label">студенти</span>
                             </div>
-                            <div className="stat-item">
-                                <span className="stat-number">{subject.assignmentCount || 0}</span>
-                                <span className="stat-label">задачи</span>
-                            </div>
                         </div>
                     </div>
                 ))}

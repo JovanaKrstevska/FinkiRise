@@ -654,7 +654,7 @@
 .create-exam-options-list {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 23px;
     position: relative;
     top: 8vw;
     left: 1vw;
@@ -688,7 +688,7 @@
     background-color: white;
     border-radius: 4px;
     position: relative;
-    right: 12.5vw;
+    right: 12vw;
     top: 2.5vw;
     transition: all 0.3s ease;
     cursor: pointer;

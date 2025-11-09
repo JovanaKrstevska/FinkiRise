@@ -95,6 +95,7 @@ function ProfessorCourseLayout({ subjectId }) {
             
             // Fetch labs from labs collection
             try {
+                console.log('🔍 Fetching labs for subjectId:', subjectId);
                 const labsQuery = query(
                     collection(db, 'labs'),
                     where('subjectId', '==', subjectId)
@@ -102,10 +103,17 @@ function ProfessorCourseLayout({ subjectId }) {
                 const labsSnapshot = await getDocs(labsQuery);
                 const labs = [];
                 labsSnapshot.forEach(doc => {
-                    labs.push({ id: doc.id, ...doc.data() });
+                    const labData = { id: doc.id, ...doc.data() };
+                    console.log('📋 Lab found:', {
+                        id: doc.id,
+                        title: labData.title,
+                        subjectId: labData.subjectId
+                    });
+                    labs.push(labData);
                 });
                 contentData.labs = labs;
                 console.log('✅ Labs fetched:', labs.length);
+                console.log('📊 All labs:', labs);
             } catch (labError) {
                 console.error('❌ Error fetching labs:', labError);
             }
@@ -147,6 +155,8 @@ function ProfessorCourseLayout({ subjectId }) {
             navigate(`/create-quiz/${subjectId}`);
         } else if (sectionType === 'labs') {
             console.log('💻 Navigating to create lab');
+            console.log('🔑 Current subjectId:', subjectId);
+            console.log('🔑 Subject data:', subject);
             navigate(`/create-lab/${subjectId}`);
         }
     };
