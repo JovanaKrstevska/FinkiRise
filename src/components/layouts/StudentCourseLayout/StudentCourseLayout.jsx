@@ -390,10 +390,27 @@ function StudentCourseLayout({ subjectId }) {
     // Debug: Log current progress state before rendering
     console.log('🎨 Rendering StudentCourseLayout with progress:', studentProgress);
 
+    // Badge function based on grade
+    const getBadge = (grade) => {
+        if (!grade) return null;
+        const numGrade = parseFloat(grade);
+        if (numGrade >= 10) return { emoji: '🥇', name: 'Gold' };
+        if (numGrade >= 8) return { emoji: '🥈', name: 'Silver' };
+        if (numGrade >= 6) return { emoji: '🥉', name: 'Bronze' };
+        return null;
+    };
+
+    const badge = getBadge(subject.finalGrade);
+
     return (
         <div className="course-layout">
             {/* Header */}
             <div className="course-header">
+                {badge && (
+                    <div className="course-badge" title={`${badge.name} Badge - Grade: ${subject.finalGrade}`}>
+                        {badge.emoji}
+                    </div>
+                )}
                 <h1 className="course-title">{subject.name}</h1>
                 <div className="course-semester">Семестар: {subject.semesterType === 'winter' ? 'Зимски' : 'Летен'} {subject.academicYear}</div>
             </div>
@@ -403,13 +420,18 @@ function StudentCourseLayout({ subjectId }) {
                 {/* Progress Card */}
                 <div className="progress-card">
                     <div className="progress-header">
-                        <div className="subject-badge">
+                        {/* <div className="subject-badge-course">
                             <img 
                                 src="/assets/icons/finki_subject_logo.svg" 
                                 alt="Subject Badge" 
                                 className="badge-image"
                             />
-                        </div>
+                            {badge && (
+                                <div className="subject-icon-badge" title={`${badge.name} Badge - Grade: ${subject.finalGrade}`}>
+                                    {badge.emoji}
+                                </div>
+                            )}
+                        </div> */}
                         <h3 className="progress-title">Прогрес на активности</h3>
                     </div>
                     

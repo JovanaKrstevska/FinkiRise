@@ -80,6 +80,16 @@ function ProfileLayout({ userRole, profileData, onImageUpload, onProfileUpdate, 
         setTasks(tasks.filter(task => task.id !== taskId));
     };
 
+    // Badge function based on grade
+    const getBadge = (grade) => {
+        if (!grade) return null;
+        const numGrade = parseFloat(grade);
+        if (numGrade >= 10) return { emoji: '🥇', name: 'Gold', color: '#FFD700' };
+        if (numGrade >= 8) return { emoji: '🥈', name: 'Silver', color: '#C0C0C0' };
+        if (numGrade >= 6) return { emoji: '🥉', name: 'Bronze', color: '#CD7F32' };
+        return null;
+    };
+
     // Calendar functions
     const getDaysInMonth = (date) => {
         const year = date.getFullYear();
@@ -423,7 +433,9 @@ function ProfileLayout({ userRole, profileData, onImageUpload, onProfileUpdate, 
 
                         <div className="student-cv-section">
                             <div className="student-cv-preview">
-                                <div className="student-cv-icon">📄</div>
+                                <div className="student-cv-icon">
+                                    <img src="/assets/icons/graduation_logo.svg" alt="CV" className="cv-icon-image" />
+                                </div>
                             </div>
                             <div className="student-cv-info">
                                 <h3>Вашето CV:</h3>
@@ -473,13 +485,23 @@ function ProfileLayout({ userRole, profileData, onImageUpload, onProfileUpdate, 
                             {recentSubjects.length > 0 ? (
                                 recentSubjects
                                     .slice(currentSubjectSlide * subjectsPerSlide, (currentSubjectSlide + 1) * subjectsPerSlide)
-                                    .map((subject) => (
-                                        <div key={subject.id} className="student-subject-card">
-                                            <div className="student-subject-icon">📚</div>
-                                            <p className="student-subject-name">{subject.name}</p>
-                                            <p className="student-subject-year">{subject.academicYear}</p>
-                                        </div>
-                                    ))
+                                    .map((subject, index) => {
+                                        // For demo: assign random grades if not present
+                                        const grade = subject.finalGrade || [10, 9, 8, 7, 6][index % 5];
+                                        const badge = getBadge(grade);
+                                        return (
+                                            <div key={subject.id} className="student-subject-card">
+                                                {badge && (
+                                                    <div className="subject-badge" title={`${badge.name} Badge - Grade: ${grade}`}>
+                                                        {badge.emoji}
+                                                    </div>
+                                                )}
+                                                <p className="student-subject-name">{subject.name}</p>
+                                                <p className="student-subject-year">{subject.academicYear}</p>
+                                                <p className="student-subject-grade">Оценка: {grade}</p>
+                                            </div>
+                                        );
+                                    })
                             ) : (
                                 Array.from({ length: 4 }, (_, index) => (
                                     <div key={index} className="student-subject-card">

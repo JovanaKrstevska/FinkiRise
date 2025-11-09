@@ -370,7 +370,7 @@ function DetailsPage() {
                                     <p className="description-text">
                                         За секое помагање, зборување и препишување, <strong>Ви се сопира испитот</strong> и ќе бидете на дисциплинска комисија!
                                     </p>
-                                    <div style={{ textAlign: 'center', margin: '20px 0', fontSize: '24px', fontWeight: 'bold', color: '#2196F3' }}>
+                                    <div style={{ textAlign: 'center', margin: '20px 0', fontSize: '24px', fontWeight: 'bold', color: '#015E86' }}>
                                         Со среќа!
                                     </div>
                                 </>

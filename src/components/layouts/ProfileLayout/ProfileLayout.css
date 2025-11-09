@@ -408,7 +408,7 @@
 .student-cv-icon {
     width: 100px;
     height: 100px;
-    background: #e0e0e0;
+    background: #cfe1f0;
     border-radius: 6px;
     display: flex;
     align-items: center;
@@ -416,6 +416,13 @@
     font-size: 14px;
     font-weight: 600;
     color: #666;
+}
+
+.cv-icon-image {
+    margin-left: 5px;
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
 }
 
 .student-cv-info {
@@ -704,7 +711,7 @@
     color: #4A90E2;
     font-size: 14px;
     font-weight: 500;
-    margin: 0 0 5px 0;
+    margin: 20px 0 5px 0;
 }
 
 .student-subject-year {
@@ -732,13 +739,12 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+    width: 15vw;
 }
 
 .save-btn:hover {
-    background: #218838;
+    background: #3899C2;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
 /* Responsive Design */
@@ -1049,4 +1055,31 @@ endar Updates */
     width: 18px;
     height: 18px;
     font-size: 12px;
+}
+
+/* Subject Badge Styles */
+.subject-badge {
+    position: relative;
+    bottom: 4px;
+    left: 1px;
+    font-size: 45px;
+    z-index: 10;
+    line-height: 1;
+    margin-bottom: 0.5vw;
+    margin-top: 2px;
+}
+
+.student-subject-card {
+    position: relative;
+}
+
+.student-subject-icon {
+    animation: none !important;
+}
+
+.student-subject-grade {
+    color: #4A90E2;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 5px 0 0 0;
 }
