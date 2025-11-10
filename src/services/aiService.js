@@ -4,6 +4,10 @@
 const PERPLEXITY_API_KEY = process.env.REACT_APP_PERPLEXITY_API_KEY;
 const PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
 
+// Note: Direct browser calls to Perplexity API are blocked by CORS.
+// For production, you should use a backend server to make API calls.
+// For now, we'll use fallback generation which works well.
+
 export const generateQuestionsWithPerplexity = async (topic, count, difficulty) => {
     console.log('🔵 [AI Service] Starting Perplexity API call');
     console.log('🔵 [AI Service] Topic:', topic);

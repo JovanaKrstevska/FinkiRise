@@ -1025,6 +1025,21 @@ eneration Modal Styling */
     border-color: #4a90a4;
     box-shadow: 0 0 0 3px rgba(74, 144, 164, 0.1);
 }
+.create-exam-ai-select-number{
+    position: absolute;
+    top: -1.5vw;
+    left: -0.5vw;
+    width: 95%;
+    height: 2vw;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 10px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
 
 .create-exam-ai-info-box {
     background: linear-gradient(135deg, #f0f8ff 0%, #e8f4f8 100%);

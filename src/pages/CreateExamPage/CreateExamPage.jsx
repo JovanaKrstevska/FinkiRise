@@ -1019,16 +1019,15 @@ function CreateExamPage() {
                                     <label className="create-exam-ai-control-label">
                                         Број на прашања
                                     </label>
-                                    <select
-                                        className="create-exam-ai-select"
+                                    <Input
+                                        type="number"
+                                        style="create-exam-ai-select-number"
                                         value={aiQuestionCount}
-                                        onChange={(e) => setAiQuestionCount(parseInt(e.target.value))}
-                                    >
-                                        <option value={3}>3</option>
-                                        <option value={5}>5</option>
-                                        <option value={10}>10</option>
-                                        <option value={15}>15</option>
-                                    </select>
+                                        onChange={(e) => setAiQuestionCount(parseInt(e.target.value) || 0)}
+                                        min="1"
+                                        max="50"
+                                        placeholder="Внеси број"
+                                    />
                                 </div>
 
                                 <div className="create-exam-ai-control-group">
