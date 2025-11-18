@@ -305,7 +305,7 @@ function DetailsPage() {
                 <div className="lab-details-page">
                     <div className="lab-details-container">
                         <div className="exam-results">
-                            <div className="results-card">
+                            <div className="results-card-exam">
                                 {isExam ? (
                                     <>
                                         <h1 className="results-title">Крај на испитот!</h1>

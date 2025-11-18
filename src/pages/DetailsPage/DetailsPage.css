@@ -161,7 +161,7 @@ Exam Results Styles */
     margin: 0 auto;
 }
 
-.results-card {
+.results-card-exam {
     background: white;
     border: 3px solid #4a90a4;
     border-radius: 20px;
@@ -170,6 +170,7 @@ Exam Results Styles */
     box-shadow: 0 4px 20px rgba(74, 144, 164, 0.15);
     text-align: center;
     max-width: 800px;
+    height: 10vw;
 }
 
 .results-title {
